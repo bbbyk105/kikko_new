@@ -193,7 +193,8 @@ export const pricingPageData = {
       nameEn: "Visitor",
       price: "¥550",
       unit: "/ 1時間",
-      description: "初めての方、短時間のご利用に最適。予約不要でお気軽にご利用いただけます。",
+      description:
+        "初めての方、短時間のご利用に最適。予約不要でお気軽にご利用いただけます。",
       features: [
         { text: "Wi-Fi利用可", included: true },
         { text: "電源利用可", included: true },
@@ -209,7 +210,8 @@ export const pricingPageData = {
       nameEn: "Regular",
       price: "¥8,800",
       unit: "/ 月",
-      description: "定期的に利用される方へ。時間を気にせず、集中して作業に取り組めます。",
+      description:
+        "定期的に利用される方へ。時間を気にせず、集中して作業に取り組めます。",
       features: [
         { text: "営業時間内使い放題", included: true },
         { text: "Wi-Fi・電源・ドリンク", included: true },
@@ -226,7 +228,8 @@ export const pricingPageData = {
       nameEn: "Corporate",
       price: "¥16,500",
       unit: "/ 月〜",
-      description: "チームでのご利用、法人登記をご希望の方へ。ビジネスの拠点としてお使いいただけます。",
+      description:
+        "チームでのご利用、法人登記をご希望の方へ。ビジネスの拠点としてお使いいただけます。",
       features: [
         { text: "複数名での利用可", included: true },
         { text: "法人登記対応", included: true },
@@ -347,9 +350,21 @@ export const reserveData = {
     description: "ご利用内容に合わせて、ご予約を承ります。",
   },
   steps: [
-    { number: "01", title: "利用内容を選択", description: "ご希望の利用タイプをお選びください" },
-    { number: "02", title: "日時と情報を入力", description: "ご希望の日時と連絡先をご入力ください" },
-    { number: "03", title: "内容確認・送信", description: "入力内容をご確認のうえ送信してください" },
+    {
+      number: "01",
+      title: "利用内容を選択",
+      description: "ご希望の利用タイプをお選びください",
+    },
+    {
+      number: "02",
+      title: "日時と情報を入力",
+      description: "ご希望の日時と連絡先をご入力ください",
+    },
+    {
+      number: "03",
+      title: "内容確認・送信",
+      description: "入力内容をご確認のうえ送信してください",
+    },
   ],
   types: [
     { value: "visitor", label: "ビジター利用", requiresPeople: false },
