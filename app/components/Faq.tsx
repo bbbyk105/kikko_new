@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { faqItems } from "@/app/data/site";
+import { SectionHeader } from "@/app/components/ui/typography";
 
 const displayFaqItems = faqItems.slice(0, 5);
 
@@ -14,18 +15,16 @@ export default function Faq() {
   };
 
   return (
-    <section id="faq" className="py-[clamp(5rem,10vw,8rem)] bg-[#FAFAF8]">
-      <div className="mx-auto max-w-[1280px] px-[clamp(1.5rem,5vw,4rem)]">
+    <section id="faq" className="py-36 lg:py-48 bg-[#FAFAF8]">
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16 lg:mb-20">
-          <p className="text-xs tracking-[0.3em] text-[#6B6B6B] mb-3">FAQ</p>
-          <h2 className="font-[var(--font-cormorant)] text-3xl lg:text-4xl text-[#2C2C2C] mb-4">
-            よくある質問
-          </h2>
-          <p className="text-sm text-[#6B6B6B] max-w-xl mx-auto">
-            ご利用にあたってよくいただくご質問をまとめました
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="FAQ"
+          title="よくある質問"
+          description="ご利用にあたってよくいただくご質問をまとめました"
+          align="center"
+          titleId="faq-heading"
+        />
 
         {/* FAQ List */}
         <div className="max-w-3xl mx-auto">
@@ -35,21 +34,21 @@ export default function Faq() {
                 <button
                   type="button"
                   onClick={() => toggleItem(index)}
-                  className="w-full py-6 text-left flex items-start justify-between gap-4 group"
+                  className="w-full py-7 text-left flex items-start justify-between gap-6 group"
                   aria-expanded={openIndex === index}
                 >
-                  <span className="text-[#2C2C2C] text-sm lg:text-base leading-relaxed pr-4">
+                  <span className="text-[#2C2C2C] text-[14px] md:text-[15px] leading-[1.9] tracking-[0.02em] pr-4">
                     {item.question}
                   </span>
                   <span
-                    className={`flex-shrink-0 w-5 h-5 flex items-center justify-center text-[#6B6B6B] group-hover:text-[#2C2C2C] transition-transform duration-200 ${
+                    className={`flex-shrink-0 w-5 h-5 flex items-center justify-center text-[#9A9A9A] group-hover:text-[#2C2C2C] transition-transform duration-200 ${
                       openIndex === index ? "rotate-45" : ""
                     }`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
+                      width="12"
+                      height="12"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -64,10 +63,10 @@ export default function Faq() {
                 </button>
                 <div
                   className={`overflow-hidden transition-all duration-200 ${
-                    openIndex === index ? "max-h-96 pb-6" : "max-h-0"
+                    openIndex === index ? "max-h-96 pb-8" : "max-h-0"
                   }`}
                 >
-                  <p className="text-sm text-[#6B6B6B] leading-relaxed pl-0 pr-8">
+                  <p className="text-[13px] md:text-[14px] text-[#6B6B6B] leading-[2] tracking-[0.02em] pl-0 pr-10">
                     {item.answer}
                   </p>
                 </div>
@@ -77,16 +76,16 @@ export default function Faq() {
         </div>
 
         {/* View All Link */}
-        <div className="text-center mt-12">
+        <div className="text-center mt-14">
           <Link
             href="/faq"
-            className="inline-flex items-center gap-2 text-sm text-[#5C6B5C] hover:text-[#2C2C2C] transition-colors"
+            className="inline-flex items-center gap-2 text-[12px] tracking-[0.1em] text-[#5C6B5C] hover:text-[#2C2C2C] transition-colors"
           >
             <span>すべての質問を見る</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="12"
+              height="12"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"

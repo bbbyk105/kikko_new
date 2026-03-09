@@ -1,23 +1,19 @@
 import Image from "next/image";
 import { images } from "@/app/data/site";
+import { Eyebrow, SectionHeading, LeadText, BlockLabel } from "@/app/components/ui/typography";
 
 export default function About() {
   return (
     <section
       id="about"
-      className="py-32 lg:py-40"
+      className="py-36 lg:py-48"
       aria-labelledby="about-heading"
     >
       <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-28 items-center">
           {/* Image */}
           <div className="relative">
             <div className="relative aspect-[4/5] overflow-hidden">
-              {/* 
-                差し替え箇所: 
-                1. /public/images/about-space.jpg に実際の写真を配置
-                2. data/site.ts の images.about を更新
-              */}
               <Image
                 src={images.about}
                 alt="橘香堂の落ち着いた雰囲気の作業スペース"
@@ -34,50 +30,44 @@ export default function About() {
           </div>
 
           {/* Text Content */}
-          <div className="lg:pl-8">
+          <div className="lg:pl-4">
             {/* Section Label */}
-            <p className="text-xs tracking-[0.3em] text-[#6B6B6B] mb-6">
-              ABOUT
-            </p>
+            <Eyebrow>About</Eyebrow>
 
             {/* Heading */}
-            <h2
-              id="about-heading"
-              className="font-[var(--font-cormorant)] text-3xl md:text-4xl lg:text-5xl leading-tight tracking-wide text-[#2C2C2C] mb-8"
-            >
-              集中、つながり、
-              <br />
-              自由な働き方を。
-            </h2>
+            <SectionHeading id="about-heading" size="large">
+              <span className="block">集中、つながり、</span>
+              <span className="block">自由な働き方を。</span>
+            </SectionHeading>
 
             {/* Description */}
-            <div className="space-y-6 text-[#6B6B6B] leading-relaxed">
-              <p>
+            <div className="space-y-5 mt-8">
+              <LeadText maxWidth="wide">
                 橘香堂は、ただ作業をする場所ではありません。
                 集中して仕事に向き合い、必要なときには人とつながり、
                 用途に応じて空間を自在に使える——
                 そんな、新しい働き方のための場所です。
-              </p>
-              <p>
+              </LeadText>
+              <LeadText maxWidth="wide">
                 富士市吉原の静かな環境の中で、
                 起業家、フリーランス、リモートワーカーの皆さまの
                 日々の仕事と成長をサポートいたします。
-              </p>
+              </LeadText>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-8 mt-12 pt-12 border-t border-[#E5E4DF]">
+            <div className="grid grid-cols-2 gap-8 mt-16 pt-12 border-t border-[#E5E4DF]">
               <div>
-                <p className="font-[var(--font-cormorant)] text-4xl text-[#2C2C2C] mb-2">
-                  80<span className="text-lg ml-1">名</span>
+                <p className="font-[var(--font-cormorant)] text-[clamp(2.5rem,5vw,3.5rem)] text-[#2C2C2C] leading-none tracking-tight mb-3">
+                  80<span className="text-base ml-1 tracking-normal">名</span>
                 </p>
-                <p className="text-sm text-[#6B6B6B]">着席最大収容</p>
+                <BlockLabel>着席最大収容</BlockLabel>
               </div>
               <div>
-                <p className="font-[var(--font-cormorant)] text-4xl text-[#2C2C2C] mb-2">
-                  150<span className="text-lg ml-1">名</span>
+                <p className="font-[var(--font-cormorant)] text-[clamp(2.5rem,5vw,3.5rem)] text-[#2C2C2C] leading-none tracking-tight mb-3">
+                  150<span className="text-base ml-1 tracking-normal">名</span>
                 </p>
-                <p className="text-sm text-[#6B6B6B]">スタンディング最大</p>
+                <BlockLabel>スタンディング最大</BlockLabel>
               </div>
             </div>
           </div>

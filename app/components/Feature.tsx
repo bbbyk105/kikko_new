@@ -1,35 +1,33 @@
 import Image from "next/image";
 import { features } from "@/app/data/site";
+import { SectionHeader, CardTitle, DecorativeNumber, LeadText } from "@/app/components/ui/typography";
 
 export default function Feature() {
   return (
     <section
-      className="py-32 lg:py-40"
+      className="py-36 lg:py-48"
       aria-labelledby="feature-heading"
     >
       <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-2xl mb-20">
-          <p className="text-xs tracking-[0.3em] text-[#6B6B6B] mb-6">
-            FEATURES
-          </p>
-          <h2
-            id="feature-heading"
-            className="font-[var(--font-cormorant)] text-3xl md:text-4xl lg:text-5xl leading-tight tracking-wide text-[#2C2C2C]"
-          >
-            仕事を支える、
-            <br />
-            充実の設備。
-          </h2>
-        </div>
+        <SectionHeader
+          eyebrow="Features"
+          title={
+            <>
+              <span className="block">仕事を支える、</span>
+              <span className="block">充実の設備。</span>
+            </>
+          }
+          titleId="feature-heading"
+          size="large"
+        />
 
         {/* Feature Grid - Asymmetric Layout */}
-        <div className="space-y-24 lg:space-y-32">
+        <div className="space-y-28 lg:space-y-40">
           {/* Feature 1 - Large Left */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <div className="lg:col-span-7">
               <div className="relative aspect-[16/10] overflow-hidden">
-                {/* 差し替え箇所: /public/images/feature-wifi.jpg に実際の写真を配置 */}
                 <Image
                   src={features[0].image}
                   alt={features[0].title}
@@ -39,41 +37,22 @@ export default function Feature() {
                 />
               </div>
             </div>
-            <div className="lg:col-span-5 lg:pl-8">
-              <span
-                className="font-[var(--font-cormorant)] text-6xl text-[#E5E4DF] block mb-4"
-                aria-hidden="true"
-              >
-                01
-              </span>
-              <h3 className="text-xl font-medium text-[#2C2C2C] mb-4">
-                {features[0].title}
-              </h3>
-              <p className="text-[#6B6B6B] leading-relaxed">
-                {features[0].description}
-              </p>
+            <div className="lg:col-span-5 lg:pl-4">
+              <DecorativeNumber size="large" className="block mb-5">01</DecorativeNumber>
+              <CardTitle className="mb-5">{features[0].title}</CardTitle>
+              <LeadText>{features[0].description}</LeadText>
             </div>
           </div>
 
           {/* Feature 2 - Large Right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-5 lg:pr-8 order-2 lg:order-1">
-              <span
-                className="font-[var(--font-cormorant)] text-6xl text-[#E5E4DF] block mb-4"
-                aria-hidden="true"
-              >
-                02
-              </span>
-              <h3 className="text-xl font-medium text-[#2C2C2C] mb-4">
-                {features[1].title}
-              </h3>
-              <p className="text-[#6B6B6B] leading-relaxed">
-                {features[1].description}
-              </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            <div className="lg:col-span-5 lg:pr-4 order-2 lg:order-1">
+              <DecorativeNumber size="large" className="block mb-5">02</DecorativeNumber>
+              <CardTitle className="mb-5">{features[1].title}</CardTitle>
+              <LeadText>{features[1].description}</LeadText>
             </div>
             <div className="lg:col-span-7 order-1 lg:order-2">
               <div className="relative aspect-[16/10] overflow-hidden">
-                {/* 差し替え箇所: /public/images/feature-business.jpg に実際の写真を配置 */}
                 <Image
                   src={features[1].image}
                   alt={features[1].title}
@@ -86,11 +65,10 @@ export default function Feature() {
           </div>
 
           {/* Features 3 & 4 - Two Column */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 lg:gap-20">
             {features.slice(2).map((feature, index) => (
               <div key={feature.id} className="group">
-                <div className="relative aspect-[4/3] overflow-hidden mb-6">
-                  {/* 差し替え箇所: /public/images/feature-*.jpg に実際の写真を配置 */}
+                <div className="relative aspect-[4/3] overflow-hidden mb-8">
                   <Image
                     src={feature.image}
                     alt={feature.title}
@@ -99,18 +77,9 @@ export default function Feature() {
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </div>
-                <span
-                  className="font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] block mb-3"
-                  aria-hidden="true"
-                >
-                  0{index + 3}
-                </span>
-                <h3 className="text-lg font-medium text-[#2C2C2C] mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-[#6B6B6B] leading-relaxed">
-                  {feature.description}
-                </p>
+                <DecorativeNumber className="block mb-4">0{index + 3}</DecorativeNumber>
+                <CardTitle className="mb-4">{feature.title}</CardTitle>
+                <LeadText>{feature.description}</LeadText>
               </div>
             ))}
           </div>

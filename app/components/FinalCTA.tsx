@@ -40,7 +40,7 @@ export default function FinalCTA() {
 
           {/* Sub Text */}
           <p className="text-[#B0B0B0] leading-relaxed mb-12">
-            見学・お問い合わせはお気軽にどうぞ。
+            お問い合わせはお気軽にどうぞ。
             <br />
             お電話またはフォームよりご連絡ください。
           </p>

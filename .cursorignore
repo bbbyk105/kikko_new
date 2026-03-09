@@ -1,0 +1,16 @@
+# Environment variables
+.env
+.env.*
+*.env
+
+# Secrets
+*.pem
+*.key
+*.p12
+*.pfx
+
+# SSH
+.ssh/
+
+# Local config
+.cursor/

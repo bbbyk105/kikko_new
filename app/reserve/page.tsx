@@ -8,7 +8,7 @@ import { reserveData } from "@/app/data/site";
 export const metadata: Metadata = {
   title: "ご予約 | 橘香堂 (worx mt.fuji)",
   description:
-    "橘香堂のご予約フォーム。見学、ビジター利用、会議室予約、貸切利用を承ります。",
+    "橘香堂のご予約フォーム。ビジター利用、会議室予約、貸切利用を承ります。",
 };
 
 export default function ReservePage() {
@@ -19,7 +19,7 @@ export default function ReservePage() {
         <PageHero
           title="Reserve"
           titleJa="ご予約"
-          description="見学・ご利用のご予約を承ります。"
+          description="ご利用のご予約を承ります。"
         />
 
         {/* Reserve Form Section */}

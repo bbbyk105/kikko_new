@@ -14,6 +14,7 @@ interface ReserveSummaryProps {
   onBack: () => void;
   onSubmit: () => void;
   isSubmitting: boolean;
+  error?: string | null;
 }
 
 export default function ReserveSummary({
@@ -21,6 +22,7 @@ export default function ReserveSummary({
   onBack,
   onSubmit,
   isSubmitting,
+  error,
 }: ReserveSummaryProps) {
   const summaryItems = [
     { label: "お名前", value: data.name },
@@ -58,6 +60,12 @@ export default function ReserveSummary({
           </div>
         ))}
       </dl>
+
+      {error && (
+        <div className="mt-6 p-4 bg-[#FDF2F2] border border-[#B85C5C] text-[#B85C5C] text-sm">
+          {error}
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row gap-4 mt-10">
         <button

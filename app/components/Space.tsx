@@ -1,33 +1,31 @@
 import Image from "next/image";
 import { spaceCategories } from "@/app/data/site";
+import { SectionHeader, CardTitle, DecorativeNumber, BlockLabel, LeadText } from "@/app/components/ui/typography";
 
 export default function Space() {
   return (
     <section
       id="space"
-      className="py-32 lg:py-40 bg-[#F7F6F3]"
+      className="py-36 lg:py-48 bg-[#F7F6F3]"
       aria-labelledby="space-heading"
     >
       <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-2xl mb-20">
-          <p className="text-xs tracking-[0.3em] text-[#6B6B6B] mb-6">SPACE</p>
-          <h2
-            id="space-heading"
-            className="font-[var(--font-cormorant)] text-3xl md:text-4xl lg:text-5xl leading-tight tracking-wide text-[#2C2C2C] mb-6"
-          >
-            多様なシーンに応える
-            <br />
-            柔軟な空間。
-          </h2>
-          <p className="text-[#6B6B6B] leading-relaxed">
-            日々の作業から、会議、セミナー、イベントまで。
-            用途に合わせた使い方が可能です。
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Space"
+          title={
+            <>
+              <span className="block">多様なシーンに応える</span>
+              <span className="block">柔軟な空間。</span>
+            </>
+          }
+          description="日々の作業から、会議、セミナー、イベントまで。用途に合わせた使い方が可能です。"
+          titleId="space-heading"
+          size="large"
+        />
 
         {/* Space Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-14 lg:gap-20">
           {spaceCategories.map((category, index) => (
             <article
               key={category.id}
@@ -35,8 +33,7 @@ export default function Space() {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Image */}
-              <div className="relative aspect-[16/10] overflow-hidden mb-6">
-                {/* 差し替え箇所: /public/images/space-*.jpg に実際の写真を配置 */}
+              <div className="relative aspect-[16/10] overflow-hidden mb-8">
                 <Image
                   src={category.image}
                   alt={`${category.titleJa}スペースの様子`}
@@ -49,24 +46,13 @@ export default function Space() {
               {/* Content */}
               <div className="flex gap-6">
                 {/* Number */}
-                <span
-                  className="font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] leading-none"
-                  aria-hidden="true"
-                >
-                  {category.number}
-                </span>
+                <DecorativeNumber>{category.number}</DecorativeNumber>
 
                 {/* Text */}
-                <div className="flex-1">
-                  <h3 className="text-lg font-medium text-[#2C2C2C] mb-1">
-                    {category.title}
-                  </h3>
-                  <p className="text-xs text-[#6B6B6B] mb-3 tracking-wider">
-                    {category.titleJa}
-                  </p>
-                  <p className="text-sm text-[#6B6B6B] leading-relaxed">
-                    {category.description}
-                  </p>
+                <div className="flex-1 pt-1">
+                  <CardTitle className="mb-2">{category.title}</CardTitle>
+                  <BlockLabel className="mb-4">{category.titleJa}</BlockLabel>
+                  <LeadText maxWidth="wide">{category.description}</LeadText>
                 </div>
               </div>
             </article>

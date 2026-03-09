@@ -56,7 +56,7 @@ export default function SpacePage() {
         {/* Bottom CTA */}
         <BottomCTA
           title="まずは、空間を実際にご覧ください。"
-          description="見学は随時受け付けております。お気軽にお問い合わせください。"
+          description="ご利用のご相談はお気軽にお問い合わせください。"
           primaryButton={{ text: "ご予約", href: "/reserve" }}
         />
       </main>

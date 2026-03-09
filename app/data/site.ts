@@ -36,18 +36,17 @@ export const heroFeatures = [
   { label: "高速Wi-Fi" },
   { label: "住所登録対応" },
   { label: "印刷設備" },
-  { label: "駐車場あり" },
+  { label: "周辺駐車場あり" },
 ];
 
-// Unsplash画像URL
-// 実際の施設写真に差し替える場合は、/public/images/ に配置して相対パスに変更してください
+// 施設写真
 export const images = {
-  hero: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=900&fit=crop&q=80",
-  about: "https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=800&h=1000&fit=crop&q=80",
-  capacity: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=1000&fit=crop&q=80",
-  cta: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1920&h=1080&fit=crop&q=80",
-  spaceHero: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1600&h=900&fit=crop&q=80",
-  pricingHero: "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=1600&h=600&fit=crop&q=80",
+  hero: "/images/slide1.webp",
+  about: "/images/slide2.webp",
+  capacity: "/images/slide3.webp",
+  cta: "/images/slide1.webp",
+  spaceHero: "/images/slide2.webp",
+  pricingHero: "/images/slide3.webp",
 };
 
 export const spaceCategories = [
@@ -58,7 +57,7 @@ export const spaceCategories = [
     titleJa: "コワーキング",
     description:
       "集中できる静かな環境で、日々の仕事に取り組む。高速Wi-Fiと快適な設備を完備した、プロフェッショナルのためのワークスペース。",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=500&fit=crop&q=80",
+    image: "/images/slide1.webp",
   },
   {
     id: "meeting",
@@ -67,7 +66,7 @@ export const spaceCategories = [
     titleJa: "会議・セミナー",
     description:
       "少人数の打ち合わせから、セミナーや研修まで。用途に応じた柔軟なレイアウトで、ビジネスシーンをサポート。",
-    image: "https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=800&h=500&fit=crop&q=80",
+    image: "/images/slide2.webp",
   },
   {
     id: "address",
@@ -76,7 +75,7 @@ export const spaceCategories = [
     titleJa: "住所登録",
     description:
       "法人登記や事業所住所として利用可能。ビジネスの拠点として、信頼性のある住所をご提供。",
-    image: "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=800&h=500&fit=crop&q=80",
+    image: "/images/slide3.webp",
   },
   {
     id: "event",
@@ -85,7 +84,7 @@ export const spaceCategories = [
     titleJa: "イベント・多目的",
     description:
       "展示会、ワークショップ、小規模イベントなど。着席80名、スタンディング150名まで対応可能な多目的スペース。",
-    image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=500&fit=crop&q=80",
+    image: "/images/yoga.jpg",
   },
 ];
 
@@ -95,28 +94,28 @@ export const features = [
     title: "高速Wi-Fiと快適な設備",
     description:
       "安定した高速インターネット環境と、集中して作業できる快適なデスク・チェアを完備。",
-    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1000&h=625&fit=crop&q=80",
+    image: "/images/slide1.webp",
   },
   {
     id: "business",
     title: "ビジネスサポート",
     description:
       "高性能プリンター・スキャナーを常設。急な印刷やスキャンにも対応。",
-    image: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=1000&h=625&fit=crop&q=80",
+    image: "/images/slide2.webp",
   },
   {
     id: "address",
     title: "住所登録サービス",
     description:
       "法人登記、事業所住所として利用可能。郵便物の受け取りにも対応いたします。",
-    image: "https://images.unsplash.com/photo-1600508774634-4e11d34730e2?w=800&h=600&fit=crop&q=80",
+    image: "/images/slide3.webp",
   },
   {
     id: "flexible",
     title: "柔軟な利用形態",
     description:
       "会議やセミナー、小規模イベントまで。空間を自在にカスタマイズしてご利用いただけます。",
-    image: "https://images.unsplash.com/photo-1606836591695-4d58a73eba1e?w=800&h=600&fit=crop&q=80",
+    image: "/images/yoga.jpg",
   },
 ];
 
@@ -164,7 +163,7 @@ export const pricingPlans = [
 
 export const accessInfo = {
   station: "JR富士駅から車で約10分",
-  parking: "専用駐車場あり（無料）",
+  parking: "周辺にコインパーキングあり",
   bus: "吉原中央駅バス停から徒歩5分",
 };
 
@@ -249,7 +248,7 @@ export const spacePageData = {
   specs: [
     { label: "高速Wi-Fi", value: "全館完備" },
     { label: "印刷設備", value: "プリンター・スキャナー常設" },
-    { label: "駐車場", value: "無料駐車場あり" },
+    { label: "駐車場", value: "周辺にコインパーキングあり" },
     { label: "着席最大", value: "80名" },
     { label: "スタンディング最大", value: "150名" },
     { label: "対応用途", value: "会議・セミナー・イベント" },
@@ -266,27 +265,27 @@ export const spacePageData = {
   ],
   gallery: [
     {
-      src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop&q=80",
+      src: "/images/slide1.webp",
       alt: "開放的なコワーキングエリア",
       size: "large" as const,
     },
     {
-      src: "https://images.unsplash.com/photo-1497215842964-222b430dc094?w=600&h=400&fit=crop&q=80",
+      src: "/images/slide2.webp",
       alt: "落ち着いた作業スペース",
       size: "small" as const,
     },
     {
-      src: "https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=600&h=400&fit=crop&q=80",
+      src: "/images/slide3.webp",
       alt: "会議室",
       size: "small" as const,
     },
     {
-      src: "https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=600&h=800&fit=crop&q=80",
-      alt: "エントランス",
+      src: "/images/yoga.jpg",
+      alt: "多目的スペース",
       size: "tall" as const,
     },
     {
-      src: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&h=500&fit=crop&q=80",
+      src: "/images/slide1.webp",
       alt: "イベントスペース",
       size: "wide" as const,
     },
@@ -298,11 +297,6 @@ export const faqItems = [
     question: "ビジター利用は可能ですか？",
     answer:
       "はい、可能です。予約不要で、1時間550円（税込）からご利用いただけます。初めての方もお気軽にお越しください。",
-  },
-  {
-    question: "見学には予約が必要ですか？",
-    answer:
-      "事前のご予約をお勧めしております。ご予約いただければ、スタッフがご案内いたします。当日のご見学も可能ですが、混雑時はお待ちいただく場合がございます。",
   },
   {
     question: "会員は何時まで利用できますか？",
@@ -322,7 +316,7 @@ export const faqItems = [
   {
     question: "駐車場はありますか？",
     answer:
-      "はい、無料の専用駐車場をご用意しております。お車でお越しの方も安心してご利用いただけます。",
+      "専用駐車場はございませんが、周辺にコインパーキングがございます。お車でお越しの際はそちらをご利用ください。",
   },
   {
     question: "住所登録サービスは使えますか？",
@@ -350,7 +344,7 @@ export const reserveData = {
   intro: {
     title: "Reserve",
     titleJa: "ご予約・お問い合わせ",
-    description: "ご利用内容に合わせて、見学・ご予約を承ります。",
+    description: "ご利用内容に合わせて、ご予約を承ります。",
   },
   steps: [
     { number: "01", title: "利用内容を選択", description: "ご希望の利用タイプをお選びください" },
@@ -358,9 +352,9 @@ export const reserveData = {
     { number: "03", title: "内容確認・送信", description: "入力内容をご確認のうえ送信してください" },
   ],
   types: [
-    { value: "tour", label: "見学", requiresPeople: false },
     { value: "visitor", label: "ビジター利用", requiresPeople: false },
     { value: "coworking", label: "コワーキング利用", requiresPeople: false },
+    { value: "kids", label: "キッズスペース利用", requiresPeople: false },
     { value: "meeting", label: "会議室予約", requiresPeople: false },
     { value: "private", label: "貸切利用", requiresPeople: true },
     { value: "event", label: "イベント・法人相談", requiresPeople: true },

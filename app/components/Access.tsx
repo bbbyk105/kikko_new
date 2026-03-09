@@ -1,54 +1,50 @@
 import { siteConfig, accessInfo } from "@/app/data/site";
+import { Eyebrow, SectionHeading } from "@/app/components/ui/typography";
 
 export default function Access() {
   return (
     <section
       id="access"
-      className="py-32 lg:py-40 bg-[#F7F6F3]"
+      className="py-36 lg:py-48 bg-[#F7F6F3]"
       aria-labelledby="access-heading"
     >
       <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-28">
           {/* Info */}
           <div>
-            <p className="text-xs tracking-[0.3em] text-[#6B6B6B] mb-6">
-              ACCESS
-            </p>
-            <h2
-              id="access-heading"
-              className="font-[var(--font-cormorant)] text-3xl md:text-4xl lg:text-5xl leading-tight tracking-wide text-[#2C2C2C] mb-12"
-            >
+            <Eyebrow>Access</Eyebrow>
+            <SectionHeading id="access-heading" size="large" className="mb-14">
               アクセス情報
-            </h2>
+            </SectionHeading>
 
             {/* Details */}
-            <dl className="space-y-8">
+            <dl className="space-y-9">
               {/* Address */}
               <div className="flex gap-8">
-                <dt className="w-24 flex-shrink-0 text-sm text-[#6B6B6B]">
+                <dt className="w-24 flex-shrink-0 text-[11px] tracking-[0.15em] uppercase text-[#9A9A9A]">
                   所在地
                 </dt>
                 <dd className="text-[#2C2C2C]">
-                  <p className="text-sm text-[#6B6B6B] mb-1">
+                  <p className="text-[12px] tracking-[0.05em] text-[#9A9A9A] mb-1.5">
                     {siteConfig.address.postal}
                   </p>
-                  <p>{siteConfig.address.full}</p>
+                  <p className="text-[14px] leading-[1.8] tracking-[0.02em]">{siteConfig.address.full}</p>
                 </dd>
               </div>
 
               {/* Hours */}
               <div className="flex gap-8">
-                <dt className="w-24 flex-shrink-0 text-sm text-[#6B6B6B]">
+                <dt className="w-24 flex-shrink-0 text-[11px] tracking-[0.15em] uppercase text-[#9A9A9A]">
                   営業時間
                 </dt>
                 <dd className="text-[#2C2C2C]">
-                  <p>
+                  <p className="text-[14px] leading-[1.8] tracking-[0.02em]">
                     {siteConfig.hours.days} {siteConfig.hours.regular}
                   </p>
-                  <p className="text-sm text-[#6B6B6B] mt-1">
+                  <p className="text-[12px] tracking-[0.03em] text-[#9A9A9A] mt-2">
                     最終入館 {siteConfig.hours.lastEntry}
                   </p>
-                  <p className="text-sm text-[#6B6B6B]">
+                  <p className="text-[12px] tracking-[0.03em] text-[#9A9A9A]">
                     会員は事前予約で{siteConfig.hours.extended}まで延長可能
                   </p>
                 </dd>
@@ -56,13 +52,13 @@ export default function Access() {
 
               {/* Phone */}
               <div className="flex gap-8">
-                <dt className="w-24 flex-shrink-0 text-sm text-[#6B6B6B]">
+                <dt className="w-24 flex-shrink-0 text-[11px] tracking-[0.15em] uppercase text-[#9A9A9A]">
                   電話番号
                 </dt>
                 <dd className="text-[#2C2C2C]">
                   <a
                     href={`tel:${siteConfig.phone}`}
-                    className="hover:text-[#5C6B5C] transition-colors"
+                    className="text-[14px] tracking-[0.02em] hover:text-[#5C6B5C] transition-colors"
                   >
                     {siteConfig.phone}
                   </a>
@@ -71,22 +67,22 @@ export default function Access() {
 
               {/* Access */}
               <div className="flex gap-8">
-                <dt className="w-24 flex-shrink-0 text-sm text-[#6B6B6B]">
+                <dt className="w-24 flex-shrink-0 text-[11px] tracking-[0.15em] uppercase text-[#9A9A9A]">
                   交通
                 </dt>
-                <dd className="text-[#2C2C2C] space-y-1">
-                  <p>{accessInfo.station}</p>
-                  <p>{accessInfo.bus}</p>
+                <dd className="text-[#2C2C2C] space-y-1.5">
+                  <p className="text-[14px] leading-[1.8] tracking-[0.02em]">{accessInfo.station}</p>
+                  <p className="text-[14px] leading-[1.8] tracking-[0.02em]">{accessInfo.bus}</p>
                 </dd>
               </div>
 
               {/* Parking */}
               <div className="flex gap-8">
-                <dt className="w-24 flex-shrink-0 text-sm text-[#6B6B6B]">
+                <dt className="w-24 flex-shrink-0 text-[11px] tracking-[0.15em] uppercase text-[#9A9A9A]">
                   駐車場
                 </dt>
                 <dd className="text-[#2C2C2C]">
-                  <p>{accessInfo.parking}</p>
+                  <p className="text-[14px] leading-[1.8] tracking-[0.02em]">{accessInfo.parking}</p>
                 </dd>
               </div>
             </dl>

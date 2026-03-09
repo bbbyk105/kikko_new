@@ -10,6 +10,7 @@ import { reserveData, siteConfig } from "@/app/data/site";
 import ReserveCalendar from "./ReserveCalendar";
 import ReserveSummary from "./ReserveSummary";
 import ReserveComplete from "./ReserveComplete";
+import { createReservation } from "@/app/actions/reservation";
 
 const reserveSchema = z.object({
   name: z.string().min(1, "お名前を入力してください"),
@@ -74,6 +75,8 @@ export default function ReserveForm() {
     }
   };
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const onSubmit = async (data: ReserveFormData) => {
     if (step === "form") {
       setStep("confirm");
@@ -81,18 +84,27 @@ export default function ReserveForm() {
     }
 
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // 送信処理（仮実装）
-    console.log("Form submitted:", {
-      ...data,
-      date: selectedDate,
-      time: isPrivateBooking ? "終日貸切" : selectedTime,
-      isPrivate: isPrivateBooking,
+    // Supabaseに予約を送信
+    const result = await createReservation({
+      type: data.type,
+      date: selectedDate ? format(selectedDate, "yyyy-MM-dd") : "",
+      time: isPrivateBooking ? null : selectedTime || null,
+      peopleCount: data.numberOfPeople ? parseInt(data.numberOfPeople, 10) || null : null,
+      name: data.name,
+      email: data.email,
+      phone: data.phone || null,
+      message: data.message || null,
     });
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setIsSubmitting(false);
-    setStep("complete");
+
+    if (result.success) {
+      setStep("complete");
+    } else {
+      setSubmitError(result.error || "予約の送信に失敗しました。");
+    }
   };
 
   const handleBack = () => {
@@ -145,6 +157,7 @@ export default function ReserveForm() {
         onBack={handleBack}
         onSubmit={handleSubmit(onSubmit)}
         isSubmitting={isSubmitting}
+        error={submitError}
       />
     );
   }
@@ -237,6 +250,11 @@ export default function ReserveForm() {
                 {(type.value === "visitor" || type.value === "coworking") && (
                   <span className={`block text-xs ${selectedType === type.value ? "text-white/70" : "text-[#8A8A8A]"}`}>
                     {type.value === "visitor" ? "お試し利用" : "定期利用"}
+                  </span>
+                )}
+                {type.value === "kids" && (
+                  <span className={`block text-xs ${selectedType === type.value ? "text-white/70" : "text-[#8A8A8A]"}`}>
+                    お子様連れでのご利用
                   </span>
                 )}
               </button>
