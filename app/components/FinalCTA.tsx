@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { images } from "@/app/data/site";
+import { images, siteConfig } from "@/app/data/site";
 
 export default function FinalCTA() {
   return (
@@ -48,7 +48,7 @@ export default function FinalCTA() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              href="mailto:info@mtfuji-kikkou.com"
+              href={`mailto:${siteConfig.email}`}
               className="inline-flex items-center justify-center px-8 py-4 text-sm tracking-wider text-[#2C2C2C] bg-[#FAFAF8] hover:bg-[#F0EFE9] transition-colors"
             >
               ご予約

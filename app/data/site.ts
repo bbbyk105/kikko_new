@@ -4,7 +4,7 @@ export const siteConfig = {
   tagline: "働く場所から、仕事の質を整える。",
   description: "富士市吉原の、静かで上質なワークスペース。",
   phone: "0545-67-7400",
-  email: "info@mtfuji-kikkou.com",
+  email: "mtfujipharmacy@gmail.com",
   address: {
     postal: "〒417-0051",
     full: "静岡県富士市吉原2丁目8番21-2号",

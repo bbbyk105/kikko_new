@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import {
+  submitContactInquiry,
+  type ContactInput,
+} from "@/app/actions/contact";
 import { siteConfig } from "@/app/data/site";
 
 type FormData = {
@@ -33,6 +37,7 @@ export default function ContactForm() {
     message: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -67,10 +72,23 @@ export default function ContactForm() {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const result = await submitContactInquiry({
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim() || undefined,
+      inquiryType: formData.inquiryType as ContactInput["inquiryType"],
+      message: formData.message.trim(),
+    });
 
     setIsSubmitting(false);
+
+    if (!result.success) {
+      setSubmitError(result.error);
+      return;
+    }
+
     setIsSubmitted(true);
   };
 
@@ -316,6 +334,12 @@ export default function ContactForm() {
               </p>
             )}
           </div>
+
+          {submitError && (
+            <p className="text-sm text-[#B85C5C]" role="alert">
+              {submitError}
+            </p>
+          )}
 
           {/* Submit Button */}
           <div className="pt-4">
