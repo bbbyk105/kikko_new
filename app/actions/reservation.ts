@@ -2,6 +2,7 @@
 
 import { siteConfig } from "@/app/data/site";
 import { sendResendEmail } from "@/lib/email/resend";
+import { isReservationTimeInPastForDateJst } from "@/lib/reservation-time";
 import { supabase } from "@/lib/supabase";
 
 export type ReservationInput = {
@@ -160,6 +161,14 @@ export async function createReservation(
   input: ReservationInput,
 ): Promise<ReservationResult> {
   try {
+    if (isReservationTimeInPastForDateJst(input.date, input.time)) {
+      return {
+        success: false,
+        error:
+          "指定した時間はすでに過ぎているため、当日の予約としては承れません。別の時間をお選びください。",
+      };
+    }
+
     const { data, error } = await supabase
       .from("reservations")
       .insert({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -31,12 +31,14 @@ export default function ReserveForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isPrivateBooking = selectedType === "private";
+  const isMeetingBooking = selectedType === "meeting";
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    trigger,
     formState: { errors },
     reset,
   } = useForm<ReserveFormData>({
@@ -58,16 +60,16 @@ export default function ReserveForm() {
     }
   };
 
-  const handleDateSelect = (date: Date) => {
+  const handleDateSelect = useCallback((date: Date) => {
     setSelectedDate(date);
     if (!isPrivateBooking) {
       setSelectedTime(undefined);
     }
-  };
+  }, [isPrivateBooking]);
 
-  const handleTimeSelect = (time: string) => {
+  const handleTimeSelect = useCallback((time: string | undefined) => {
     setSelectedTime(time);
-  };
+  }, []);
 
   const handleContinueToForm = () => {
     if (selectedDate && (isPrivateBooking || selectedTime)) {
@@ -137,70 +139,157 @@ export default function ReserveForm() {
 
   const currentStepNumber = getStepNumber();
 
+  const meetingTimePattern = /^\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}$/;
+  const dateTimeReady =
+    !!selectedDate &&
+    (isPrivateBooking ||
+      (isMeetingBooking
+        ? meetingTimePattern.test(selectedTime?.trim() ?? "")
+        : !!selectedTime));
+
+  const canNavigateToStep = useCallback(
+    (targetNum: number): boolean => {
+      if (targetNum === currentStepNumber) return false;
+
+      if (targetNum < currentStepNumber) {
+        if (targetNum === 1) return true;
+        if (targetNum === 2) return !!selectedType;
+        if (targetNum === 3) {
+          return !!selectedType && dateTimeReady;
+        }
+        return false;
+      }
+
+      if (targetNum === 2) return !!selectedType;
+      if (targetNum === 3) {
+        return !!selectedType && dateTimeReady;
+      }
+      if (targetNum === 4) {
+        return (
+          step === "form" &&
+          !!selectedType &&
+          dateTimeReady
+        );
+      }
+      return false;
+    },
+    [currentStepNumber, selectedType, dateTimeReady, step],
+  );
+
+  const navigateToStep = useCallback(
+    (targetNum: number) => {
+      if (!canNavigateToStep(targetNum)) return;
+
+      if (targetNum === 1) {
+        setStep("type");
+        return;
+      }
+      if (targetNum === 2) {
+        setStep("calendar");
+        return;
+      }
+      if (targetNum === 3) {
+        setStep("form");
+        return;
+      }
+      if (targetNum === 4 && step === "form") {
+        void trigger().then((ok) => {
+          if (ok) setStep("confirm");
+        });
+      }
+    },
+    [canNavigateToStep, step, trigger],
+  );
+
+  const stepIndicator = (
+    <div
+      className="flex flex-wrap items-center justify-center gap-y-2 gap-x-2 sm:gap-4"
+      role="navigation"
+      aria-label="予約ステップ"
+    >
+      {[
+        { num: 1, label: "利用種別" },
+        { num: 2, label: "日時選択" },
+        { num: 3, label: "情報入力" },
+        { num: 4, label: "確認" },
+      ].map((s, index) => {
+        const disabled = !canNavigateToStep(s.num);
+        const isActive = currentStepNumber === s.num;
+        return (
+          <div key={s.num} className="flex items-center">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => navigateToStep(s.num)}
+                disabled={disabled}
+                aria-current={isActive ? "step" : undefined}
+                aria-disabled={disabled}
+                className={`flex items-center gap-2 rounded-sm text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                  !disabled ? "hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5C6B5C]" : ""
+                }`}
+              >
+                <span
+                  className={`w-8 h-8 shrink-0 flex items-center justify-center text-sm ${
+                    currentStepNumber >= s.num
+                      ? "bg-[#2C2C2C] text-white"
+                      : "bg-[#E5E4DF] text-[#8A8A8A]"
+                  }`}
+                >
+                  {s.num}
+                </span>
+                <span
+                  className={`text-xs hidden sm:inline ${
+                    currentStepNumber >= s.num ? "text-[#2C2C2C]" : "text-[#8A8A8A]"
+                  }`}
+                >
+                  {s.label}
+                </span>
+              </button>
+            </div>
+            {index < 3 && (
+              <div
+                className={`w-6 sm:w-10 h-px mx-2 sm:mx-3 shrink-0 ${
+                  currentStepNumber > s.num ? "bg-[#2C2C2C]" : "bg-[#E5E4DF]"
+                }`}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+
   if (step === "complete") {
     return <ReserveComplete onReset={handleReset} />;
   }
 
   if (step === "confirm") {
     return (
-      <ReserveSummary
-        data={{
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          type: reserveData.types.find((t) => t.value === formData.type)?.label || "",
-          date: selectedDate ? format(selectedDate, "yyyy年M月d日(E)", { locale: ja }) : "",
-          time: isPrivateBooking ? "終日貸切（9:00〜18:00）" : selectedTime || "",
-          numberOfPeople: formData.numberOfPeople,
-          message: formData.message,
-        }}
-        onBack={handleBack}
-        onSubmit={handleSubmit(onSubmit)}
-        isSubmitting={isSubmitting}
-        error={submitError}
-      />
+      <div className="space-y-12">
+        {stepIndicator}
+        <ReserveSummary
+          data={{
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            type: reserveData.types.find((t) => t.value === formData.type)?.label || "",
+            date: selectedDate ? format(selectedDate, "yyyy年M月d日(E)", { locale: ja }) : "",
+            time: isPrivateBooking ? "終日貸切（9:00〜18:00）" : selectedTime || "",
+            numberOfPeople: formData.numberOfPeople,
+            message: formData.message,
+          }}
+          onBack={handleBack}
+          onSubmit={handleSubmit(onSubmit)}
+          isSubmitting={isSubmitting}
+          error={submitError}
+        />
+      </div>
     );
   }
 
   return (
     <div className="space-y-12">
-      {/* Step Indicator */}
-      <div className="flex items-center justify-center gap-2 sm:gap-4">
-        {[
-          { num: 1, label: "利用種別" },
-          { num: 2, label: "日時選択" },
-          { num: 3, label: "情報入力" },
-          { num: 4, label: "確認" },
-        ].map((s, index) => (
-          <div key={s.num} className="flex items-center">
-            <div className="flex items-center gap-2">
-              <span
-                className={`w-8 h-8 flex items-center justify-center text-sm ${
-                  currentStepNumber >= s.num
-                    ? "bg-[#2C2C2C] text-white"
-                    : "bg-[#E5E4DF] text-[#8A8A8A]"
-                }`}
-              >
-                {s.num}
-              </span>
-              <span
-                className={`text-xs hidden sm:block ${
-                  currentStepNumber >= s.num ? "text-[#2C2C2C]" : "text-[#8A8A8A]"
-                }`}
-              >
-                {s.label}
-              </span>
-            </div>
-            {index < 3 && (
-              <div
-                className={`w-6 sm:w-10 h-px mx-2 sm:mx-3 ${
-                  currentStepNumber > s.num ? "bg-[#2C2C2C]" : "bg-[#E5E4DF]"
-                }`}
-              />
-            )}
-          </div>
-        ))}
-      </div>
+      {stepIndicator}
 
       {/* Step 1: Type Selection */}
       {step === "type" && (
@@ -280,12 +369,18 @@ export default function ReserveForm() {
           <div>
             <div className="text-center mb-8">
               <h3 className="font-[var(--font-cormorant)] text-2xl text-[#2C2C2C] mb-2">
-                {isPrivateBooking ? "ご希望の日付を選択" : "ご希望の日時を選択"}
+                {isPrivateBooking
+                  ? "ご希望の日付を選択"
+                  : isMeetingBooking
+                    ? "ご希望の日時を選択（会議室）"
+                    : "ご希望の日時を選択"}
               </h3>
               <p className="text-sm text-[#6B6B6B]">
                 {isPrivateBooking
                   ? "貸切利用の日付をお選びください（9:00〜18:00の終日利用）"
-                  : "カレンダーから日付を選び、時間帯をお選びください"}
+                  : isMeetingBooking
+                    ? "カレンダーで日付を選び、利用時間帯（開始〜終了）を指定してください。例: 10:00〜13:00"
+                    : "カレンダーから日付を選び、時間帯をお選びください"}
               </p>
               <p className="mt-2 text-sm text-[#5C6B5C]">
                 利用種別: {reserveData.types.find((t) => t.value === selectedType)?.label}
@@ -305,6 +400,7 @@ export default function ReserveForm() {
               onSelectDate={handleDateSelect}
               onSelectTime={handleTimeSelect}
               isPrivateBooking={isPrivateBooking}
+              isMeetingBooking={isMeetingBooking}
             />
           </div>
 
@@ -319,7 +415,7 @@ export default function ReserveForm() {
             <button
               type="button"
               onClick={handleContinueToForm}
-              disabled={!selectedDate || (!isPrivateBooking && !selectedTime)}
+              disabled={!selectedDate || (!isPrivateBooking && !dateTimeReady)}
               className="px-12 py-4 text-sm tracking-wider text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] disabled:bg-[#D0D0D0] disabled:cursor-not-allowed transition-colors"
             >
               次へ進む
