@@ -15,13 +15,16 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     // 正規ドメイン以外は worxmtfuji.com へ（worksmtfuji.com は綴り違い対策で保持）
-    return ["www.worxmtfuji.com", "worksmtfuji.com", "www.worksmtfuji.com"].map(
-      (host) => ({
-        source: "/:path*",
-        has: [{ type: "host" as const, value: host.replaceAll(".", "\\.") }],
-        destination: "https://worxmtfuji.com/:path*",
-        permanent: true,
-      }),
+    // トップページは別ルールにする。OpenNext は "/:path*" が "/" にマッチすると
+    // ":path*" を置き換えず、https://worxmtfuji.com/:path* へ飛ばしてしまうため。
+    return ["www.worxmtfuji.com", "worksmtfuji.com", "www.worksmtfuji.com"].flatMap(
+      (host) => {
+        const has = [{ type: "host" as const, value: host.replaceAll(".", "\\.") }];
+        return [
+          { source: "/", has, destination: "https://worxmtfuji.com/", permanent: true },
+          { source: "/:path*", has, destination: "https://worxmtfuji.com/:path*", permanent: true },
+        ];
+      },
     );
   },
 };
