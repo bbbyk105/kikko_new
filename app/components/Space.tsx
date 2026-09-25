@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { spaceCategories } from "@/app/data/site";
 import { SectionHeader, CardTitle, DecorativeNumber, BlockLabel, LeadText } from "@/app/components/ui/typography";
 
@@ -32,29 +34,38 @@ export default function Space() {
               className="group"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              {/* Image */}
-              <div className="relative aspect-[16/10] overflow-hidden mb-8">
-                <Image
-                  src={category.image}
-                  alt={`${category.titleJa}スペースの様子`}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="flex gap-6">
-                {/* Number */}
-                <DecorativeNumber>{category.number}</DecorativeNumber>
-
-                {/* Text */}
-                <div className="flex-1 pt-1">
-                  <CardTitle className="mb-2">{category.title}</CardTitle>
-                  <BlockLabel className="mb-4">{category.titleJa}</BlockLabel>
-                  <LeadText maxWidth="wide">{category.description}</LeadText>
+              <Link href={`/space/${category.id}`} className="block">
+                {/* Image */}
+                <div className="relative aspect-[16/10] overflow-hidden mb-8">
+                  <Image
+                    src={category.image}
+                    alt={`${category.titleJa}スペースの様子`}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
                 </div>
-              </div>
+
+                {/* Content */}
+                <div className="flex gap-6">
+                  {/* Number */}
+                  <DecorativeNumber>{category.number}</DecorativeNumber>
+
+                  {/* Text */}
+                  <div className="flex-1 pt-1">
+                    <CardTitle className="mb-2">{category.title}</CardTitle>
+                    <BlockLabel className="mb-4">{category.titleJa}</BlockLabel>
+                    <LeadText maxWidth="wide">{category.description}</LeadText>
+                    <span className="inline-flex items-center gap-2 mt-6 pb-1 text-[12px] tracking-[0.12em] text-[#2C2C2C] border-b border-[#2C2C2C] group-hover:text-[#5C6B5C] group-hover:border-[#5C6B5C] transition-colors">
+                      詳しく見る
+                      <ArrowRight
+                        className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </div>
+                </div>
+              </Link>
             </article>
           ))}
         </div>

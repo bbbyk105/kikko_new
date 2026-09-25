@@ -4,7 +4,7 @@ export const siteConfig = {
   tagline: "働く場所から、仕事の質を整える。",
   description: "富士市吉原の、静かで上質なワークスペース。",
   phone: "0545-67-7400",
-  email: "mtfujipharmacy@gmail.com",
+  email: "info@worxmtfuji.com",
   address: {
     postal: "〒417-0051",
     full: "静岡県富士市吉原2丁目8番21-2号",
@@ -297,46 +297,55 @@ export const spacePageData = {
 
 export const faqItems = [
   {
+    id: "visitor",
     question: "ビジター利用は可能ですか？",
     answer:
       "はい、可能です。予約不要で、1時間550円（税込）からご利用いただけます。初めての方もお気軽にお越しください。",
   },
   {
+    id: "hours",
     question: "会員は何時まで利用できますか？",
     answer:
       "通常の営業時間は9:00〜18:00（最終入館17:30）ですが、会員の方は事前予約により22:00まで延長してご利用いただけます。",
   },
   {
+    id: "corporate",
     question: "法人契約はできますか？",
     answer:
       "はい、法人会員プランをご用意しております。複数名でのご利用、法人登記、郵便物の受け取りなどに対応しています。詳細はお問い合わせください。",
   },
   {
+    id: "event",
     question: "イベント利用は可能ですか？",
     answer:
       "はい、セミナー、ワークショップ、展示会など、様々なイベントにご利用いただけます。着席最大80名、スタンディング最大150名まで対応可能です。",
   },
   {
+    id: "parking",
     question: "駐車場はありますか？",
     answer:
       "専用駐車場はございませんが、周辺にコインパーキングがございます。お車でお越しの際はそちらをご利用ください。",
   },
   {
+    id: "address",
     question: "住所登録サービスは使えますか？",
     answer:
       "はい、法人登記や事業所住所としてご利用いただける住所登録サービスを提供しています。郵便物の受け取りにも対応しております。",
   },
   {
+    id: "payment",
     question: "支払い方法について教えてください。",
     answer:
       "現金、クレジットカード、各種キャッシュレス決済に対応しております。会員費は口座振替またはクレジットカードでのお支払いとなります。",
   },
   {
+    id: "wifi",
     question: "Wi-Fiは使えますか？",
     answer:
       "はい、高速Wi-Fiを全館で無料でご利用いただけます。安定した通信環境でリモートワークやオンライン会議にも対応しています。",
   },
   {
+    id: "food",
     question: "飲食の持ち込みはできますか？",
     answer:
       "はい、可能です。フリードリンクもご用意しておりますので、ご自由にご利用ください。",
@@ -402,4 +411,339 @@ export const reserveData = {
     "キャンセルは前日17:00までにご連絡ください",
     "当日のご予約変更は電話にてお問い合わせください",
   ],
+};
+
+// ====================================
+// Space detail pages (/space/[slug])
+// ====================================
+
+export interface SpaceDetail {
+  /** 概要セクションの見出し（1要素 = 1行） */
+  catchcopy: string[];
+  /** 概要本文（1要素 = 1段落） */
+  intro: string[];
+  facts: { label: string; value: string }[];
+  highlights: { title: string; description: string }[];
+  scenes: string[];
+  recommendedFor: string[];
+  /** pricingPlans の id。空なら見積り案内のみ表示 */
+  planIds: string[];
+  pricingNote: string;
+  flow: { number: string; title: string; description: string }[];
+  /** faqItems の id */
+  faqIds: string[];
+  cta: {
+    title: string;
+    description: string;
+    primaryButton: { text: string; href: string };
+    secondaryButton?: { text: string; href: string };
+  };
+}
+
+export const spaceDetails: Record<string, SpaceDetail> = {
+  coworking: {
+    catchcopy: ["静けさの中で、", "自分の仕事に向き合う。"],
+    intro: [
+      "自宅では気が散る、カフェでは長居しづらい。そんなときに、腰を据えて仕事ができる場所です。",
+      "全館に高速Wi-Fiを備え、電源とフリードリンクもご用意しています。オンライン会議から資料づくりまで、一日の仕事をここで進められます。",
+      "初めての方は1時間単位のビジター利用から。定期的に使う方には、営業時間内使い放題の通常会員プランがあります。",
+    ],
+    facts: [
+      {
+        label: "営業時間",
+        value: `${siteConfig.hours.regular}（最終入館 ${siteConfig.hours.lastEntry}）`,
+      },
+      { label: "延長利用", value: siteConfig.hours.extended },
+      { label: "料金", value: "ビジター ¥550 / 1時間〜" },
+      { label: "設備", value: "高速Wi-Fi・電源・フリードリンク" },
+      { label: "印刷", value: "プリンター・スキャナー常設" },
+      { label: "飲食", value: "持ち込み可" },
+    ],
+    highlights: [
+      {
+        title: "高速Wi-Fiと電源",
+        description:
+          "全館で高速Wi-Fiを無料でお使いいただけます。オンライン会議やクラウドでの作業にも対応します。",
+      },
+      {
+        title: "フリードリンク・持ち込み可",
+        description:
+          "フリードリンクをご用意しています。飲食物の持ち込みもできるので、昼食をはさんで一日じっくり作業できます。",
+      },
+      {
+        title: "印刷・スキャンがその場で",
+        description:
+          "高性能プリンター・スキャナーを常設。契約書の印刷や書類の取り込みも、外に出ずに済ませられます。",
+      },
+      {
+        title: "会員は22:00まで",
+        description:
+          "会員の方は事前予約で22:00まで延長してご利用いただけます。日中は打ち合わせ、夜は作業という使い方も。",
+      },
+    ],
+    scenes: [
+      "日々のデスクワーク",
+      "リモートワーク",
+      "オンライン会議",
+      "資料・企画書づくり",
+      "勉強・自己学習",
+    ],
+    recommendedFor: [
+      "自宅だと集中しにくいリモートワーカー",
+      "決まった拠点を持たずに働くフリーランス",
+      "移動や外出の合間に作業したい方",
+      "週に数日だけ使える作業場所を探している方",
+    ],
+    planIds: ["visitor", "member"],
+    pricingNote:
+      "ビジター利用は予約不要です。通常会員なら、営業時間内は時間を気にせずご利用いただけます。",
+    flow: [
+      {
+        number: "01",
+        title: "利用方法を選ぶ",
+        description: "ビジター（1時間単位）か通常会員（月額）かをお選びください",
+      },
+      {
+        number: "02",
+        title: "ご来館・ご予約",
+        description: "ビジターは予約不要です。日時指定のご予約はフォームから承ります",
+      },
+      {
+        number: "03",
+        title: "ご利用開始",
+        description: "Wi-Fi・電源・ドリンクをご自由にお使いください",
+      },
+    ],
+    faqIds: ["visitor", "hours", "wifi", "food", "payment"],
+    cta: {
+      title: "まずは1時間、使ってみてください。",
+      description: "ビジター利用は予約不要です。お気軽にお立ち寄りください。",
+      primaryButton: { text: "ご予約", href: "/reserve" },
+      secondaryButton: { text: "料金プランを見る", href: "/pricing" },
+    },
+  },
+  meeting: {
+    catchcopy: ["打ち合わせから研修まで、", "人数に合わせて整える。"],
+    intro: [
+      "数名の打ち合わせから、数十名規模のセミナーや研修まで。人数と内容に合わせて、レイアウトを変えてご利用いただけます。",
+      "着席なら最大80名まで対応します。Wi-Fiと印刷設備が揃っているので、資料の準備も会場でそのまま行えます。",
+      "ご予約は1時間単位で承ります。通常会員の方は優先予約、法人会員の方は無料枠をご利用いただけます。",
+    ],
+    facts: [
+      {
+        label: "収容人数",
+        value: `少人数〜着席最大${siteConfig.capacity.seated}名`,
+      },
+      { label: "利用時間", value: siteConfig.hours.regular },
+      { label: "予約単位", value: "1時間単位" },
+      { label: "設備", value: "高速Wi-Fi・プリンター・スキャナー" },
+      { label: "会員特典", value: "優先予約（通常会員）／無料枠（法人会員）" },
+      { label: "料金", value: "ご利用内容に応じてご案内" },
+    ],
+    highlights: [
+      {
+        title: "人数に合わせたレイアウト",
+        description:
+          `少人数の打ち合わせから着席${siteConfig.capacity.seated}名のセミナーまで、用途に合わせて空間を組み替えられます。`,
+      },
+      {
+        title: "1時間単位で予約",
+        description:
+          "必要な時間だけ、1時間単位でご予約いただけます。開始・終了時刻はフォームから選べます。",
+      },
+      {
+        title: "資料の印刷もその場で",
+        description:
+          "プリンター・スキャナーを常設。配布資料の追加印刷など、直前の準備にも対応できます。",
+      },
+      {
+        title: "会員は優先予約・無料枠",
+        description:
+          "通常会員は会議室を優先して予約でき、法人会員には無料枠が付きます。定例会議の場所としても。",
+      },
+    ],
+    scenes: [
+      "打ち合わせ・商談",
+      "社内会議",
+      "セミナー・研修",
+      "採用面接・説明会",
+      "勉強会",
+    ],
+    recommendedFor: [
+      "来客との打ち合わせ場所を探している方",
+      "社外で会議や研修を行いたい企業",
+      "セミナー・勉強会を主催する方",
+      "定例ミーティングの場所を確保したいチーム",
+    ],
+    planIds: ["member", "corporate"],
+    pricingNote:
+      "会議室の料金は、人数・時間・ご利用内容に応じてご案内します。会員の方は優先予約や無料枠をご利用いただけます。",
+    flow: reserveData.steps,
+    faqIds: ["corporate", "event", "wifi", "parking"],
+    cta: {
+      title: "会議・セミナーのご予約を承ります。",
+      description: "日時や人数が決まっていなくても、まずはご相談ください。",
+      primaryButton: { text: "会議室を予約する", href: "/reserve" },
+      secondaryButton: { text: "お問い合わせ", href: "/contact" },
+    },
+  },
+  address: {
+    catchcopy: ["富士市吉原に、", "事業の拠点を。"],
+    intro: [
+      "法人登記や、名刺・Webサイトに載せる事業所住所として、橘香堂の住所をご利用いただけます。自宅の住所を公開したくない方にも。",
+      "郵便物の受け取りに対応しているほか、法人会員の方は来客対応も可能です。住所だけでなく、実際に働ける場所があるのが特長です。",
+      "通常会員はオプションで住所利用、法人会員は法人登記に対応しています。料金の詳細はお問い合わせください。",
+    ],
+    facts: [
+      {
+        label: "登録住所",
+        value: `${siteConfig.address.postal} ${siteConfig.address.full}`,
+      },
+      { label: "法人登記", value: "対応（法人会員）" },
+      { label: "郵便物", value: "受け取り対応" },
+      { label: "来客対応", value: "可（法人会員）" },
+      { label: "作業スペース", value: "会員は営業時間内利用可" },
+      { label: "料金", value: "別途オプション（お問い合わせ）" },
+    ],
+    highlights: [
+      {
+        title: "法人登記に対応",
+        description:
+          "法人会員プランでは、橘香堂の住所で法人登記ができます。富士市での開業・起業の拠点として。",
+      },
+      {
+        title: "郵便物の受け取り",
+        description:
+          "事業所宛ての郵便物をお預かりします。住所を公開しても、自宅に郵便物が届くことはありません。",
+      },
+      {
+        title: "来客にも対応",
+        description:
+          "法人会員の方は来客対応も承ります。取引先との打ち合わせは、館内の会議スペースで。",
+      },
+      {
+        title: "住所と働く場所をひとつに",
+        description:
+          "登録した住所で、そのまま仕事ができます。住所だけのバーチャルオフィスとの違いです。",
+      },
+    ],
+    scenes: [
+      "法人登記",
+      "事業所住所",
+      "名刺・Webサイトへの記載",
+      "郵便物の受け取り",
+      "取引先との打ち合わせ",
+    ],
+    recommendedFor: [
+      "富士市で起業・開業する方",
+      "自宅住所を公開したくない個人事業主",
+      "静岡県内に拠点を置きたい県外の企業",
+      "登記と作業場所をまとめたい方",
+    ],
+    planIds: ["member", "corporate"],
+    pricingNote:
+      "住所登録サービスは別途オプションです。ご利用の形に合わせて料金をご案内しますので、お気軽にお問い合わせください。",
+    flow: [
+      {
+        number: "01",
+        title: "お問い合わせ",
+        description: "フォームまたはお電話でご連絡ください",
+      },
+      {
+        number: "02",
+        title: "プランのご案内",
+        description: "ご利用の形に合わせて内容と料金をご説明します",
+      },
+      {
+        number: "03",
+        title: "ご利用開始",
+        description: "お手続き完了後、住所をご利用いただけます",
+      },
+    ],
+    faqIds: ["address", "corporate", "payment"],
+    cta: {
+      title: "住所登録のご相談を承ります。",
+      description: "登記や郵便物の扱いなど、わからないことがあればお問い合わせください。",
+      primaryButton: { text: "お問い合わせ", href: "/contact" },
+      secondaryButton: { text: "料金プランを見る", href: "/pricing" },
+    },
+  },
+  event: {
+    catchcopy: ["人が集まる場を、", "かたちにする。"],
+    intro: [
+      `展示会、ワークショップ、懇親会まで。着席で最大${siteConfig.capacity.seated}名、スタンディングなら最大${siteConfig.capacity.standing}名まで対応できる多目的スペースです。`,
+      "机や椅子の配置は、イベントの内容に合わせて調整できます。貸切でのご利用も承ります。",
+      "日程や人数、内容が固まっていない段階でも構いません。まずはやりたいことをお聞かせください。",
+    ],
+    facts: [
+      { label: "着席", value: `最大${siteConfig.capacity.seated}名` },
+      { label: "スタンディング", value: `最大${siteConfig.capacity.standing}名` },
+      { label: "貸切", value: "対応" },
+      { label: "設備", value: "高速Wi-Fi・プリンター・スキャナー" },
+      { label: "アクセス", value: accessInfo.bus },
+      { label: "料金", value: "内容に応じてお見積り" },
+    ],
+    highlights: [
+      {
+        title: `最大${siteConfig.capacity.standing}名の収容力`,
+        description:
+          `着席${siteConfig.capacity.seated}名、スタンディング${siteConfig.capacity.standing}名。小さな集まりから、地域のイベントまで対応します。`,
+      },
+      {
+        title: "内容に合わせたレイアウト",
+        description:
+          "展示・講演・ワークショップなど、目的に合わせて空間をつくれます。",
+      },
+      {
+        title: "貸切での利用",
+        description:
+          "スペースを貸し切ってご利用いただけます。周りを気にせず、イベントに集中できます。",
+      },
+      {
+        title: "吉原の中心部から",
+        description:
+          "吉原中央駅バス停から徒歩5分。周辺にはコインパーキングもあります。",
+      },
+    ],
+    scenes: [
+      "展示会",
+      "ワークショップ",
+      "セミナー・講演会",
+      "懇親会・パーティー",
+      "ヨガ・各種教室",
+    ],
+    recommendedFor: [
+      "地域でイベントや展示会を開きたい方",
+      "ワークショップや教室の会場を探している方",
+      "社内イベント・懇親会を企画している企業",
+      "貸切できるスペースを探している方",
+    ],
+    planIds: [],
+    pricingNote:
+      "イベント・貸切の料金は、日時・人数・内容をうかがったうえでお見積りします。",
+    flow: [
+      {
+        number: "01",
+        title: "ご相談",
+        description: "日程・人数・内容をフォームでお知らせください",
+      },
+      {
+        number: "02",
+        title: "お見積り・打ち合わせ",
+        description: "レイアウトと料金をご提案します",
+      },
+      {
+        number: "03",
+        title: "当日のご利用",
+        description: "確定した内容で、スペースをご利用いただけます",
+      },
+    ],
+    faqIds: ["event", "parking", "payment"],
+    cta: {
+      title: "イベント・貸切のご相談を承ります。",
+      description: "日程や人数が未定でも構いません。まずはお気軽にご相談ください。",
+      primaryButton: { text: "イベントを相談する", href: "/reserve" },
+      secondaryButton: { text: "お問い合わせ", href: "/contact" },
+    },
+  },
 };

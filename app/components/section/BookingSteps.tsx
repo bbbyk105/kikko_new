@@ -15,7 +15,7 @@ export default function BookingSteps({ steps }: BookingStepsProps) {
         <div key={step.number} className="relative">
           {index < steps.length - 1 && (
             <div
-              className="hidden md:block absolute top-6 left-full w-full h-px bg-[#E5E4DF] -translate-x-1/2"
+              className="hidden md:block absolute top-6 left-16 right-0 h-px bg-[#E5E4DF]"
               aria-hidden="true"
             />
           )}

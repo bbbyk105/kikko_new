@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 interface SpaceCategory {
   id: string;
@@ -29,38 +31,47 @@ export default function SpaceTypes({ categories }: SpaceTypesProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
           {categories.map((category) => (
             <article key={category.id} className="group">
-              {/* Image */}
-              <div className="relative aspect-[16/10] overflow-hidden mb-6">
-                {/* 差し替え箇所: 実際の施設写真に差し替えてください */}
-                <Image
-                  src={category.image}
-                  alt={`${category.titleJa}スペースの様子`}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="flex gap-6">
-                <span
-                  className="font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] leading-none"
-                  aria-hidden="true"
-                >
-                  {category.number}
-                </span>
-                <div className="flex-1">
-                  <h3 className="text-lg font-medium text-[#2C2C2C] mb-1">
-                    {category.title}
-                  </h3>
-                  <p className="text-xs text-[#6B6B6B] mb-3 tracking-wider">
-                    {category.titleJa}
-                  </p>
-                  <p className="text-sm text-[#6B6B6B] leading-relaxed">
-                    {category.description}
-                  </p>
+              <Link href={`/space/${category.id}`} className="block">
+                {/* Image */}
+                <div className="relative aspect-[16/10] overflow-hidden mb-6">
+                  {/* 差し替え箇所: 実際の施設写真に差し替えてください */}
+                  <Image
+                    src={category.image}
+                    alt={`${category.titleJa}スペースの様子`}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
                 </div>
-              </div>
+
+                {/* Content */}
+                <div className="flex gap-6">
+                  <span
+                    className="font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] leading-none"
+                    aria-hidden="true"
+                  >
+                    {category.number}
+                  </span>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-medium text-[#2C2C2C] mb-1">
+                      {category.title}
+                    </h3>
+                    <p className="text-xs text-[#6B6B6B] mb-3 tracking-wider">
+                      {category.titleJa}
+                    </p>
+                    <p className="text-sm text-[#6B6B6B] leading-relaxed">
+                      {category.description}
+                    </p>
+                    <span className="inline-flex items-center gap-2 mt-5 pb-1 text-[12px] tracking-[0.12em] text-[#2C2C2C] border-b border-[#2C2C2C] group-hover:text-[#5C6B5C] group-hover:border-[#5C6B5C] transition-colors">
+                      詳しく見る
+                      <ArrowRight
+                        className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </div>
+                </div>
+              </Link>
             </article>
           ))}
         </div>
