@@ -34,5 +34,16 @@
 		// Enable image optimization
 		// see https://opennext.js.org/cloudflare/howtos/image
 		"binding": "IMAGES"
+	},
+	// 正規ドメインは worxmtfuji.com。それ以外（www・綴り違いの worksmtfuji.com）は next.config.ts でリダイレクト
+	"routes": [
+		{ "pattern": "worxmtfuji.com", "custom_domain": true },
+		{ "pattern": "www.worxmtfuji.com", "custom_domain": true },
+		{ "pattern": "worksmtfuji.com", "custom_domain": true },
+		{ "pattern": "www.worksmtfuji.com", "custom_domain": true }
+	],
+	// 秘密でない値のみ。RESEND_API_KEY は `wrangler secret put` で設定する
+	"vars": {
+		"RESEND_FROM": "橘香堂 <noreply@worxmtfuji.com>"
 	}
 }

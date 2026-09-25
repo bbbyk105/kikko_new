@@ -17,6 +17,7 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://worxmtfuji.com"),
   title: "橘香堂 (worx mt.fuji) | 富士市吉原のコワーキングスペース",
   description:
     "静岡県富士市吉原の静かで上質なワークスペース。高速Wi-Fi、住所登録、会議室完備。起業家、フリーランス、リモートワーカーのための集中できる空間。",
