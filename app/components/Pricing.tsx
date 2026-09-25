@@ -25,7 +25,7 @@ export default function Pricing() {
           {pricingPlans.map((plan) => (
             <article
               key={plan.id}
-              className={`relative p-8 lg:p-10 ${
+              className={`relative flex flex-col p-8 lg:p-10 ${
                 plan.highlighted
                   ? "bg-[#F7F6F3] border-2 border-[#5C6B5C]"
                   : "bg-[#FAFAF8] border border-[#E5E4DF]"
@@ -47,11 +47,13 @@ export default function Pricing() {
                   </span>
                   <span className="text-[12px] text-[#9A9A9A] tracking-[0.05em]">{plan.unit}</span>
                 </div>
-                <LeadText className="mt-4">{plan.description}</LeadText>
+                {/* 説明が1行でも2行でも、下の特典リストの開始位置を揃える */}
+                <LeadText className="mt-4 md:min-h-[4.2em]">{plan.description}</LeadText>
               </div>
 
               {/* Features List */}
-              <ul className="space-y-3.5 mb-10">
+              {/* flex-1 でリストを伸ばし、ボタンをカード下端に揃える */}
+              <ul className="flex-1 space-y-3.5 mb-10">
                 {plan.features.map((feature) => (
                   <li
                     key={feature}

@@ -30,8 +30,8 @@ export default function SpaceTypes({ categories }: SpaceTypesProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
           {categories.map((category) => (
-            <article key={category.id} className="group">
-              <Link href={`/space/${category.id}`} className="block">
+            <article key={category.id} className="group flex flex-col">
+              <Link href={`/space/${category.id}`} className="flex flex-1 flex-col">
                 {/* Image */}
                 <div className="relative aspect-[16/10] overflow-hidden mb-6">
                   {/* 差し替え箇所: 実際の施設写真に差し替えてください */}
@@ -45,14 +45,14 @@ export default function SpaceTypes({ categories }: SpaceTypesProps) {
                 </div>
 
                 {/* Content */}
-                <div className="flex gap-6">
+                <div className="flex flex-1 gap-6">
                   <span
-                    className="font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] leading-none"
+                    className="w-[1.2em] shrink-0 font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] leading-none"
                     aria-hidden="true"
                   >
                     {category.number}
                   </span>
-                  <div className="flex-1">
+                  <div className="flex flex-1 flex-col">
                     <h3 className="text-lg font-medium text-[#2C2C2C] mb-1">
                       {category.title}
                     </h3>
@@ -62,13 +62,15 @@ export default function SpaceTypes({ categories }: SpaceTypesProps) {
                     <p className="text-sm text-[#6B6B6B] leading-relaxed">
                       {category.description}
                     </p>
-                    <span className="inline-flex items-center gap-2 mt-5 pb-1 text-[12px] tracking-[0.12em] text-[#2C2C2C] border-b border-[#2C2C2C] group-hover:text-[#5C6B5C] group-hover:border-[#5C6B5C] transition-colors">
-                      詳しく見る
-                      <ArrowRight
-                        className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1"
-                        aria-hidden="true"
-                      />
-                    </span>
+                    <div className="mt-auto pt-5">
+                      <span className="inline-flex items-center gap-2 pb-1 text-[12px] tracking-[0.12em] text-[#2C2C2C] border-b border-[#2C2C2C] group-hover:text-[#5C6B5C] group-hover:border-[#5C6B5C] transition-colors">
+                        詳しく見る
+                        <ArrowRight
+                          className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Link>

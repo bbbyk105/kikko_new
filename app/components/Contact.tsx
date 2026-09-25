@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { siteConfig } from "@/app/data/site";
 import { Eyebrow, SectionHeading, LeadText, BlockLabel } from "@/app/components/ui/typography";
 
@@ -27,25 +28,12 @@ export default function Contact() {
               className="inline-flex items-center gap-2 px-8 py-4 text-[12px] tracking-[0.12em] text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] transition-colors"
             >
               <span>予約する</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
+              <ArrowRight className="w-3 h-3" strokeWidth={1.5} aria-hidden="true" />
             </Link>
           </div>
 
-          {/* Right Column - Contact */}
-          <div>
+          {/* Right Column - Contact（左と同じ余白の枠にして見出し・ボタンの高さを揃える） */}
+          <div className="border border-[#E5E4DF] p-10 lg:p-14">
             <Eyebrow className="mb-5">Contact</Eyebrow>
             <SectionHeading as="h3" id="contact-heading" size="compact" className="mb-5">
               お問い合わせ
@@ -61,20 +49,7 @@ export default function Contact() {
               className="inline-flex items-center gap-2 px-8 py-4 text-[12px] tracking-[0.12em] text-[#2C2C2C] border border-[#2C2C2C] hover:bg-[#2C2C2C] hover:text-[#FAFAF8] transition-colors mb-14"
             >
               <span>お問い合わせ</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
+              <ArrowRight className="w-3 h-3" strokeWidth={1.5} aria-hidden="true" />
             </Link>
 
             {/* Contact Info */}

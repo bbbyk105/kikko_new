@@ -1,3 +1,5 @@
+import { BulletList } from "@/app/components/ui/bullet-list";
+
 interface PricingNotesProps {
   notes: string[];
 }
@@ -10,17 +12,7 @@ export default function PricingNotes({ notes }: PricingNotesProps) {
           <h3 className="text-sm tracking-wider text-[#6B6B6B] mb-6">
             ご利用にあたって
           </h3>
-          <ul className="space-y-3">
-            {notes.map((note, index) => (
-              <li
-                key={index}
-                className="flex items-start gap-3 text-sm text-[#6B6B6B]"
-              >
-                <span className="text-[#5C6B5C] mt-1">•</span>
-                <span>{note}</span>
-              </li>
-            ))}
-          </ul>
+          <BulletList items={notes} />
         </div>
       </div>
     </section>

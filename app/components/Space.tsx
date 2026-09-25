@@ -31,10 +31,10 @@ export default function Space() {
           {spaceCategories.map((category, index) => (
             <article
               key={category.id}
-              className="group"
+              className="group flex flex-col"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <Link href={`/space/${category.id}`} className="block">
+              <Link href={`/space/${category.id}`} className="flex flex-1 flex-col">
                 {/* Image */}
                 <div className="relative aspect-[16/10] overflow-hidden mb-8">
                   <Image
@@ -47,22 +47,25 @@ export default function Space() {
                 </div>
 
                 {/* Content */}
-                <div className="flex gap-6">
-                  {/* Number */}
-                  <DecorativeNumber>{category.number}</DecorativeNumber>
+                <div className="flex flex-1 gap-6">
+                  {/* Number（幅を固定して桁の字幅差でタイトル位置がずれないようにする） */}
+                  <DecorativeNumber className="w-[1.2em] shrink-0">{category.number}</DecorativeNumber>
 
                   {/* Text */}
-                  <div className="flex-1 pt-1">
+                  <div className="flex flex-1 flex-col pt-1">
                     <CardTitle className="mb-2">{category.title}</CardTitle>
                     <BlockLabel className="mb-4">{category.titleJa}</BlockLabel>
                     <LeadText maxWidth="wide">{category.description}</LeadText>
-                    <span className="inline-flex items-center gap-2 mt-6 pb-1 text-[12px] tracking-[0.12em] text-[#2C2C2C] border-b border-[#2C2C2C] group-hover:text-[#5C6B5C] group-hover:border-[#5C6B5C] transition-colors">
-                      詳しく見る
-                      <ArrowRight
-                        className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1"
-                        aria-hidden="true"
-                      />
-                    </span>
+                    {/* 説明の行数が違っても「詳しく見る」をカード下端に揃える */}
+                    <div className="mt-auto pt-6">
+                      <span className="inline-flex items-center gap-2 pb-1 text-[12px] tracking-[0.12em] text-[#2C2C2C] border-b border-[#2C2C2C] group-hover:text-[#5C6B5C] group-hover:border-[#5C6B5C] transition-colors">
+                        詳しく見る
+                        <ArrowRight
+                          className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Link>
