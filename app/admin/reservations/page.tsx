@@ -1,16 +1,17 @@
-import { supabase, type Reservation } from "@/lib/supabase";
+import { getSupabase, type Reservation } from "@/lib/supabase";
 
 interface PageProps {
-  searchParams?: {
+  searchParams: Promise<{
     key?: string;
-  };
+  }>;
 }
 
 export default async function AdminReservationsPage({ searchParams }: PageProps) {
   const accessKey = process.env.ADMIN_DASHBOARD_KEY;
-  const providedKey = searchParams?.key;
+  const { key: providedKey } = await searchParams;
 
-  const isAuthorized = !accessKey || (providedKey && accessKey && providedKey === accessKey);
+  // キー未設定時は誰にも見せない（個人情報を含むため）
+  const isAuthorized = Boolean(accessKey) && providedKey === accessKey;
 
   if (!isAuthorized) {
     return (
@@ -29,7 +30,7 @@ export default async function AdminReservationsPage({ searchParams }: PageProps)
     );
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("reservations")
     .select("*")
     .order("created_at", { ascending: false })

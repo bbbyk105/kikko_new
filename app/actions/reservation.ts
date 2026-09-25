@@ -3,7 +3,7 @@
 import { siteConfig } from "@/app/data/site";
 import { sendResendEmail } from "@/lib/email/resend";
 import { isReservationTimeInPastForDateJst } from "@/lib/reservation-time";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 
 export type ReservationInput = {
   type: string;
@@ -169,7 +169,7 @@ export async function createReservation(
       };
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from("reservations")
       .insert({
         type: input.type,

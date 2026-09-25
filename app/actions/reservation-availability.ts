@@ -2,7 +2,7 @@
 
 import { reserveData } from "@/app/data/site";
 import { occupiedHourSlotsFromReservationTime } from "@/lib/reservation-time";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 
 export type ReservationCalendarAvailability = {
   /** 貸切（終日）が入っている日 */
@@ -21,7 +21,7 @@ export async function getReservationAvailability(
   endDate: string,
 ): Promise<ReservationCalendarAvailability> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from("reservations")
       .select("date, time, type")
       .gte("date", startDate)
