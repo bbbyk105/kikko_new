@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { features } from "@/app/data/site";
 import { SectionHeader, CardTitle, DecorativeNumber, LeadText } from "@/app/components/ui/typography";
+import { ArrowLink } from "@/app/components/ui/arrow-link";
 
 export default function Feature() {
   return (
@@ -83,6 +84,10 @@ export default function Feature() {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="mt-20 lg:mt-28 text-center">
+          <ArrowLink href="/space#specs">設備・仕様の一覧を見る</ArrowLink>
         </div>
       </div>
     </section>

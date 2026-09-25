@@ -10,7 +10,7 @@ interface SpaceSpecsProps {
 
 export default function SpaceSpecs({ specs, useCases }: SpaceSpecsProps) {
   return (
-    <section className="py-20 lg:py-28">
+    <section id="specs" className="py-20 lg:py-28">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
           {/* Specs */}

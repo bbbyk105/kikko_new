@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { siteConfig, images } from "@/app/data/site";
 import { Eyebrow, SectionHeading, LeadText, BlockLabel } from "@/app/components/ui/typography";
+import { ArrowLink } from "@/app/components/ui/arrow-link";
+import { reserveHref } from "@/lib/routes";
 
 export default function Capacity() {
   return (
@@ -18,8 +20,7 @@ export default function Capacity() {
               <span className="block">対応可能。</span>
             </SectionHeading>
             <LeadText theme="dark" maxWidth="wide" className="mt-8 mb-14">
-              少人数の打ち合わせから、セミナー、展示会、パーティーまで。
-              様々な規模・用途に合わせて空間をアレンジできます。
+              {"少人数の打ち合わせから、セミナー、展示会、パーティーまで。様々な規模・用途に合わせて空間をアレンジできます。"}
             </LeadText>
 
             {/* Capacity Numbers */}
@@ -59,6 +60,15 @@ export default function Capacity() {
                   </li>
                 ))}
               </ul>
+            </div>
+
+            <div className="flex flex-wrap gap-x-10 gap-y-5 mt-14">
+              <ArrowLink href="/space/event" theme="dark">
+                イベント・多目的利用について
+              </ArrowLink>
+              <ArrowLink href={reserveHref("private")} theme="dark">
+                貸切の日程を予約する
+              </ArrowLink>
             </div>
           </div>
 

@@ -5,6 +5,7 @@ export const inquiryTypeOptions = [
   { value: "general", label: "一般的なご質問" },
   { value: "membership", label: "会員登録について" },
   { value: "corporate", label: "法人契約について" },
+  { value: "address", label: "住所登録について" },
   { value: "event", label: "イベント利用について" },
   { value: "other", label: "その他" },
 ] as const;

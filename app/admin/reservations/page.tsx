@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { getSupabase, type Reservation } from "@/lib/supabase";
+
+export const metadata: Metadata = {
+  title: "Reservations Admin",
+  robots: { index: false, follow: false },
+};
 
 interface PageProps {
   searchParams: Promise<{

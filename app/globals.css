@@ -51,6 +51,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 日本語の見出しは文節で改行し、行の長さを揃える（「ご案内しま / す。」のような泣き別れを防ぐ） */
+h1,
+h2,
+h3,
+h4 {
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+
+/* 本文は最終行に1〜2文字だけ残らないようにする */
+p {
+  text-wrap: pretty;
+}
+
+/* 固定ヘッダー（高さ 5rem）の下にアンカー先が隠れないようにする */
+[id] {
+  scroll-margin-top: 6rem;
+}
+
 /* ============================================
    エディトリアル・タイポグラフィシステム
    
@@ -77,27 +96,27 @@ body {
 /* Display Heading - Hero用の主見出し
    - 最も存在感のある見出し
    - 派手ではなく上品に
-   - 改行位置と最大幅を厳密に制御 */
+   - 改行位置は span（1行 = 1ブロック）で決め、1行が収まる文字サイズにする
+     （ch は欧文の字幅なので和文の最大幅には使わない。9文字の行が2カラムに収まる上限を lg で設定） */
 .display-heading {
   font-family: var(--font-display), serif;
-  font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+  font-size: clamp(2rem, 8.2vw, 3.75rem);
   font-weight: 400;
   line-height: 1.15;
   letter-spacing: 0.04em;
   margin-bottom: var(--heading-mb);
-  max-width: 14ch;
 }
 
 @media (min-width: 768px) {
   .display-heading {
-    font-size: clamp(2.75rem, 5vw, 4.25rem);
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
     line-height: 1.18;
-    max-width: 16ch;
   }
 }
 
 @media (min-width: 1024px) {
   .display-heading {
+    font-size: clamp(2.5rem, 4.4vw, 3.6rem);
     letter-spacing: 0.05em;
   }
 }
@@ -221,7 +240,7 @@ body {
 
 /* Hero Header - Hero専用の余白調整 */
 .hero-header {
-  max-width: 540px;
+  max-width: 36rem;
 }
 
 .hero-eyebrow {
@@ -284,12 +303,20 @@ body {
   }
 }
 
+/* fill-mode は both: 遅延中も開始時の状態（透明）で待たせ、表示→消える→フェードのちらつきを防ぐ */
 .animate-fade-up {
-  animation: fadeUp 0.8s ease-out forwards;
+  animation: fadeUp 0.8s ease-out both;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+  animation: fadeIn 0.6s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-in {
+    animation: none;
+  }
 }
 
 .animation-delay-100 {

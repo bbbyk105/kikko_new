@@ -1,7 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { useContactForm } from "@/app/hooks/use-contact-form";
+import type { InquiryType } from "@/lib/routes";
 import { inquiryTypeOptions } from "@/lib/validation/contact";
 import { FormField, fieldA11yProps, fieldClassName } from "@/app/components/ui/form-field";
 
@@ -15,9 +17,11 @@ const selectArrowStyle = {
 interface ContactFormProps {
   /** 左カラムの案内（Server Component で描画して渡す） */
   aside: ReactNode;
+  /** ?type= 付きで来たときのお問い合わせ種別 */
+  initialType?: InquiryType;
 }
 
-export default function ContactForm({ aside }: ContactFormProps) {
+export default function ContactForm({ aside, initialType }: ContactFormProps) {
   const {
     values,
     errors,
@@ -27,7 +31,7 @@ export default function ContactForm({ aside }: ContactFormProps) {
     handleChange,
     handleSubmit,
     reset,
-  } = useContactForm();
+  } = useContactForm(initialType);
 
   if (isSubmitted) {
     return (
@@ -57,6 +61,7 @@ export default function ContactForm({ aside }: ContactFormProps) {
           しばらくお待ちくださいませ。
         </p>
         <button
+          type="button"
           onClick={reset}
           className="text-sm text-[#5C6B5C] hover:text-[#4A5A4A] underline underline-offset-4 transition-colors"
         >
@@ -163,7 +168,11 @@ export default function ContactForm({ aside }: ContactFormProps) {
 
           {/* Privacy Note */}
           <p className="text-xs text-[#8A8A8A] leading-relaxed">
-            ご入力いただいた個人情報は、お問い合わせへの対応およびご連絡のためにのみ使用いたします。
+            ご入力いただいた個人情報は、お問い合わせへの対応およびご連絡のためにのみ使用いたします。詳しくは
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-[#2C2C2C] transition-colors">
+              プライバシーポリシー
+            </Link>
+            をご覧ください。
           </p>
         </form>
       </div>

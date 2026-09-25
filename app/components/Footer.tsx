@@ -1,19 +1,23 @@
 import Link from "next/link";
-import { siteConfig, navigation } from "@/app/data/site";
+import { siteConfig, navigation, spaceCategories, primaryActions } from "@/app/data/site";
 import { BlockLabel } from "@/app/components/ui/typography";
 
-const footerNavigation = [
-  ...navigation,
-  { name: "Reserve", href: "/reserve" },
-];
+const menuLinks = [{ name: "Home", href: "/" }, ...navigation];
+
+const spaceLinks = spaceCategories.map((category) => ({
+  name: category.titleJa,
+  href: `/space/${category.id}`,
+}));
+
+const linkClass = "text-[13px] tracking-[0.03em] text-[#9A9A9A] hover:text-[#FAFAF8] transition-colors";
 
 export default function Footer() {
   return (
     <footer className="py-20 lg:py-24 bg-[#2C2C2C] text-[#FAFAF8]">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-14 lg:gap-10 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-14 lg:gap-10 mb-20">
           {/* Brand */}
-          <div className="lg:col-span-2">
+          <div className="sm:col-span-2 lg:col-span-4">
             <Link href="/" className="inline-block mb-8">
               <span className="font-[var(--font-cormorant)] text-[1.625rem] tracking-[0.08em]">
                 {siteConfig.nameEn}
@@ -22,25 +26,57 @@ export default function Footer() {
                 {siteConfig.name}
               </span>
             </Link>
-            <p className="text-[13px] text-[#7A7A7A] leading-[2] tracking-[0.02em] max-w-sm">
+            <p className="text-[13px] text-[#7A7A7A] leading-[2] tracking-[0.02em] max-w-sm mb-10">
               {siteConfig.tagline}
               <br />
               {siteConfig.description}
             </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={primaryActions.reserve.href}
+                className="inline-flex items-center justify-center px-7 py-3 text-[12px] tracking-[0.12em] text-[#2C2C2C] bg-[#FAFAF8] hover:bg-[#E5E4DF] transition-colors"
+              >
+                {primaryActions.reserve.label}
+              </Link>
+              <Link
+                href={primaryActions.contact.href}
+                className="inline-flex items-center justify-center px-7 py-3 text-[12px] tracking-[0.12em] text-[#FAFAF8] border border-[#6B6B6B] hover:border-[#FAFAF8] transition-colors"
+              >
+                {primaryActions.contact.label}
+              </Link>
+            </div>
           </div>
 
-          {/* Navigation */}
-          <nav aria-label="フッターナビゲーション">
+          {/* Menu */}
+          <nav aria-label="フッターナビゲーション" className="lg:col-span-2">
             <BlockLabel as="h3" theme="dark" className="mb-5">
               Menu
             </BlockLabel>
             <ul className="space-y-3.5">
-              {footerNavigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-[13px] tracking-[0.03em] text-[#9A9A9A] hover:text-[#FAFAF8] transition-colors"
-                  >
+              {menuLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={linkClass}>
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href={primaryActions.reserve.href} className={linkClass}>
+                  Reserve
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          {/* Space */}
+          <nav aria-label="利用スタイル" className="lg:col-span-3">
+            <BlockLabel as="h3" theme="dark" className="mb-5">
+              Space
+            </BlockLabel>
+            <ul className="space-y-3.5">
+              {spaceLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={linkClass}>
                     {item.name}
                   </Link>
                 </li>
@@ -49,7 +85,7 @@ export default function Footer() {
           </nav>
 
           {/* Contact Info */}
-          <div>
+          <div className="lg:col-span-3">
             <BlockLabel as="h3" theme="dark" className="mb-5">
               Contact
             </BlockLabel>
@@ -86,11 +122,16 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="pt-10 border-t border-[#404040]">
-          <p className="text-[11px] tracking-[0.05em] text-[#5A5A5A] text-center">
-            © {new Date().getFullYear()} {siteConfig.name} ({siteConfig.nameEn}
-            ). All rights reserved.
+        <div className="pt-10 border-t border-[#404040] flex flex-col-reverse items-center gap-4 sm:flex-row sm:justify-between">
+          <p className="text-[11px] tracking-[0.05em] text-[#5A5A5A]">
+            © {new Date().getFullYear()} {siteConfig.name} ({siteConfig.nameEn}). All rights reserved.
           </p>
+          <Link
+            href="/privacy"
+            className="text-[11px] tracking-[0.05em] text-[#7A7A7A] hover:text-[#FAFAF8] transition-colors"
+          >
+            プライバシーポリシー
+          </Link>
         </div>
       </div>
     </footer>

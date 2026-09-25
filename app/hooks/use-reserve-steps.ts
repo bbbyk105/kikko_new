@@ -13,15 +13,18 @@ import { useScrollToTopOnChange } from "@/app/hooks/use-scroll-to-top-on-change"
  * 確認ステップへ進むときは validateForm（react-hook-form の trigger など）を通す。
  */
 export function useReserveSteps({
+  initialStep = "type",
   hasType,
   dateTimeReady,
   validateForm,
 }: {
+  /** 利用種別が決まった状態で開いたときは "calendar" から始める */
+  initialStep?: ReserveStep;
   hasType: boolean;
   dateTimeReady: boolean;
   validateForm: () => Promise<boolean>;
 }) {
-  const [step, setStep] = useState<ReserveStep>("type");
+  const [step, setStep] = useState<ReserveStep>(initialStep);
   useScrollToTopOnChange(step);
 
   const canNavigate = useCallback(

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { spaceCategories } from "@/app/data/site";
 import { SectionHeader, CardTitle, DecorativeNumber, BlockLabel, LeadText } from "@/app/components/ui/typography";
+import { ArrowLink } from "@/app/components/ui/arrow-link";
 
 export default function Space() {
   return (
@@ -71,6 +72,10 @@ export default function Space() {
               </Link>
             </article>
           ))}
+        </div>
+
+        <div className="mt-20 text-center">
+          <ArrowLink href="/space">空間と利用シーンを見る</ArrowLink>
         </div>
       </div>
     </section>
