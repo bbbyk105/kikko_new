@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useLayoutEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,6 +24,8 @@ const reserveSchema = z.object({
 type ReserveFormData = z.infer<typeof reserveSchema>;
 
 export default function ReserveForm() {
+  const skipScrollOnMount = useRef(true);
+
   const [step, setStep] = useState<"type" | "calendar" | "form" | "confirm" | "complete">("type");
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -46,6 +48,14 @@ export default function ReserveForm() {
   });
 
   const formData = watch();
+
+  useLayoutEffect(() => {
+    if (skipScrollOnMount.current) {
+      skipScrollOnMount.current = false;
+      return;
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [step]);
 
   const handleTypeSelect = (type: string) => {
     setSelectedType(type);
@@ -224,22 +234,22 @@ export default function ReserveForm() {
                 disabled={disabled}
                 aria-current={isActive ? "step" : undefined}
                 aria-disabled={disabled}
-                className={`flex items-center gap-2 rounded-sm text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                className={`flex items-center gap-2 rounded-sm text-left transition-colors disabled:cursor-not-allowed ${
                   !disabled ? "hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5C6B5C]" : ""
                 }`}
               >
                 <span
-                  className={`w-8 h-8 shrink-0 flex items-center justify-center text-sm ${
+                  className={`w-8 h-8 shrink-0 flex items-center justify-center text-sm font-medium tabular-nums ${
                     currentStepNumber >= s.num
                       ? "bg-[#2C2C2C] text-white"
-                      : "bg-[#E5E4DF] text-[#8A8A8A]"
+                      : "bg-[#E5E4DF] text-[#2C2C2C] border border-[#C8C7C2]"
                   }`}
                 >
                   {s.num}
                 </span>
                 <span
                   className={`text-xs hidden sm:inline ${
-                    currentStepNumber >= s.num ? "text-[#2C2C2C]" : "text-[#8A8A8A]"
+                    currentStepNumber >= s.num ? "text-[#2C2C2C]" : "text-[#6B6B6B]"
                   }`}
                 >
                   {s.label}
@@ -260,7 +270,11 @@ export default function ReserveForm() {
   );
 
   if (step === "complete") {
-    return <ReserveComplete onReset={handleReset} />;
+    return (
+      <div>
+        <ReserveComplete onReset={handleReset} />
+      </div>
+    );
   }
 
   if (step === "confirm") {

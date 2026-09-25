@@ -33,12 +33,30 @@ function notifyFrom(): string | undefined {
   return process.env.RESEND_FROM ?? process.env.RESERVATION_EMAIL_FROM;
 }
 
-function notifyTo(): string {
-  return (
-    process.env.CONTACT_EMAIL_TO ??
-    process.env.RESERVATION_EMAIL_TO ??
-    siteConfig.email
-  );
+/**
+ * 管理者向け通知の宛先（DBは使わずメールのみ）。
+ * CONTACT_EMAIL_TO と RESERVATION_EMAIL_TO の両方があれば両方に送る（カンマ区切りも可）。
+ * どちらも無いときはサイトの問い合わせメール。
+ */
+function notifyToRecipients(): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  const add = (raw: string | undefined) => {
+    if (!raw?.trim()) return;
+    for (const part of raw.split(/[,;]+/)) {
+      const e = part.trim();
+      const key = e.toLowerCase();
+      if (e && !seen.has(key)) {
+        seen.add(key);
+        out.push(e);
+      }
+    }
+  };
+  add(process.env.CONTACT_EMAIL_TO);
+  add(process.env.RESERVATION_EMAIL_TO);
+  if (out.length > 0) return out;
+  add(siteConfig.email);
+  return out;
 }
 
 function customerReplyTo(): string {
@@ -153,7 +171,7 @@ export async function submitContactInquiry(
 
   const result = await sendResendEmail({
     from,
-    to: notifyTo(),
+    to: notifyToRecipients(),
     subject: `【お問い合わせ】${siteConfig.name} ${data.name} 様`,
     text: lines.join("\n"),
     replyTo: data.email,
