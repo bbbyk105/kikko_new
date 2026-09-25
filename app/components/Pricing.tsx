@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { pricingPlans } from "@/app/data/site";
-import { SectionHeader, CardTitle, BlockLabel, LeadText } from "@/app/components/ui/typography";
+import { contactHref } from "@/lib/routes";
+import { SectionHeader } from "@/app/components/ui/typography";
+import { ArrowLink } from "@/app/components/ui/arrow-link";
+import PlanCard from "@/app/components/pricing/PlanCard";
 
 export default function Pricing() {
   return (
@@ -23,80 +26,25 @@ export default function Pricing() {
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
           {pricingPlans.map((plan) => (
-            <article
-              key={plan.id}
-              className={`relative flex flex-col p-8 lg:p-10 ${
-                plan.highlighted
-                  ? "bg-[#F7F6F3] border-2 border-[#5C6B5C]"
-                  : "bg-[#FAFAF8] border border-[#E5E4DF]"
-              }`}
-            >
-              {plan.highlighted && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1.5 text-[9px] tracking-[0.2em] uppercase text-[#FAFAF8] bg-[#5C6B5C]">
-                  Recommended
-                </span>
-              )}
-
-              {/* Plan Header */}
-              <div className="mb-10">
-                <BlockLabel className="mb-3">{plan.nameEn}</BlockLabel>
-                <CardTitle className="mb-5">{plan.name}</CardTitle>
-                <div className="flex items-baseline gap-1">
-                  <span className="font-[var(--font-cormorant)] text-[2.75rem] text-[#2C2C2C] leading-none tracking-tight">
-                    {plan.price}
-                  </span>
-                  <span className="text-[12px] text-[#9A9A9A] tracking-[0.05em]">{plan.unit}</span>
-                </div>
-                {/* 説明が1行でも2行でも、下の特典リストの開始位置を揃える */}
-                <LeadText className="mt-4 md:min-h-[4.2em]">{plan.description}</LeadText>
-              </div>
-
-              {/* Features List */}
-              {/* flex-1 でリストを伸ばし、ボタンをカード下端に揃える */}
-              <ul className="flex-1 space-y-3.5 mb-10">
-                {plan.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="flex items-start gap-3 text-[13px] tracking-[0.02em] text-[#6B6B6B]"
-                  >
-                    <svg
-                      className="w-3.5 h-3.5 text-[#5C6B5C] mt-0.5 flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* CTA */}
-              <Link
-                href="/contact"
-                className={`block text-center py-3.5 text-[12px] tracking-[0.12em] transition-colors ${
-                  plan.highlighted
-                    ? "text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D]"
-                    : "text-[#2C2C2C] border border-[#2C2C2C] hover:bg-[#2C2C2C] hover:text-[#FAFAF8]"
-                }`}
-              >
-                お問い合わせ
-              </Link>
-            </article>
+            <PlanCard key={plan.id} plan={plan} />
           ))}
         </div>
 
         {/* Note */}
         <p className="text-center text-[12px] tracking-[0.03em] text-[#9A9A9A] mt-14">
-          ※ 価格はすべて税込表示です。詳細はお気軽にお問い合わせください。
+          ※ 価格はすべて税込表示です。ご不明な点は
+          <Link
+            href={contactHref()}
+            className="underline underline-offset-4 decoration-[#C8C7C2] hover:text-[#2C2C2C] transition-colors"
+          >
+            お問い合わせ
+          </Link>
+          ください。
         </p>
+
+        <div className="mt-12 text-center">
+          <ArrowLink href="/pricing">料金プランの詳細を見る</ArrowLink>
+        </div>
       </div>
     </section>
   );

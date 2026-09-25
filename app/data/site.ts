@@ -1,6 +1,9 @@
+import { contactHref, reserveHref, type ReserveType } from "@/lib/routes";
+
 export const siteConfig = {
   name: "橘香堂",
   nameEn: "worx mt.fuji",
+  url: "https://worxmtfuji.com",
   tagline: "働く場所から、仕事の質を整える。",
   description: "富士市吉原の、静かで上質なワークスペース。",
   phone: "0545-67-7400",
@@ -14,6 +17,8 @@ export const siteConfig = {
     regular: "9:00–18:00",
     lastEntry: "17:30",
     extended: "22:00（会員予約制）",
+    /** 会員の延長利用の終了時刻（文中に埋め込む用） */
+    extendedUntil: "22:00",
     days: "平日・土日祝",
   },
   capacity: {
@@ -22,15 +27,31 @@ export const siteConfig = {
   },
   googleMapsEmbed:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3261.760906869442!2d138.68491027576485!3d35.16258317275916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601a2b3b80616499%3A0x6c57d4d775647025!2z5qmY6aaZ5aCC6L-R6Jek6Yas5bGA77yId29yeCBtdC5mdWpp77yJ!5e0!3m2!1sja!2sjp!4v1772772222596!5m2!1sja!2sjp",
+  /** Google マップのアプリ・新しいタブで開く用（Google 上の登録名「橘香堂近藤薬局」＋住所で検索する） */
+  googleMapsLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("橘香堂近藤薬局 静岡県富士市吉原2丁目8番21-2号")}`,
 };
 
-export const navigation = [
-  { name: "Space", href: "/space" },
-  { name: "Pricing", href: "/pricing" },
-  { name: "FAQ", href: "/faq" },
-  { name: "Access", href: "/#access" },
-  { name: "Contact", href: "/contact" },
+export interface NavItem {
+  name: string;
+  nameJa: string;
+  href: string;
+}
+
+/** ヘッダー・フッター共通のメインメニュー */
+export const navigation: NavItem[] = [
+  { name: "About", nameJa: "橘香堂について", href: "/about" },
+  { name: "Space", nameJa: "空間", href: "/space" },
+  { name: "Pricing", nameJa: "料金", href: "/pricing" },
+  { name: "Access", nameJa: "アクセス", href: "/access" },
+  { name: "FAQ", nameJa: "よくある質問", href: "/faq" },
+  { name: "Contact", nameJa: "お問い合わせ", href: "/contact" },
 ];
+
+/** 予約・問い合わせの導線（ヘッダーのボタン、フッターなどで共用） */
+export const primaryActions = {
+  reserve: { label: "ご予約", href: reserveHref() },
+  contact: { label: "お問い合わせ", href: contactHref() },
+};
 
 export const heroFeatures = [
   { label: "高速Wi-Fi" },
@@ -119,6 +140,21 @@ export const features = [
   },
 ];
 
+export interface LinkAction {
+  label: string;
+  href: string;
+}
+
+/**
+ * 料金プランのボタン。
+ * 日時を決めて使うプランは予約フォーム（種別を選んだ状態）へ、契約の相談が必要な法人会員はお問い合わせへ。
+ */
+const planCtas = {
+  visitor: { label: "ビジター利用を予約する", href: reserveHref("visitor") },
+  member: { label: "コワーキング利用を予約する", href: reserveHref("coworking") },
+  corporate: { label: "法人契約を相談する", href: contactHref("corporate") },
+} satisfies Record<string, LinkAction>;
+
 export const pricingPlans = [
   {
     id: "visitor",
@@ -128,6 +164,7 @@ export const pricingPlans = [
     unit: "/ 1時間",
     description: "お試し利用や、短時間のご利用に。",
     features: ["Wi-Fi利用可", "電源利用可", "フリードリンク"],
+    cta: planCtas.visitor,
   },
   {
     id: "member",
@@ -143,6 +180,7 @@ export const pricingPlans = [
       "住所利用可（別途）",
     ],
     highlighted: true,
+    cta: planCtas.member,
   },
   {
     id: "corporate",
@@ -158,6 +196,7 @@ export const pricingPlans = [
       "来客対応可",
       "会議室無料枠",
     ],
+    cta: planCtas.corporate,
   },
 ];
 
@@ -203,6 +242,7 @@ export const pricingPageData = {
         { text: "延長営業", included: false },
         { text: "住所登録", included: false },
       ],
+      cta: planCtas.visitor,
     },
     {
       id: "member",
@@ -221,6 +261,7 @@ export const pricingPageData = {
         { text: "法人登記", included: false },
       ],
       highlighted: true,
+      cta: planCtas.member,
     },
     {
       id: "corporate",
@@ -238,6 +279,7 @@ export const pricingPageData = {
         { text: "会議室無料枠付き", included: true },
         { text: "郵便物受け取り", included: true },
       ],
+      cta: planCtas.corporate,
     },
   ],
 };
@@ -382,7 +424,7 @@ export const reserveData = {
     { value: "meeting", label: "会議室予約", description: "打ち合わせ・セミナー", requiresPeople: false },
     { value: "private", label: "貸切利用", description: "終日貸切・80名まで", requiresPeople: true },
     { value: "event", label: "イベント・法人相談", description: "イベント・法人利用相談", requiresPeople: true },
-  ],
+  ] satisfies { value: ReserveType; label: string; description: string; requiresPeople: boolean }[],
   timeSlots: [
     "09:00",
     "10:00",
@@ -428,6 +470,8 @@ export interface SpaceDetail {
   recommendedFor: string[];
   /** pricingPlans の id。空なら見積り案内のみ表示 */
   planIds: string[];
+  /** プランが無いときの「お見積りを依頼する」の行き先 */
+  estimateHref?: string;
   pricingNote: string;
   flow: { number: string; title: string; description: string }[];
   /** faqItems の id */
@@ -518,7 +562,7 @@ export const spaceDetails: Record<string, SpaceDetail> = {
     cta: {
       title: "まずは1時間、使ってみてください。",
       description: "ビジター利用は予約不要です。お気軽にお立ち寄りください。",
-      primaryButton: { text: "ご予約", href: "/reserve" },
+      primaryButton: { text: "ビジター利用を予約する", href: reserveHref("visitor") },
       secondaryButton: { text: "料金プランを見る", href: "/pricing" },
     },
   },
@@ -583,8 +627,8 @@ export const spaceDetails: Record<string, SpaceDetail> = {
     cta: {
       title: "会議・セミナーのご予約を承ります。",
       description: "日時や人数が決まっていなくても、まずはご相談ください。",
-      primaryButton: { text: "会議室を予約する", href: "/reserve" },
-      secondaryButton: { text: "お問い合わせ", href: "/contact" },
+      primaryButton: { text: "会議室を予約する", href: reserveHref("meeting") },
+      secondaryButton: { text: "お問い合わせ", href: contactHref("general") },
     },
   },
   address: {
@@ -664,7 +708,7 @@ export const spaceDetails: Record<string, SpaceDetail> = {
     cta: {
       title: "住所登録のご相談を承ります。",
       description: "登記や郵便物の扱いなど、わからないことがあればお問い合わせください。",
-      primaryButton: { text: "お問い合わせ", href: "/contact" },
+      primaryButton: { text: "住所登録について問い合わせる", href: contactHref("address") },
       secondaryButton: { text: "料金プランを見る", href: "/pricing" },
     },
   },
@@ -719,6 +763,7 @@ export const spaceDetails: Record<string, SpaceDetail> = {
       "貸切できるスペースを探している方",
     ],
     planIds: [],
+    estimateHref: contactHref("event"),
     pricingNote:
       "イベント・貸切の料金は、日時・人数・内容をうかがったうえでお見積りします。",
     flow: [
@@ -742,8 +787,174 @@ export const spaceDetails: Record<string, SpaceDetail> = {
     cta: {
       title: "イベント・貸切のご相談を承ります。",
       description: "日程や人数が未定でも構いません。まずはお気軽にご相談ください。",
-      primaryButton: { text: "イベントを相談する", href: "/reserve" },
-      secondaryButton: { text: "お問い合わせ", href: "/contact" },
+      primaryButton: { text: "イベントを相談する", href: contactHref("event") },
+      secondaryButton: { text: "貸切の日程を予約する", href: reserveHref("private") },
     },
   },
+};
+
+// ====================================
+// About page (/about)
+// ====================================
+
+export const aboutPageData = {
+  intro: {
+    title: "About",
+    titleJa: "橘香堂について",
+    description: "富士市吉原の、静かで上質なワークスペース。",
+  },
+  concept: {
+    heading: ["集中、つながり、", "自由な働き方を。"],
+    paragraphs: [
+      "橘香堂は、ただ作業をする場所ではありません。集中して仕事に向き合い、必要なときには人とつながり、用途に応じて空間を自在に使える——そんな、新しい働き方のための場所です。",
+      "富士市吉原の静かな環境の中で、起業家、フリーランス、リモートワーカーの皆さまの日々の仕事と成長をサポートいたします。",
+    ],
+  },
+  values: [
+    {
+      titleEn: "Focus",
+      title: "集中する",
+      description:
+        "静かな空間に、高速Wi-Fi・電源・フリードリンク。自分の仕事に向き合うための環境を、最初から整えています。",
+    },
+    {
+      titleEn: "Connect",
+      title: "つながる",
+      description:
+        "打ち合わせや商談、セミナーや勉強会。人と会い、話すための場所としてもお使いいただけます。",
+    },
+    {
+      titleEn: "Flexible",
+      title: "自在に使う",
+      description: `1時間のビジター利用から月額会員、法人登記、最大${siteConfig.capacity.standing}名のイベントまで。働き方に合わせて使い方を選べます。`,
+    },
+  ],
+  audiences: [
+    {
+      title: "起業家",
+      description: "富士市での開業・起業の拠点に。法人登記にも対応しています。",
+    },
+    {
+      title: "フリーランス",
+      description: "決まった拠点を持たずに働く方の、日々の仕事場に。",
+    },
+    {
+      title: "リモートワーカー",
+      description: "自宅では集中しにくいときの、もうひとつの仕事場に。",
+    },
+    {
+      title: "企業・団体",
+      description: "社外での会議や研修、地域でのイベントの会場に。",
+    },
+  ],
+  overview: [
+    { label: "名称", value: `${siteConfig.name}（${siteConfig.nameEn}）` },
+    { label: "所在地", value: `${siteConfig.address.postal} ${siteConfig.address.full}` },
+    {
+      label: "営業時間",
+      value: `${siteConfig.hours.days} ${siteConfig.hours.regular}（最終入館 ${siteConfig.hours.lastEntry}）`,
+    },
+    { label: "延長利用", value: siteConfig.hours.extended },
+    {
+      label: "収容人数",
+      value: `着席最大${siteConfig.capacity.seated}名 / スタンディング最大${siteConfig.capacity.standing}名`,
+    },
+    { label: "設備", value: "高速Wi-Fi・電源・フリードリンク・プリンター・スキャナー" },
+    { label: "サービス", value: "コワーキング・会議室・貸切・住所登録（法人登記対応）" },
+    { label: "電話番号", value: siteConfig.phone },
+  ],
+};
+
+// ====================================
+// Access page (/access)
+// ====================================
+
+export const accessPageData = {
+  intro: {
+    title: "Access",
+    titleJa: "アクセス",
+    description: `吉原の中心部、${accessInfo.bus}です。`,
+  },
+  routes: [
+    {
+      titleEn: "By Car",
+      title: "お車でお越しの方",
+      lines: [
+        accessInfo.station,
+        "専用駐車場はございません。周辺のコインパーキングをご利用ください。",
+      ],
+    },
+    {
+      titleEn: "By Bus",
+      title: "バスでお越しの方",
+      lines: [accessInfo.bus],
+    },
+  ],
+  visitNotes: [
+    "ビジター利用は予約不要です。営業時間内にそのままお越しください",
+    `最終入館は${siteConfig.hours.lastEntry}です`,
+    "会員の方は事前予約で22:00までご利用いただけます",
+    "会議室・貸切のご利用は、事前にご予約ください",
+  ],
+};
+
+// ====================================
+// Privacy policy (/privacy)
+// ====================================
+
+export const privacyPolicy = {
+  enactedAt: "2026年9月25日",
+  preamble: `${siteConfig.name}（${siteConfig.nameEn}）（以下「当施設」といいます）は、お客様の個人情報を適切に取り扱うことを重要な責務と考え、以下のとおりプライバシーポリシーを定めます。`,
+  sections: [
+    {
+      title: "取得する個人情報",
+      body: [
+        "当施設は、ご予約・お問い合わせフォーム、お電話、ご来館時のお手続きなどを通じて、お名前、メールアドレス、電話番号、ご予約内容（利用日時・人数など）、お問い合わせ内容を取得します。",
+      ],
+    },
+    {
+      title: "利用目的",
+      body: ["取得した個人情報は、次の目的の範囲内で利用します。"],
+      list: [
+        "ご予約の受付・確認・変更・キャンセルへの対応",
+        "お問い合わせへの回答およびご連絡",
+        "会員契約・法人契約・住所登録サービスのお手続きと提供",
+        "施設の運営およびサービスの改善",
+        "法令に基づく対応",
+      ],
+    },
+    {
+      title: "第三者への提供",
+      body: ["当施設は、次の場合を除き、ご本人の同意なく個人情報を第三者に提供しません。"],
+      list: [
+        "法令に基づく場合",
+        "人の生命・身体または財産の保護のために必要で、ご本人の同意を得ることが難しい場合",
+        "国の機関や地方公共団体などが法令の定める事務を行うことに協力する必要がある場合",
+      ],
+    },
+    {
+      title: "業務の委託",
+      body: [
+        "当施設は、予約情報の保管やメールの送信などの業務を外部の事業者に委託することがあります。その場合は委託先を適切に選び、個人情報が安全に管理されるよう必要な監督を行います。",
+      ],
+    },
+    {
+      title: "安全管理",
+      body: [
+        "個人情報への不正アクセス、紛失、漏えいなどを防ぐため、必要かつ適切な安全管理措置を講じます。",
+      ],
+    },
+    {
+      title: "開示・訂正・削除のご請求",
+      body: [
+        "ご本人から個人情報の開示・訂正・利用停止・削除のご請求があった場合は、ご本人であることを確認したうえで、法令に従い速やかに対応します。",
+      ],
+    },
+    {
+      title: "本ポリシーの改定",
+      body: [
+        "本ポリシーは、法令の変更などに応じて改定することがあります。改定後の内容は、本ページに掲載した時点から効力を生じます。",
+      ],
+    },
+  ],
 };

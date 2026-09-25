@@ -13,13 +13,13 @@ export default function ReserveComplete({ onReset }: ReserveCompleteProps) {
       </div>
 
       <h3 className="font-[var(--font-cormorant)] text-3xl text-[#2C2C2C] mb-4">
-        送信が完了しました
+        ご予約を受け付けました
       </h3>
 
       <p className="text-[#6B6B6B] leading-relaxed mb-8">
-        お問い合わせいただきありがとうございます。
+        お申し込みいただきありがとうございます。
         <br />
-        内容を確認のうえ、担当者より折り返しご連絡いたします。
+        内容を確認のうえ、担当者より確認のご連絡をいたします。
         <br />
         しばらくお待ちくださいませ。
       </p>

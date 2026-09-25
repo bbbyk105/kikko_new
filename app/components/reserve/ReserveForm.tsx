@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,6 +18,7 @@ import {
   reserveTypeLabel,
 } from "@/lib/reserve-flow";
 import type { BookingMode } from "@/lib/reservation-time";
+import type { ReserveType } from "@/lib/routes";
 import { FormField, fieldA11yProps, fieldClassName } from "@/app/components/ui/form-field";
 import ReserveCalendar from "./ReserveCalendar";
 import ReserveSummary from "./ReserveSummary";
@@ -55,10 +57,12 @@ const CALENDAR_COPY: Record<BookingMode, { title: string; description: string }>
 interface ReserveFormProps {
   /** 入力ステップ左側の営業時間・電話番号（Server Component で描画して渡す） */
   contactInfo: ReactNode;
+  /** 料金プランなどから ?type= 付きで来たときの利用種別（日時選択から始める） */
+  initialType?: ReserveType;
 }
 
-export default function ReserveForm({ contactInfo }: ReserveFormProps) {
-  const [selectedType, setSelectedType] = useState("");
+export default function ReserveForm({ contactInfo, initialType }: ReserveFormProps) {
+  const [selectedType, setSelectedType] = useState<string>(initialType ?? "");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,10 +84,12 @@ export default function ReserveForm({ contactInfo }: ReserveFormProps) {
     reset,
   } = useForm<ReserveFormData>({
     resolver: zodResolver(reserveSchema),
+    defaultValues: { type: initialType ?? "" },
   });
 
   const dateTimeReady = isDateTimeReady({ date: selectedDate, time: selectedTime, mode });
   const steps = useReserveSteps({
+    initialStep: initialType ? "calendar" : "type",
     hasType: !!selectedType,
     dateTimeReady,
     validateForm: trigger,
@@ -131,7 +137,7 @@ export default function ReserveForm({ contactInfo }: ReserveFormProps) {
   };
 
   const handleReset = () => {
-    reset();
+    reset({ type: "" });
     setSelectedType("");
     setSelectedDate(undefined);
     setSelectedTime(undefined);
@@ -376,6 +382,14 @@ export default function ReserveForm({ contactInfo }: ReserveFormProps) {
                   入力内容を確認する
                 </button>
               </div>
+
+              <p className="text-xs text-[#8A8A8A] leading-relaxed">
+                ご入力いただいた個人情報は、ご予約への対応およびご連絡のためにのみ使用いたします。詳しくは
+                <Link href="/privacy" className="underline underline-offset-2 hover:text-[#2C2C2C] transition-colors">
+                  プライバシーポリシー
+                </Link>
+                をご覧ください。
+              </p>
             </form>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { siteConfig, accessInfo } from "@/app/data/site";
 import { Eyebrow, SectionHeading } from "@/app/components/ui/typography";
+import { ArrowLink } from "@/app/components/ui/arrow-link";
 
 export default function Access() {
   return (
@@ -45,7 +46,7 @@ export default function Access() {
                     最終入館 {siteConfig.hours.lastEntry}
                   </p>
                   <p className="text-[12px] tracking-[0.03em] text-[#9A9A9A]">
-                    会員は事前予約で{siteConfig.hours.extended}まで延長可能
+                    会員は事前予約で{siteConfig.hours.extendedUntil}まで延長可能
                   </p>
                 </dd>
               </div>
@@ -86,6 +87,13 @@ export default function Access() {
                 </dd>
               </div>
             </dl>
+
+            <div className="flex flex-wrap gap-x-10 gap-y-5 mt-14">
+              <ArrowLink href="/access">アクセスの詳細を見る</ArrowLink>
+              <ArrowLink href={siteConfig.googleMapsLink} external>
+                Google マップで開く
+              </ArrowLink>
+            </div>
           </div>
 
           {/* Map */}

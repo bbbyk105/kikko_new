@@ -1,4 +1,5 @@
-import { siteConfig } from "@/app/data/site";
+import { siteConfig, primaryActions } from "@/app/data/site";
+import { ArrowLink } from "@/app/components/ui/arrow-link";
 
 /** お問い合わせページ左側の案内と連絡先（Server Component） */
 export default function ContactInfo() {
@@ -37,6 +38,15 @@ export default function ContactInfo() {
             {siteConfig.address.full}
           </p>
         </div>
+      </div>
+
+      {/* 予約したい方をフォームへ案内する */}
+      <div className="mt-12 p-8 bg-[#F7F6F3]">
+        <p className="text-xs tracking-wider text-[#8A8A8A] mb-3">ご予約をご希望の方</p>
+        <p className="text-sm text-[#6B6B6B] leading-relaxed mb-6">
+          ビジター利用・会議室・貸切のご予約は、空き状況を見ながら予約フォームからお申し込みいただけます。
+        </p>
+        <ArrowLink href={primaryActions.reserve.href}>予約フォームへ</ArrowLink>
       </div>
     </div>
   );

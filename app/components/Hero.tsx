@@ -68,8 +68,9 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Feature Strip - 控えめなアクセント */}
-      <div className="absolute bottom-0 left-0 right-0 bg-[#F7F6F3] border-t border-[#E5E4DF]">
+      {/* Feature Strip - 控えめなアクセント
+          （スマホでは本文が画面より長くなりボタンに重なるため、PC だけ下端に固定する） */}
+      <div className="lg:absolute lg:bottom-0 lg:left-0 lg:right-0 bg-[#F7F6F3] border-t border-[#E5E4DF]">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
           <ul className="flex flex-wrap justify-center lg:justify-between items-center gap-6 lg:gap-8 py-6">
             {heroFeatures.map((feature, index) => (

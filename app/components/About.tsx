@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { images } from "@/app/data/site";
+import { aboutPageData, images } from "@/app/data/site";
 import { Eyebrow, SectionHeading, LeadText, BlockLabel } from "@/app/components/ui/typography";
+import { ArrowLink } from "@/app/components/ui/arrow-link";
 
 export default function About() {
   return (
@@ -40,19 +41,13 @@ export default function About() {
               <span className="block">自由な働き方を。</span>
             </SectionHeading>
 
-            {/* Description */}
+            {/* Description（JSX で改行すると和文に半角スペースが入るので、文章はデータから渡す） */}
             <div className="space-y-5 mt-8">
-              <LeadText maxWidth="wide">
-                橘香堂は、ただ作業をする場所ではありません。
-                集中して仕事に向き合い、必要なときには人とつながり、
-                用途に応じて空間を自在に使える——
-                そんな、新しい働き方のための場所です。
-              </LeadText>
-              <LeadText maxWidth="wide">
-                富士市吉原の静かな環境の中で、
-                起業家、フリーランス、リモートワーカーの皆さまの
-                日々の仕事と成長をサポートいたします。
-              </LeadText>
+              {aboutPageData.concept.paragraphs.map((paragraph) => (
+                <LeadText key={paragraph} maxWidth="wide">
+                  {paragraph}
+                </LeadText>
+              ))}
             </div>
 
             {/* Stats */}
@@ -69,6 +64,10 @@ export default function About() {
                 </p>
                 <BlockLabel>スタンディング最大</BlockLabel>
               </div>
+            </div>
+
+            <div className="mt-14">
+              <ArrowLink href="/about">橘香堂について</ArrowLink>
             </div>
           </div>
         </div>

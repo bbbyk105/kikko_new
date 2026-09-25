@@ -1,7 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
+import Breadcrumbs from "@/app/components/section/Breadcrumbs";
 
 interface SpaceDetailHeroProps {
+  slug: string;
   number: string;
   title: string;
   titleJa: string;
@@ -10,6 +11,7 @@ interface SpaceDetailHeroProps {
 }
 
 export default function SpaceDetailHero({
+  slug,
   number,
   title,
   titleJa,
@@ -20,26 +22,13 @@ export default function SpaceDetailHero({
     <>
       <section className="pt-32 pb-16 lg:pt-40 lg:pb-20">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-          {/* Breadcrumb */}
-          <nav aria-label="パンくずリスト" className="mb-10 animate-fade-up">
-            <ol className="flex flex-wrap items-center gap-2 text-[11px] tracking-[0.15em] text-[#9A9A9A]">
-              <li>
-                <Link href="/" className="hover:text-[#2C2C2C] transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li>
-                <Link href="/space" className="hover:text-[#2C2C2C] transition-colors">
-                  Space
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li aria-current="page" className="text-[#6B6B6B]">
-                {title}
-              </li>
-            </ol>
-          </nav>
+          <Breadcrumbs
+            items={[
+              { name: "Space", href: "/space" },
+              { name: title, href: `/space/${slug}` },
+            ]}
+            className="mb-10 animate-fade-up"
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
             <div className="lg:col-span-8 max-w-3xl">

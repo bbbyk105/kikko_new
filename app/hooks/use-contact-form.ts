@@ -16,9 +16,15 @@ const EMPTY_VALUES: ContactFormValues = {
   message: "",
 };
 
-/** お問い合わせフォームの入力・検証・送信の状態 */
-export function useContactForm() {
-  const [values, setValues] = useState<ContactFormValues>(EMPTY_VALUES);
+/**
+ * お問い合わせフォームの入力・検証・送信の状態。
+ * initialInquiryType を渡すと、種別を選んだ状態で始める（送信後のリセットでは空に戻す）。
+ */
+export function useContactForm(initialInquiryType?: string) {
+  const [values, setValues] = useState<ContactFormValues>({
+    ...EMPTY_VALUES,
+    inquiryType: initialInquiryType ?? "",
+  });
   const [errors, setErrors] = useState<ContactFieldErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
