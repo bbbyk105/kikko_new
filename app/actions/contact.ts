@@ -1,29 +1,12 @@
 "use server";
 
-import { z } from "zod";
 import { siteConfig } from "@/app/data/site";
 import { sendResendEmail } from "@/lib/email/resend";
-
-const inquiryTypeLabels: Record<string, string> = {
-  general: "一般的なご質問",
-  membership: "会員登録について",
-  corporate: "法人契約について",
-  event: "イベント利用について",
-  other: "その他",
-};
-
-const contactSchema = z.object({
-  name: z.string().trim().min(1, "お名前を入力してください"),
-  email: z.string().email("正しいメールアドレスを入力してください"),
-  phone: z.string().optional(),
-  inquiryType: z.enum(
-    ["general", "membership", "corporate", "event", "other"],
-    { message: "お問い合わせ種別を選択してください" },
-  ),
-  message: z.string().trim().min(1, "お問い合わせ内容を入力してください"),
-});
-
-export type ContactInput = z.infer<typeof contactSchema>;
+import {
+  contactSchema,
+  inquiryTypeLabel,
+  type ContactInput,
+} from "@/lib/validation/contact";
 
 export type ContactResult =
   | { success: true }
@@ -83,7 +66,7 @@ async function sendCustomerContactConfirmation(data: {
     return;
   }
 
-  const typeLabel = inquiryTypeLabels[data.inquiryType] ?? data.inquiryType;
+  const typeLabel = inquiryTypeLabel(data.inquiryType);
   const subject = `【お問い合わせを受け付けました】${siteConfig.name}`;
 
   const lines = [
@@ -150,7 +133,7 @@ export async function submitContactInquiry(
     };
   }
 
-  const typeLabel = inquiryTypeLabels[data.inquiryType] ?? data.inquiryType;
+  const typeLabel = inquiryTypeLabel(data.inquiryType);
   const receivedAt = new Date().toLocaleString("ja-JP", {
     timeZone: "Asia/Tokyo",
   });

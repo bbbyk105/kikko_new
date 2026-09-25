@@ -1,108 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import {
-  submitContactInquiry,
-  type ContactInput,
-} from "@/app/actions/contact";
-import { siteConfig } from "@/app/data/site";
+import type { ReactNode } from "react";
+import { useContactForm } from "@/app/hooks/use-contact-form";
+import { inquiryTypeOptions } from "@/lib/validation/contact";
+import { FormField, fieldA11yProps, fieldClassName } from "@/app/components/ui/form-field";
 
-type FormData = {
-  name: string;
-  email: string;
-  phone: string;
-  inquiryType: string;
-  message: string;
-};
+const selectArrowStyle = {
+  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B6B6B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 1rem center",
+  backgroundSize: "1.25rem",
+} as const;
 
-type FormErrors = {
-  [key in keyof FormData]?: string;
-};
+interface ContactFormProps {
+  /** 左カラムの案内（Server Component で描画して渡す） */
+  aside: ReactNode;
+}
 
-const inquiryTypes = [
-  { value: "", label: "お問い合わせ種別を選択" },
-  { value: "general", label: "一般的なご質問" },
-  { value: "membership", label: "会員登録について" },
-  { value: "corporate", label: "法人契約について" },
-  { value: "event", label: "イベント利用について" },
-  { value: "other", label: "その他" },
-];
-
-export default function ContactForm() {
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    phone: "",
-    inquiryType: "",
-    message: "",
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "お名前を入力してください";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "メールアドレスを入力してください";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "正しいメールアドレスを入力してください";
-    }
-
-    if (!formData.inquiryType) {
-      newErrors.inquiryType = "お問い合わせ種別を選択してください";
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "お問い合わせ内容を入力してください";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-    setSubmitError(null);
-
-    const result = await submitContactInquiry({
-      name: formData.name.trim(),
-      email: formData.email.trim(),
-      phone: formData.phone.trim() || undefined,
-      inquiryType: formData.inquiryType as ContactInput["inquiryType"],
-      message: formData.message.trim(),
-    });
-
-    setIsSubmitting(false);
-
-    if (!result.success) {
-      setSubmitError(result.error);
-      return;
-    }
-
-    setIsSubmitted(true);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof FormData]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
-  };
+export default function ContactForm({ aside }: ContactFormProps) {
+  const {
+    values,
+    errors,
+    submitError,
+    isSubmitting,
+    isSubmitted,
+    handleChange,
+    handleSubmit,
+    reset,
+  } = useContactForm();
 
   if (isSubmitted) {
     return (
@@ -132,16 +57,7 @@ export default function ContactForm() {
           しばらくお待ちくださいませ。
         </p>
         <button
-          onClick={() => {
-            setIsSubmitted(false);
-            setFormData({
-              name: "",
-              email: "",
-              phone: "",
-              inquiryType: "",
-              message: "",
-            });
-          }}
+          onClick={reset}
           className="text-sm text-[#5C6B5C] hover:text-[#4A5A4A] underline underline-offset-4 transition-colors"
         >
           新しいお問い合わせを送信
@@ -153,187 +69,80 @@ export default function ContactForm() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
       {/* Left Column - Info */}
-      <div>
-        <h2 className="font-[var(--font-cormorant)] text-2xl lg:text-3xl text-[#2C2C2C] mb-6">
-          ご質問・ご相談
-        </h2>
-        <p className="text-[#6B6B6B] leading-relaxed mb-12">
-          会員登録、法人契約、イベント利用など、
-          <br className="hidden lg:block" />
-          お気軽にお問い合わせください。
-          <br />
-          担当者より折り返しご連絡いたします。
-        </p>
-
-        {/* Contact Info */}
-        <div className="space-y-6 pt-8 border-t border-[#E5E4DF]">
-          <div>
-            <p className="text-xs tracking-wider text-[#8A8A8A] mb-2">
-              電話でのお問い合わせ
-            </p>
-            <a
-              href={`tel:${siteConfig.phone}`}
-              className="font-[var(--font-cormorant)] text-2xl text-[#2C2C2C] hover:text-[#5C6B5C] transition-colors"
-            >
-              {siteConfig.phone}
-            </a>
-            <p className="text-sm text-[#8A8A8A] mt-1">
-              {siteConfig.hours.days} {siteConfig.hours.regular}
-            </p>
-          </div>
-          <div>
-            <p className="text-xs tracking-wider text-[#8A8A8A] mb-2">所在地</p>
-            <p className="text-[#2C2C2C]">
-              {siteConfig.address.postal}
-              <br />
-              {siteConfig.address.full}
-            </p>
-          </div>
-        </div>
-      </div>
+      {aside}
 
       {/* Right Column - Form */}
       <div>
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-          {/* Name */}
-          <div>
-            <label htmlFor="name" className="block text-sm text-[#2C2C2C] mb-2">
-              お名前 <span className="text-[#B85C5C]">*</span>
-            </label>
+          <FormField id="name" label="お名前" required error={errors.name}>
             <input
               type="text"
               id="name"
               name="name"
-              value={formData.name}
+              value={values.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border ${
-                errors.name ? "border-[#B85C5C]" : "border-[#E5E4DF]"
-              } text-[#2C2C2C] placeholder-[#B0B0B0] focus:outline-none focus:border-[#5C6B5C] transition-colors`}
+              className={fieldClassName(!!errors.name)}
               placeholder="山田 太郎"
-              aria-invalid={!!errors.name}
-              aria-describedby={errors.name ? "name-error" : undefined}
+              {...fieldA11yProps("name", errors.name)}
             />
-            {errors.name && (
-              <p id="name-error" className="mt-1 text-sm text-[#B85C5C]">
-                {errors.name}
-              </p>
-            )}
-          </div>
+          </FormField>
 
-          {/* Email */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm text-[#2C2C2C] mb-2"
-            >
-              メールアドレス <span className="text-[#B85C5C]">*</span>
-            </label>
+          <FormField id="email" label="メールアドレス" required error={errors.email}>
             <input
               type="email"
               id="email"
               name="email"
-              value={formData.email}
+              value={values.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border ${
-                errors.email ? "border-[#B85C5C]" : "border-[#E5E4DF]"
-              } text-[#2C2C2C] placeholder-[#B0B0B0] focus:outline-none focus:border-[#5C6B5C] transition-colors`}
+              className={fieldClassName(!!errors.email)}
               placeholder="example@email.com"
-              aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? "email-error" : undefined}
+              {...fieldA11yProps("email", errors.email)}
             />
-            {errors.email && (
-              <p id="email-error" className="mt-1 text-sm text-[#B85C5C]">
-                {errors.email}
-              </p>
-            )}
-          </div>
+          </FormField>
 
-          {/* Phone */}
-          <div>
-            <label
-              htmlFor="phone"
-              className="block text-sm text-[#2C2C2C] mb-2"
-            >
-              電話番号
-            </label>
+          <FormField id="phone" label="電話番号">
             <input
               type="tel"
               id="phone"
               name="phone"
-              value={formData.phone}
+              value={values.phone}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-white border border-[#E5E4DF] text-[#2C2C2C] placeholder-[#B0B0B0] focus:outline-none focus:border-[#5C6B5C] transition-colors"
+              className={fieldClassName()}
               placeholder="090-1234-5678"
             />
-          </div>
+          </FormField>
 
-          {/* Inquiry Type */}
-          <div>
-            <label
-              htmlFor="inquiryType"
-              className="block text-sm text-[#2C2C2C] mb-2"
-            >
-              お問い合わせ種別 <span className="text-[#B85C5C]">*</span>
-            </label>
+          <FormField id="inquiryType" label="お問い合わせ種別" required error={errors.inquiryType}>
             <select
               id="inquiryType"
               name="inquiryType"
-              value={formData.inquiryType}
+              value={values.inquiryType}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border ${
-                errors.inquiryType ? "border-[#B85C5C]" : "border-[#E5E4DF]"
-              } text-[#2C2C2C] focus:outline-none focus:border-[#5C6B5C] transition-colors appearance-none cursor-pointer`}
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B6B6B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "right 1rem center",
-                backgroundSize: "1.25rem",
-              }}
-              aria-invalid={!!errors.inquiryType}
-              aria-describedby={
-                errors.inquiryType ? "inquiryType-error" : undefined
-              }
+              className={fieldClassName(!!errors.inquiryType, "appearance-none cursor-pointer")}
+              style={selectArrowStyle}
+              {...fieldA11yProps("inquiryType", errors.inquiryType)}
             >
-              {inquiryTypes.map((type) => (
+              <option value="">お問い合わせ種別を選択</option>
+              {inquiryTypeOptions.map((type) => (
                 <option key={type.value} value={type.value}>
                   {type.label}
                 </option>
               ))}
             </select>
-            {errors.inquiryType && (
-              <p id="inquiryType-error" className="mt-1 text-sm text-[#B85C5C]">
-                {errors.inquiryType}
-              </p>
-            )}
-          </div>
+          </FormField>
 
-          {/* Message */}
-          <div>
-            <label
-              htmlFor="message"
-              className="block text-sm text-[#2C2C2C] mb-2"
-            >
-              お問い合わせ内容 <span className="text-[#B85C5C]">*</span>
-            </label>
+          <FormField id="message" label="お問い合わせ内容" required error={errors.message}>
             <textarea
               id="message"
               name="message"
-              value={formData.message}
+              value={values.message}
               onChange={handleChange}
               rows={6}
-              className={`w-full px-4 py-3 bg-white border ${
-                errors.message ? "border-[#B85C5C]" : "border-[#E5E4DF]"
-              } text-[#2C2C2C] placeholder-[#B0B0B0] focus:outline-none focus:border-[#5C6B5C] transition-colors resize-none`}
+              className={fieldClassName(!!errors.message, "resize-none")}
               placeholder="ご質問やご相談内容をお気軽にご記入ください。"
-              aria-invalid={!!errors.message}
-              aria-describedby={errors.message ? "message-error" : undefined}
+              {...fieldA11yProps("message", errors.message)}
             />
-            {errors.message && (
-              <p id="message-error" className="mt-1 text-sm text-[#B85C5C]">
-                {errors.message}
-              </p>
-            )}
-          </div>
+          </FormField>
 
           {submitError && (
             <p className="text-sm text-[#B85C5C]" role="alert">

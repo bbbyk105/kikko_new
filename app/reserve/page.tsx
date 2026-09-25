@@ -3,6 +3,8 @@ import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
 import PageHero from "@/app/components/section/PageHero";
 import ReserveForm from "@/app/components/reserve/ReserveForm";
+import ReserveContactInfo from "@/app/components/reserve/ReserveContactInfo";
+import { BulletList } from "@/app/components/ui/bullet-list";
 import { reserveData } from "@/app/data/site";
 
 export const metadata: Metadata = {
@@ -25,7 +27,7 @@ export default function ReservePage() {
         {/* Reserve Form Section */}
         <section className="py-12 lg:py-16 bg-[#F7F6F3]">
           <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-            <ReserveForm />
+            <ReserveForm contactInfo={<ReserveContactInfo />} />
           </div>
         </section>
 
@@ -36,17 +38,7 @@ export default function ReservePage() {
               <h3 className="text-sm tracking-wider text-[#6B6B6B] mb-6 text-center">
                 ご予約にあたって
               </h3>
-              <ul className="space-y-3">
-                {reserveData.notes.map((note, index) => (
-                  <li
-                    key={index}
-                    className="flex items-start gap-3 text-sm text-[#6B6B6B]"
-                  >
-                    <span className="text-[#5C6B5C] mt-1">•</span>
-                    <span>{note}</span>
-                  </li>
-                ))}
-              </ul>
+              <BulletList items={reserveData.notes} />
             </div>
           </div>
         </section>

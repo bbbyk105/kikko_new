@@ -376,12 +376,12 @@ export const reserveData = {
     },
   ],
   types: [
-    { value: "visitor", label: "ビジター利用", requiresPeople: false },
-    { value: "coworking", label: "コワーキング利用", requiresPeople: false },
-    { value: "kids", label: "キッズスペース利用", requiresPeople: false },
-    { value: "meeting", label: "会議室予約", requiresPeople: false },
-    { value: "private", label: "貸切利用", requiresPeople: true },
-    { value: "event", label: "イベント・法人相談", requiresPeople: true },
+    { value: "visitor", label: "ビジター利用", description: "お試し利用", requiresPeople: false },
+    { value: "coworking", label: "コワーキング利用", description: "定期利用", requiresPeople: false },
+    { value: "kids", label: "キッズスペース利用", description: "お子様連れでのご利用", requiresPeople: false },
+    { value: "meeting", label: "会議室予約", description: "打ち合わせ・セミナー", requiresPeople: false },
+    { value: "private", label: "貸切利用", description: "終日貸切・80名まで", requiresPeople: true },
+    { value: "event", label: "イベント・法人相談", description: "イベント・法人利用相談", requiresPeople: true },
   ],
   timeSlots: [
     "09:00",

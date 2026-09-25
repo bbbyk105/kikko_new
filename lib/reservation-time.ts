@@ -1,4 +1,4 @@
-import { isSameDay, startOfDay } from "date-fns";
+import { format, isSameDay, startOfDay } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { reserveData } from "@/app/data/site";
 
@@ -11,6 +11,17 @@ export function normalizeReservationTime(time: string | null): string | null {
   const min = m[2];
   if (Number.isNaN(h)) return null;
   return `${String(h).padStart(2, "0")}:${min}`;
+}
+
+/** "10:00-13:00" 形式を HH:mm の開始・終了に分解する。形式が違えば null */
+export function parseTimeRange(
+  time: string | null | undefined,
+): { start: string; end: string } | null {
+  const m = time?.trim().match(/^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/);
+  if (!m) return null;
+  const start = normalizeReservationTime(m[1]);
+  const end = normalizeReservationTime(m[2]);
+  return start && end ? { start, end } : null;
 }
 
 export function timeToMinutes(time: string): number {
@@ -56,17 +67,11 @@ export function occupiedHourSlotsFromReservationTime(
   hourlySlots: readonly string[],
 ): string[] {
   if (!time?.trim()) return [];
-  const trimmed = time.trim();
-  const rangeMatch = trimmed.match(
-    /^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/,
-  );
-  if (rangeMatch) {
-    const start = normalizeReservationTime(rangeMatch[1]);
-    const end = normalizeReservationTime(rangeMatch[2]);
-    if (!start || !end) return [];
-    return hourSlotStartsBetween(start, end, hourlySlots);
+  const range = parseTimeRange(time);
+  if (range) {
+    return hourSlotStartsBetween(range.start, range.end, hourlySlots);
   }
-  const single = normalizeReservationTime(trimmed);
+  const single = normalizeReservationTime(time);
   if (!single) return [];
   return [single];
 }
@@ -130,16 +135,12 @@ export function isReservationTimeInPastForDateJst(
     Number(formatInTimeZone(now, JST, "H")) * 60 +
     Number(formatInTimeZone(now, JST, "m"));
 
-  const trimmed = timeRaw.trim();
-  const rangeMatch = trimmed.match(/^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/);
-  if (rangeMatch) {
-    const start = normalizeReservationTime(rangeMatch[1]);
-    const end = normalizeReservationTime(rangeMatch[2]);
-    if (!start || !end) return true;
-    const needed = hourSlotStartsBetween(start, end, reserveData.timeSlots);
+  const range = parseTimeRange(timeRaw);
+  if (range) {
+    const needed = hourSlotStartsBetween(range.start, range.end, reserveData.timeSlots);
     return needed.some((s) => nowMin >= timeToMinutes(s));
   }
-  const single = normalizeReservationTime(trimmed);
+  const single = normalizeReservationTime(timeRaw);
   if (!single) return false;
   return nowMin >= timeToMinutes(single);
 }
@@ -171,4 +172,77 @@ export function findFirstAvailableMeetingRange(
     }
   }
   return null;
+}
+
+/** 予約済み時刻の一覧を HH:mm の Set にする（表記ゆれ・空値は除く） */
+export function toSlotSet(times: readonly (string | null)[] | undefined): Set<string> {
+  const out = new Set<string>();
+  for (const t of times ?? []) {
+    const n = normalizeReservationTime(t);
+    if (n) out.add(n);
+  }
+  return out;
+}
+
+/** その日に予約できる時間枠（予約済みと、当日なら開始済みを除く）。返り値は timeSlots の表記のまま */
+export function availableSlotsForDay(
+  day: Date,
+  timeSlots: readonly string[],
+  booked: Set<string>,
+  now: Date = new Date(),
+): string[] {
+  return timeSlots.filter((slot) => {
+    const n = normalizeReservationTime(slot);
+    if (!n || booked.has(n)) return false;
+    return !isSlotPastForSelectedDay(day, n, now);
+  });
+}
+
+export type BookingMode = "visitor" | "meeting" | "private";
+
+/**
+ * カレンダーでその日を選べるか（表示期間外かどうかは呼び出し側で判定）。
+ * - 貸切日は全モードで不可
+ * - 貸切: 他の予約が一切ない日のみ
+ * - それ以外: 空いている時間枠が1つ以上ある日
+ */
+export function isDayBookable(
+  day: Date,
+  {
+    mode,
+    privateDates,
+    bookedTimesByDate,
+    timeSlots,
+    now = new Date(),
+  }: {
+    mode: BookingMode;
+    privateDates: Set<string>;
+    bookedTimesByDate: Record<string, string[]>;
+    timeSlots: readonly string[];
+    now?: Date;
+  },
+): boolean {
+  const key = format(day, "yyyy-MM-dd");
+  if (privateDates.has(key)) return false;
+  const times = bookedTimesByDate[key];
+  if (mode === "private") return !times || times.length === 0;
+  return availableSlotsForDay(day, timeSlots, toSlotSet(times), now).length > 0;
+}
+
+/** 開始時刻より後の終了時刻候補 */
+export function meetingEndOptionsAfter(
+  start: string,
+  endOptions: readonly string[],
+): string[] {
+  return endOptions.filter((opt) => timeToMinutes(opt) > timeToMinutes(start));
+}
+
+/** 開始時刻を変えたときの終了時刻。今の終了がまだ使えればそのまま、使えなければ最初の候補 */
+export function pickMeetingEnd(
+  start: string,
+  currentEnd: string,
+  endOptions: readonly string[],
+): string {
+  const ends = meetingEndOptionsAfter(start, endOptions);
+  return ends.includes(currentEnd) ? currentEnd : (ends[0] ?? currentEnd);
 }

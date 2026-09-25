@@ -3,6 +3,7 @@ import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
 import PageHero from "@/app/components/section/PageHero";
 import ContactForm from "@/app/components/contact/ContactForm";
+import ContactInfo from "@/app/components/contact/ContactInfo";
 
 export const metadata: Metadata = {
   title: "お問い合わせ | 橘香堂 (worx mt.fuji)",
@@ -24,7 +25,7 @@ export default function ContactPage() {
         {/* Contact Form Section */}
         <section className="py-16 lg:py-24 bg-[#FAFAF8]">
           <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-            <ContactForm />
+            <ContactForm aside={<ContactInfo />} />
           </div>
         </section>
       </main>
