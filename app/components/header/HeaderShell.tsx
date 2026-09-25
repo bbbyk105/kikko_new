@@ -46,13 +46,15 @@ export default function HeaderShell({ children, mobileMenu }: HeaderShellProps) 
   }, [isOpen, close]);
 
   // リンクは Server Component 側で描画しているので、クリックはイベント委譲で拾って閉じる
-  const closeOnLinkClick = (e: MouseEvent<HTMLDivElement>) => {
+  // （ヘッダーのロゴを押したときも閉じる）
+  const closeOnLinkClick = (e: MouseEvent<HTMLElement>) => {
     if ((e.target as HTMLElement).closest("a")) close();
   };
 
   return (
     <>
       <header
+        onClick={closeOnLinkClick}
         className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,box-shadow] duration-300 ${
           isSolid ? "bg-[#FAFAF8]/95 shadow-[0_1px_0_0_#E5E4DF]" : "bg-transparent"
         } ${isScrolled && !isOpen ? "backdrop-blur-sm" : ""}`}
