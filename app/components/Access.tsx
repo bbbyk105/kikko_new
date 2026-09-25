@@ -90,7 +90,8 @@ export default function Access() {
 
           {/* Map */}
           <div className="relative">
-            <div className="relative aspect-square lg:aspect-auto lg:h-full min-h-[400px] overflow-hidden">
+            {/* aspect-square と min-h を併用するとスマホで幅が 400px に引っ張られてはみ出すため、高さ固定にする */}
+            <div className="relative h-[400px] lg:h-full min-h-[400px] overflow-hidden">
               <iframe
                 src={siteConfig.googleMapsEmbed}
                 width="100%"

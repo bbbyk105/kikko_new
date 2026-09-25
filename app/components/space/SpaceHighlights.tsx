@@ -18,7 +18,9 @@ export default function SpaceHighlights({ titleJa, highlights }: SpaceHighlights
               key={highlight.title}
               className="flex gap-6 pt-8 border-t border-[#E5E4DF]"
             >
-              <DecorativeNumber>{String(index + 1).padStart(2, "0")}</DecorativeNumber>
+              <DecorativeNumber className="w-[1.2em] shrink-0">
+                {String(index + 1).padStart(2, "0")}
+              </DecorativeNumber>
               <div className="flex-1 pt-1">
                 <CardTitle className="mb-3">{highlight.title}</CardTitle>
                 <LeadText maxWidth="wide">{highlight.description}</LeadText>

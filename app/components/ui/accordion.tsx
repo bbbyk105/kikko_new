@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAccordionState } from "@/app/hooks/use-accordion-state";
 
 interface AccordionContextValue {
   openItems: string[];
@@ -33,24 +34,7 @@ export function Accordion({
   children,
   className,
 }: AccordionProps) {
-  const [openItems, setOpenItems] = React.useState<string[]>(() => {
-    if (!defaultValue) return [];
-    return Array.isArray(defaultValue) ? defaultValue : [defaultValue];
-  });
-
-  const toggleItem = React.useCallback(
-    (value: string) => {
-      setOpenItems((prev) => {
-        if (type === "single") {
-          return prev.includes(value) ? [] : [value];
-        }
-        return prev.includes(value)
-          ? prev.filter((item) => item !== value)
-          : [...prev, value];
-      });
-    },
-    [type]
-  );
+  const { openItems, toggle: toggleItem } = useAccordionState(type, defaultValue);
 
   return (
     <AccordionContext.Provider value={{ openItems, toggleItem, type }}>

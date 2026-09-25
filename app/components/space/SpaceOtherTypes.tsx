@@ -34,7 +34,7 @@ export default function SpaceOtherTypes({ categories }: SpaceOtherTypesProps) {
               </div>
               <div className="flex gap-5">
                 <span
-                  className="font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] leading-none"
+                  className="w-[1.2em] shrink-0 font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] leading-none"
                   aria-hidden="true"
                 >
                   {category.number}
