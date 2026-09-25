@@ -4,6 +4,7 @@ import { siteConfig, navigation, spaceCategories, primaryActions } from "@/app/d
 import HeaderShell from "@/app/components/header/HeaderShell";
 import NavLink from "@/app/components/header/NavLink";
 import NavDropdown from "@/app/components/header/NavDropdown";
+import HomeLink from "@/app/components/header/HomeLink";
 
 /** Space の下に出すサブメニュー（利用スタイル別の詳細ページ） */
 const spaceLinks = spaceCategories.map((category) => ({
@@ -31,9 +32,8 @@ export default function Header() {
       </a>
 
       <HeaderShell mobileMenu={<MobileMenu />}>
-        {/* Logo */}
-        <Link
-          href="/"
+        {/* Logo（トップページにいるときは先頭へスクロール） */}
+        <HomeLink
           className="flex flex-col items-start gap-0 transition-opacity hover:opacity-70"
           aria-label={`${siteConfig.name} トップページへ`}
         >
@@ -41,7 +41,7 @@ export default function Header() {
             {siteConfig.nameEn}
           </span>
           <span className="text-[10px] tracking-[0.2em] text-[#6B6B6B]">{siteConfig.name}</span>
-        </Link>
+        </HomeLink>
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-10" aria-label="メインナビゲーション">
