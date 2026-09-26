@@ -14,6 +14,10 @@ interface ReserveSummaryProps {
   onBack: () => void;
   onSubmit: () => void;
   isSubmitting: boolean;
+  /** 送信ボタンの上に出すもの（ボット対策のウィジェットなど） */
+  beforeSubmit?: React.ReactNode;
+  /** false のあいだは送信できない（ボット対策の確認中など） */
+  canSubmit?: boolean;
   error?: string | null;
 }
 
@@ -22,6 +26,8 @@ export default function ReserveSummary({
   onBack,
   onSubmit,
   isSubmitting,
+  beforeSubmit,
+  canSubmit = true,
   error,
 }: ReserveSummaryProps) {
   const summaryItems = [
@@ -67,6 +73,8 @@ export default function ReserveSummary({
         </div>
       )}
 
+      {beforeSubmit && <div className="mt-6 flex flex-col items-center gap-2">{beforeSubmit}</div>}
+
       <div className="flex flex-col sm:flex-row gap-4 mt-10">
         <button
           type="button"
@@ -78,10 +86,10 @@ export default function ReserveSummary({
         <button
           type="button"
           onClick={onSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !canSubmit}
           className="flex-1 py-4 text-sm tracking-wider text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] disabled:bg-[#8A8A8A] disabled:cursor-not-allowed transition-colors"
         >
-          {isSubmitting ? "送信中..." : "この内容で送信する"}
+          {isSubmitting ? "送信中..." : canSubmit ? "この内容で送信する" : "確認中..."}
         </button>
       </div>
     </div>

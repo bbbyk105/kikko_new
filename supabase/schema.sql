@@ -44,6 +44,9 @@ revoke all on table reservations from anon, authenticated;
 -- 新しいプロジェクトでは新規テーブルへの自動付与がオフの場合があるため明示する
 grant select, insert, update, delete on table reservations to service_role;
 
+-- 店内メモ（管理画面だけで使う。お客様には見せない）
+alter table reservations add column if not exists staff_note text;
+
 -- インデックス
 create index if not exists reservations_date_idx on reservations (date);
 create index if not exists reservations_status_idx on reservations (status);

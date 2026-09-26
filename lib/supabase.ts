@@ -35,4 +35,6 @@ export type Reservation = {
   phone: string | null;
   message: string | null;
   status: "pending" | "confirmed" | "cancelled";
+  /** 店内メモ（管理画面だけで使う。お客様向けの画面・メールには出さない）。列を追加する前の DB では undefined */
+  staff_note?: string | null;
 };

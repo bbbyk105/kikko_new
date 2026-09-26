@@ -200,6 +200,7 @@ export default function AdminDashboard() {
             setFormTarget({ mode: "edit", id: selected.id });
           }}
           onDone={handleDone}
+          onRefresh={reload}
         />
       )}
 

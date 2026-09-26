@@ -22,6 +22,7 @@ import {
 import type { BookingMode } from "@/lib/reservation-time";
 import type { ReserveType } from "@/lib/routes";
 import { FormField, fieldA11yProps, fieldClassName } from "@/app/components/ui/form-field";
+import { Turnstile, TurnstileFailedNotice, useTurnstile } from "@/app/components/ui/turnstile";
 import ReserveCalendar from "./ReserveCalendar";
 import ReserveSummary from "./ReserveSummary";
 import ReserveComplete from "./ReserveComplete";
@@ -69,6 +70,7 @@ export default function ReserveForm({ contactInfo, initialType }: ReserveFormPro
   const [selectedTime, setSelectedTime] = useState<string | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const human = useTurnstile();
 
   const mode = bookingModeOf(selectedType);
   const isPrivateBooking = mode === "private";
@@ -141,9 +143,12 @@ export default function ReserveForm({ contactInfo, initialType }: ReserveFormPro
 
     const result = await createReservation(
       buildReservationInput(data, { date: selectedDate, time: selectedTime, mode }),
+      human.token,
     );
 
     setIsSubmitting(false);
+    // ボット対策のトークンは1回しか使えないので、次の送信に備えて取り直す
+    human.reset();
 
     if (result.success) {
       steps.setStep("complete");
@@ -201,6 +206,13 @@ export default function ReserveForm({ contactInfo, initialType }: ReserveFormPro
           onSubmit={handleSubmit(onSubmit)}
           isSubmitting={isSubmitting}
           error={submitError}
+          canSubmit={human.ready}
+          beforeSubmit={
+            <>
+              <Turnstile action="reserve" {...human.widgetProps} />
+              {human.failed && <TurnstileFailedNotice />}
+            </>
+          }
         />
       </div>
     );

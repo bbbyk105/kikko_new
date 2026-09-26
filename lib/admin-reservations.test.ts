@@ -1,7 +1,6 @@
 import {
   adminReservationSchema,
   filterReservations,
-  findConflicts,
   groupByDate,
   summarize,
   toAdminReservation,
@@ -79,28 +78,13 @@ describe("filterReservations", () => {
     expect(filterReservations(list, { query: "09012345678", type: "" }).map((r) => r.id)).toEqual(["a1"]);
     expect(filterReservations(list, { query: "b2", type: "" }).map((r) => r.id)).toEqual(["b2"]);
   });
+  it("店内メモでも探せる", () => {
+    const withNote = [toAdminReservation(row({ id: "n1", staff_note: "プロジェクター使用" })), ...list];
+    expect(filterReservations(withNote, { query: "プロジェクター", type: "" }).map((r) => r.id)).toEqual(["n1"]);
+    expect(withNote[1].staffNote).toBeNull();
+  });
   it("種別で絞り込める", () => {
     expect(filterReservations(list, { query: "", type: "meeting" }).map((r) => r.id)).toEqual(["b2"]);
-  });
-});
-
-describe("findConflicts", () => {
-  const candidates = [
-    { id: "m1", type: "meeting", date: "2026-10-03", time: "10:00-12:00", name: "A" },
-    { id: "v1", type: "visitor", date: "2026-10-03", time: "10:00", name: "B" },
-    { id: "m2", type: "meeting", date: "2026-10-04", time: "10:00-12:00", name: "C" },
-  ];
-
-  it("会議室は時間帯が重なる会議室の予約だけ", () => {
-    expect(findConflicts({ type: "meeting", date: "2026-10-03", time: "11:00-13:00" }, candidates).map((c) => c.id)).toEqual(["m1"]);
-    expect(findConflicts({ type: "meeting", date: "2026-10-03", time: "12:00-13:00" }, candidates)).toEqual([]);
-  });
-  it("貸切は同じ日のすべての予約と重なる", () => {
-    expect(findConflicts({ type: "private", date: "2026-10-03", time: null }, candidates).map((c) => c.id)).toEqual(["m1", "v1"]);
-  });
-  it("貸切の日にはほかの予約を入れられない", () => {
-    const withPrivate = [...candidates, { id: "p1", type: "private", date: "2026-10-04", time: null, name: "D" }];
-    expect(findConflicts({ type: "visitor", date: "2026-10-04", time: "09:00" }, withPrivate).map((c) => c.id)).toEqual(["p1"]);
   });
 });
 

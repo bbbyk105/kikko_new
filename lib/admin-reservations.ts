@@ -1,14 +1,13 @@
 import { addDays, format, parseISO } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { z } from "zod";
-import { reserveData } from "@/app/data/site";
 import {
   RESERVATION_STATUS_LABEL,
   reservationDateLabel,
   reservationTimeLabel,
   type ReservationStatus,
 } from "@/lib/reservation-manage";
-import { hourSlotStartsBetween, normalizeReservationTime, parseTimeRange } from "@/lib/reservation-time";
+import { normalizeReservationTime, parseTimeRange } from "@/lib/reservation-time";
 import { reserveTypeLabel } from "@/lib/reserve-flow";
 import { RESERVE_TYPES } from "@/lib/routes";
 import type { Reservation } from "@/lib/supabase";
@@ -42,6 +41,8 @@ export type AdminReservation = {
   message: string | null;
   status: ReservationStatus;
   statusLabel: string;
+  /** 店内メモ（お客様には見せない） */
+  staffNote: string | null;
 };
 
 export function todayJst(now: Date = new Date()): string {
@@ -65,6 +66,7 @@ export function toAdminReservation(row: Reservation): AdminReservation {
     message: row.message,
     status: row.status,
     statusLabel: RESERVATION_STATUS_LABEL[row.status] ?? row.status,
+    staffNote: row.staff_note ?? null,
   };
 }
 
@@ -108,7 +110,7 @@ export function summarize(
   };
 }
 
-/** 検索（お名前・メール・電話・受付番号）と種別で絞り込む */
+/** 検索（お名前・メール・電話・受付番号・店内メモ）と種別で絞り込む */
 export function filterReservations(
   reservations: AdminReservation[],
   { query, type }: { query: string; type: string },
@@ -122,36 +124,9 @@ export function filterReservations(
       r.name.toLowerCase().includes(q) ||
       r.email.toLowerCase().includes(q) ||
       r.id.startsWith(q) ||
+      (r.staffNote ?? "").toLowerCase().includes(q) ||
       (digits.length >= 3 && (r.phone ?? "").replace(/\D/g, "").includes(digits))
     );
-  });
-}
-
-type SlotTarget = Pick<Reservation, "type" | "date" | "time">;
-export type ConflictCandidate = Pick<Reservation, "id" | "type" | "date" | "time" | "name">;
-
-/** その予約が押さえる会議室の時間枠（会議室以外は空） */
-function meetingSlots(r: SlotTarget): string[] {
-  if (r.type !== "meeting" || !r.time) return [];
-  const range = parseTimeRange(r.time);
-  if (range) return hourSlotStartsBetween(range.start, range.end, reserveData.timeSlots);
-  const single = normalizeReservationTime(r.time);
-  return single ? [single] : [];
-}
-
-/**
- * 同じ日の予約と重なるか（Web の空き枠と同じ考え方）。
- * - 貸切の日は、ほかのすべての予約と重なる
- * - 会議室は、時間帯が重なる会議室の予約と重なる
- * candidates は同じ日のキャンセル以外の予約（自分自身は除いて渡す）
- */
-export function findConflicts(target: SlotTarget, candidates: ConflictCandidate[]): ConflictCandidate[] {
-  const sameDay = candidates.filter((c) => c.date === target.date);
-  if (target.type === "private") return sameDay;
-  const targetSlots = new Set(meetingSlots(target));
-  return sameDay.filter((c) => {
-    if (c.type === "private") return true;
-    return meetingSlots(c).some((slot) => targetSlots.has(slot));
   });
 }
 
