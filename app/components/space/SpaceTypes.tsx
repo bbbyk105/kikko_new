@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { ParallaxPhoto } from "@/app/components/ui/parallax-photo";
 
 interface SpaceCategory {
   id: string;
@@ -33,16 +34,16 @@ export default function SpaceTypes({ categories }: SpaceTypesProps) {
             <article key={category.id} className="group flex flex-col">
               <Link href={`/space/${category.id}`} className="flex flex-1 flex-col">
                 {/* Image */}
-                <div className="relative aspect-[16/10] overflow-hidden mb-6">
+                <ParallaxPhoto className="aspect-[16/10] mb-6">
                   {/* 差し替え箇所: 実際の施設写真に差し替えてください */}
                   <Image
                     src={category.image}
                     alt={`${category.titleJa}スペースの様子`}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                </div>
+                </ParallaxPhoto>
 
                 {/* Content */}
                 <div className="flex flex-1 gap-6">

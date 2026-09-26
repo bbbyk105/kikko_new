@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import SectionIntro from "@/app/components/section/SectionIntro";
+import { ParallaxPhoto } from "@/app/components/ui/parallax-photo";
 
 interface SpaceCategory {
   id: string;
@@ -23,15 +24,15 @@ export default function SpaceOtherTypes({ categories }: SpaceOtherTypesProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12">
           {categories.map((category) => (
             <Link key={category.id} href={`/space/${category.id}`} className="group block">
-              <div className="relative aspect-[4/3] overflow-hidden mb-6">
+              <ParallaxPhoto className="aspect-[4/3] mb-6">
                 <Image
                   src={category.image}
                   alt={`${category.titleJa}スペースの様子`}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
-              </div>
+              </ParallaxPhoto>
               <div className="flex gap-5">
                 <span
                   className="w-[1.2em] shrink-0 font-[var(--font-cormorant)] text-4xl text-[#E5E4DF] leading-none"

@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { spaceCategories } from "@/app/data/site";
 import { SectionHeader, CardTitle, DecorativeNumber, BlockLabel, LeadText } from "@/app/components/ui/typography";
 import { ArrowLink } from "@/app/components/ui/arrow-link";
+import { ParallaxPhoto } from "@/app/components/ui/parallax-photo";
 
 export default function Space() {
   return (
@@ -37,15 +38,15 @@ export default function Space() {
             >
               <Link href={`/space/${category.id}`} className="flex flex-1 flex-col">
                 {/* Image */}
-                <div className="relative aspect-[16/10] overflow-hidden mb-8">
+                <ParallaxPhoto className="aspect-[16/10] mb-8">
                   <Image
                     src={category.image}
                     alt={`${category.titleJa}スペースの様子`}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                </div>
+                </ParallaxPhoto>
 
                 {/* Content */}
                 <div className="flex flex-1 gap-6">
