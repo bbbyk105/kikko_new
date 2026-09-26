@@ -110,9 +110,13 @@ describe("isDayBookable", () => {
     expect(isDayBookable(day(2026, 10, 1), { ...base, mode: "visitor" })).toBe(true);
     expect(isDayBookable(day(2026, 10, 1), { ...base, mode: "meeting" })).toBe(true);
   });
-  it("全枠埋まっていれば不可", () => {
+  it("会議室は全枠埋まっていれば不可", () => {
     const full = { ...base, bookedTimesByDate: { "2026-10-01": SLOTS } };
-    expect(isDayBookable(day(2026, 10, 1), { ...full, mode: "visitor" })).toBe(false);
+    expect(isDayBookable(day(2026, 10, 1), { ...full, mode: "meeting" })).toBe(false);
+  });
+  it("ビジター等は会議室（個室）が全枠埋まっていても可", () => {
+    const full = { ...base, bookedTimesByDate: { "2026-10-01": SLOTS } };
+    expect(isDayBookable(day(2026, 10, 1), { ...full, mode: "visitor" })).toBe(true);
   });
 });
 

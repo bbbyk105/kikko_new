@@ -35,7 +35,7 @@ export type AdminMutationResult =
 
 export type AdminSaveResult =
   | AdminMutationResult
-  /** 保存はできたが、同時に保存された予約と重なっている（保存の直後に確認した結果） */
+  /** 保存はできたが、同時に保存された予約と重なっている（保存の直後に確認した結果。お客様へのメールは送らない） */
   | { ok: true; reservation: AdminReservation; notified: boolean; conflictsAfterSave: string[] }
   /** 同じ日の予約と重なる（force で保存し直せる） */
   | { ok: false; reason: "conflict"; conflicts: { label: string }[] };
@@ -231,16 +231,22 @@ export async function saveReservation(
     if (!row) return { ok: false, reason: "invalid", error: "予約が見つかりません。" };
 
     console.info(`[admin] ${auth.email} ${options.id ? "updated" : "created"} reservation ${row.id}`);
-    const kind: StoreNoticeKind = options.id ? "changed" : row.status === "confirmed" ? "confirmed" : "created";
-    const notified = options.notify ? await notifyCustomer(kind, row) : false;
 
-    // 確認から保存までの間に、別の画面（Web 予約・もう一人の管理者）で重なる予約が入っていないか確かめ直す
+    // 確認から保存までの間に、別の画面（Web 予約・もう一人の管理者）で重なる予約が入っていないか確かめ直す。
+    // 重なっていたらお客様には知らせず、どうするかはスタッフに任せる。
+    // 保存は済んでいるので、確かめ直しに失敗してもエラーにはしない（登録し直すと二重になるため）
     if (!options.force) {
-      const conflictsAfterSave = await conflictLabels(value, row.id);
+      const conflictsAfterSave = await conflictLabels(value, row.id).catch((err: unknown) => {
+        console.error("saveReservation: recheck failed", err);
+        return [];
+      });
       if (conflictsAfterSave.length > 0) {
-        return { ok: true, reservation: toAdminReservation(row), notified, conflictsAfterSave };
+        return { ok: true, reservation: toAdminReservation(row), notified: false, conflictsAfterSave };
       }
     }
+
+    const kind: StoreNoticeKind = options.id ? "changed" : row.status === "confirmed" ? "confirmed" : "created";
+    const notified = options.notify ? await notifyCustomer(kind, row) : false;
     return { ok: true, reservation: toAdminReservation(row), notified };
   } catch (err) {
     console.error("saveReservation:", err);

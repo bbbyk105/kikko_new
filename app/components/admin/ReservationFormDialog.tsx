@@ -108,7 +108,9 @@ export default function ReservationFormDialog({ reservation, onClose, onDone }: 
       const sent = result.notified ? "（お客様にメールを送りました）" : "";
       const overlap =
         "conflictsAfterSave" in result
-          ? `。ただし、同時に入った予約と重なっています: ${result.conflictsAfterSave.join("、")}`
+          ? `。ただし、同時に入った予約と重なっています: ${result.conflictsAfterSave.join("、")}${
+              notify && hasEmail ? "（重なっているため、お客様へのメールは送っていません）" : ""
+            }`
           : "";
       onDone(`${result.reservation.name} 様の予約を${isEdit ? "変更" : "登録"}しました${sent}${overlap}`);
     } else if (result.reason === "conflict") {

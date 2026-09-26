@@ -228,7 +228,7 @@ export function VisitorSlotsPanel({
     if (loading) return <PanelLoading />;
     if (isSelectedDayPrivate) return <PrivateDayMessage />;
     if (slots.length === 0) {
-      return <PanelMessage>この日は予約可能な時間帯がありません（満席）。</PanelMessage>;
+      return <PanelMessage>この日は予約できる時間帯がありません。別の日をお選びください。</PanelMessage>;
     }
     return (
       <div className="space-y-2">

@@ -16,9 +16,9 @@ import {
   type ConflictCandidate,
 } from "@/lib/reservation-conflicts";
 import { isReservationTimeInPastForDateJst } from "@/lib/reservation-time";
-import { RESERVE_TYPES } from "@/lib/routes";
 import { getSupabase } from "@/lib/supabase";
 import { verifyHuman } from "@/lib/turnstile";
+import { parseWebReservation } from "@/lib/validation/reservation";
 
 export type ReservationInput = {
   type: string;
@@ -132,6 +132,60 @@ async function sendCustomerReservationConfirmation(
   }
 }
 
+/**
+ * 重なりが見つかって取り消そうとした予約を、消せなかったときの管理者への連絡。
+ * お客様には「埋まっている」と伝えてあるので、管理画面でキャンセルしてもらう。
+ */
+async function sendWithdrawFailedEmail(input: ReservationInput, reservationId: string) {
+  const from = notificationFrom();
+  if (!from) return;
+
+  const lines = [
+    "ほぼ同時に同じ枠へ予約が入ったため、後から入った次の予約を取り消そうとしましたが、失敗しました。",
+    "お客様には「ほかのご予約で埋まってしまいました」と表示済みです。",
+    "管理画面でこの予約をキャンセルしてください（お客様へのお知らせは不要です）。",
+    "",
+    `ID: ${reservationId}`,
+    `利用種別: ${input.type}`,
+    `利用日時: ${input.date} ${input.time ?? "（終日）"}`,
+    `お名前: ${input.name}`,
+  ];
+
+  const result = await sendResendEmail({
+    from,
+    to: reservationAdminTo(),
+    subject: `【要対応】${siteConfig.name} 重なった予約を取り消せませんでした`,
+    text: lines.join("\n"),
+    tags: [
+      { name: "type", value: "reservation-withdraw-failed" },
+      { name: "recipient", value: "admin" },
+    ],
+  });
+  if (!result.ok && result.reason === "api_error") {
+    console.error("Failed to send withdraw-failed email:", result.message);
+  }
+}
+
+/**
+ * 後から入って先客と重なった自分の予約を取り消す。
+ * 消せなければキャンセル扱いにして空き枠や「確認待ち」に残さず、それもできなければ管理者に知らせる。
+ */
+async function withdrawReservation(input: ReservationInput, reservationId: string) {
+  const supabase = getSupabase();
+  const removed = await supabase.from("reservations").delete().eq("id", reservationId);
+  if (!removed.error) return;
+  console.error("Failed to remove conflicting reservation:", removed.error);
+
+  const cancelled = await supabase
+    .from("reservations")
+    .update({ status: "cancelled" })
+    .eq("id", reservationId);
+  if (!cancelled.error) return;
+  console.error("Failed to cancel conflicting reservation:", cancelled.error);
+
+  await sendWithdrawFailedEmail(input, reservationId);
+}
+
 const SLOT_TAKEN_ERROR =
   "選択した日時は、ほかのご予約で埋まってしまいました。お手数ですが、別の日時をお選びください。";
 
@@ -149,13 +203,14 @@ async function sameDayReservations(date: string): Promise<SameDayReservation[]> 
 }
 
 export async function createReservation(
-  input: ReservationInput,
+  rawInput: ReservationInput,
   humanToken?: string | null,
 ): Promise<ReservationResult> {
   try {
-    if (!RESERVE_TYPES.some((type) => type === input.type) || !/^\d{4}-\d{2}-\d{2}$/.test(input.date)) {
-      return { success: false, error: "予約内容が正しくありません。もう一度お選びください。" };
-    }
+    // 画面の入力チェックを通らない送信もあるので、形式・日付の範囲・時間枠をここでも確かめる
+    const parsed = parseWebReservation(rawInput);
+    if (!parsed.ok) return { success: false, error: parsed.error };
+    const input: ReservationInput = parsed.value;
 
     const human = await verifyHuman(humanToken, "reserve");
     if (!human.ok) return { success: false, error: human.error };
@@ -200,8 +255,7 @@ export async function createReservation(
     // ほぼ同時に同じ枠の予約が入った場合は、先に入った方を残し、後から入った自分を取り消す
     const mine = { ...input, id: data.id as string, created_at: data.created_at as string };
     if (earlierWebBookingConflicts(mine, await sameDayReservations(input.date)).length > 0) {
-      const removed = await getSupabase().from("reservations").delete().eq("id", mine.id);
-      if (removed.error) console.error("Failed to remove conflicting reservation:", removed.error);
+      await withdrawReservation(input, mine.id);
       return { success: false, error: SLOT_TAKEN_ERROR };
     }
 
