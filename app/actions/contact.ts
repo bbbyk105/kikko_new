@@ -85,7 +85,7 @@ async function sendCustomerContactConfirmation(data: {
     data.message,
     "────────────────────────",
     "",
-    siteConfig.name,
+    siteConfig.officialName,
     siteConfig.address.full,
     `TEL ${siteConfig.phone}`,
     siteConfig.email,

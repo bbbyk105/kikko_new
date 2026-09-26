@@ -69,9 +69,7 @@ export default function PrivacyPage() {
                 <dl className="p-8 bg-[#F7F6F3] space-y-3 text-[14px] leading-[1.9] tracking-[0.02em]">
                   <div className="flex flex-col sm:flex-row sm:gap-6">
                     <dt className="sm:w-24 shrink-0 text-[12px] text-[#9A9A9A] sm:pt-0.5">名称</dt>
-                    <dd className="text-[#2C2C2C]">
-                      {siteConfig.name}（{siteConfig.nameEn}）
-                    </dd>
+                    <dd className="text-[#2C2C2C]">{siteConfig.officialName}</dd>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:gap-6">
                     <dt className="sm:w-24 shrink-0 text-[12px] text-[#9A9A9A] sm:pt-0.5">所在地</dt>

@@ -3,6 +3,8 @@ import { contactHref, reserveHref, type ReserveType } from "@/lib/routes";
 export const siteConfig = {
   name: "橘香堂",
   nameEn: "worx mt.fuji",
+  /** 正式名称。施設概要・プライバシーポリシー・メール署名など、事業者として名乗る箇所だけに使う */
+  officialName: "worx mt.fuji 橘香堂（近藤薬局）",
   url: "https://worxmtfuji.com",
   tagline: "働く場所から、仕事の質を整える。",
   description: "富士市吉原の、静かで上質なワークスペース。",
@@ -848,7 +850,7 @@ export const aboutPageData = {
     },
   ],
   overview: [
-    { label: "名称", value: `${siteConfig.name}（${siteConfig.nameEn}）` },
+    { label: "名称", value: siteConfig.officialName },
     { label: "所在地", value: `${siteConfig.address.postal} ${siteConfig.address.full}` },
     {
       label: "営業時間",
@@ -904,7 +906,7 @@ export const accessPageData = {
 
 export const privacyPolicy = {
   enactedAt: "2026年9月25日",
-  preamble: `${siteConfig.name}（${siteConfig.nameEn}）（以下「当施設」といいます）は、お客様の個人情報を適切に取り扱うことを重要な責務と考え、以下のとおりプライバシーポリシーを定めます。`,
+  preamble: `${siteConfig.officialName}（以下「当施設」といいます）は、お客様の個人情報を適切に取り扱うことを重要な責務と考え、以下のとおりプライバシーポリシーを定めます。`,
   sections: [
     {
       title: "取得する個人情報",
