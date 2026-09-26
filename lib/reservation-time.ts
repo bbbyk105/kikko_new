@@ -119,6 +119,14 @@ export function meetingRangeIsFreeAndNotPast(
 
 const JST = "Asia/Tokyo";
 
+/** 今日から何日先まで Web の予約を受け付けるか（その日を含む） */
+export const BOOKING_WINDOW_DAYS = 60;
+
+/** 日本時間の今日（yyyy-MM-dd） */
+export function todayJst(now: Date = new Date()): string {
+  return formatInTimeZone(now, JST, "yyyy-MM-dd");
+}
+
 /**
  * サーバー用: 当日（JST）で、予約時刻のいずれかがすでに開始済みなら true（不正な予約）
  */
@@ -204,7 +212,8 @@ export type BookingMode = "visitor" | "meeting" | "private";
  * カレンダーでその日を選べるか（表示期間外かどうかは呼び出し側で判定）。
  * - 貸切日は全モードで不可
  * - 貸切: 他の予約が一切ない日のみ
- * - それ以外: 空いている時間枠が1つ以上ある日
+ * - 会議室: 空いている時間枠が1つ以上ある日
+ * - ビジター等: 会議室は個室で、ビジター等は共有スペースなので、会議室の予約では枠を減らさない
  */
 export function isDayBookable(
   day: Date,
@@ -226,7 +235,8 @@ export function isDayBookable(
   if (privateDates.has(key)) return false;
   const times = bookedTimesByDate[key];
   if (mode === "private") return !times || times.length === 0;
-  return availableSlotsForDay(day, timeSlots, toSlotSet(times), now).length > 0;
+  const booked = mode === "meeting" ? toSlotSet(times) : new Set<string>();
+  return availableSlotsForDay(day, timeSlots, booked, now).length > 0;
 }
 
 /** 開始時刻より後の終了時刻候補 */

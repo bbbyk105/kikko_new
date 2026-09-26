@@ -7,12 +7,14 @@ import {
   reservationTimeLabel,
   type ReservationStatus,
 } from "@/lib/reservation-manage";
-import { normalizeReservationTime, parseTimeRange } from "@/lib/reservation-time";
+import { normalizeReservationTime, parseTimeRange, todayJst } from "@/lib/reservation-time";
 import { reserveTypeLabel } from "@/lib/reserve-flow";
 import { RESERVE_TYPES } from "@/lib/routes";
 import type { Reservation } from "@/lib/supabase";
 
 const JST = "Asia/Tokyo";
+
+export { todayJst };
 
 export type AdminView = "upcoming" | "pending" | "past" | "cancelled" | "all";
 
@@ -44,10 +46,6 @@ export type AdminReservation = {
   /** 店内メモ（お客様には見せない） */
   staffNote: string | null;
 };
-
-export function todayJst(now: Date = new Date()): string {
-  return formatInTimeZone(now, JST, "yyyy-MM-dd");
-}
 
 export function toAdminReservation(row: Reservation): AdminReservation {
   return {

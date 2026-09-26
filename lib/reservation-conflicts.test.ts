@@ -38,7 +38,7 @@ describe("findWebBookingConflicts（Web の予約フォーム）", () => {
     expect(findWebBookingConflicts({ type: "visitor", date: "2026-10-04", time: "09:00" }, withPrivate).map((c) => c.id)).toEqual(["p1"]);
     expect(findWebBookingConflicts({ type: "private", date: "2026-10-04", time: null }, withPrivate).map((c) => c.id)).toEqual(["m2", "p1"]);
   });
-  it("ビジター同士は重ならない（共有利用）", () => {
+  it("ビジターは、ビジター同士とも同じ時間の会議室（個室）とも重ならない", () => {
     expect(findWebBookingConflicts({ type: "visitor", date: "2026-10-03", time: "10:00" }, candidates)).toEqual([]);
   });
 });

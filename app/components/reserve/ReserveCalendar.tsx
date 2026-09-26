@@ -4,7 +4,12 @@ import { memo, useMemo } from "react";
 import { addDays, format, isBefore, startOfDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { reserveData } from "@/app/data/site";
-import { isDayBookable, toSlotSet, type BookingMode } from "@/lib/reservation-time";
+import {
+  BOOKING_WINDOW_DAYS,
+  isDayBookable,
+  toSlotSet,
+  type BookingMode,
+} from "@/lib/reservation-time";
 import { PRIVATE_TIME_LABEL } from "@/lib/reserve-flow";
 import { useMonthCalendar } from "@/app/hooks/use-month-calendar";
 import { useReservationAvailability } from "@/app/hooks/use-reservation-availability";
@@ -18,9 +23,6 @@ import {
   SelectionNote,
   VisitorSlotsPanel,
 } from "./SlotPanels";
-
-/** 今日から何日先まで予約を受け付けるか */
-const BOOKING_WINDOW_DAYS = 60;
 
 interface ReserveCalendarProps {
   selectedDate: Date | undefined;
@@ -63,7 +65,6 @@ function ReserveCalendar({
     selectedTime,
     onSelectTime,
     privateDates,
-    bookedSlots,
   });
 
   const meetingRange = useMeetingRange({
