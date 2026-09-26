@@ -102,6 +102,7 @@ export default function PrivacyPage() {
 
             <p className="mt-16 text-[12px] tracking-[0.05em] text-[#9A9A9A]">
               制定日：{privacyPolicy.enactedAt}
+              {privacyPolicy.revisedAt && <>　最終改定日：{privacyPolicy.revisedAt}</>}
             </p>
           </article>
         </div>
