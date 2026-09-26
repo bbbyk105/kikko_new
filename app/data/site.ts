@@ -1,8 +1,10 @@
-import { contactHref, reserveHref, type ReserveType } from "@/lib/routes";
+import { contactHref, MYPAGE_PATH, reserveHref, type ReserveType } from "@/lib/routes";
 
 export const siteConfig = {
   name: "橘香堂",
   nameEn: "worx mt.fuji",
+  /** 正式名称。施設概要・プライバシーポリシー・メール署名など、事業者として名乗る箇所だけに使う */
+  officialName: "worx mt.fuji 橘香堂（近藤薬局）",
   url: "https://worxmtfuji.com",
   tagline: "働く場所から、仕事の質を整える。",
   description: "富士市吉原の、静かで上質なワークスペース。",
@@ -51,6 +53,7 @@ export const navigation: NavItem[] = [
 export const primaryActions = {
   reserve: { label: "ご予約", href: reserveHref() },
   contact: { label: "お問い合わせ", href: contactHref() },
+  mypage: { label: "マイページ", href: MYPAGE_PATH },
 };
 
 export const heroFeatures = [
@@ -337,6 +340,9 @@ export const spacePageData = {
   ],
 };
 
+/** Web でのキャンセル締切（利用日の前日のこの時刻・日本時間） */
+const CANCEL_DEADLINE_TIME = "17:00";
+
 export const faqItems = [
   {
     id: "visitor",
@@ -391,6 +397,11 @@ export const faqItems = [
     question: "飲食の持ち込みはできますか？",
     answer:
       "はい、可能です。フリードリンクもご用意しておりますので、ご自由にご利用ください。",
+  },
+  {
+    id: "cancel",
+    question: "予約のキャンセルや変更はできますか？",
+    answer: `キャンセルは、ご利用日の前日${CANCEL_DEADLINE_TIME}まで、予約受付メールに記載のリンクまたはマイページから承ります。マイページには、ご予約時のメールアドレスでログインできます（パスワードは不要です）。前日${CANCEL_DEADLINE_TIME}以降のキャンセルや日時の変更は、お電話（${siteConfig.phone}）でご連絡ください。`,
   },
 ];
 
@@ -448,10 +459,17 @@ export const reserveData = {
     "17:00",
     "18:00",
   ],
+  cancelDeadlineTime: CANCEL_DEADLINE_TIME,
   notes: [
     "ご予約確定後、担当者より確認のご連絡をいたします",
-    "キャンセルは前日17:00までにご連絡ください",
-    "当日のご予約変更は電話にてお問い合わせください",
+    `キャンセルは前日${CANCEL_DEADLINE_TIME}まで、予約受付メールのリンクまたはマイページから承ります。それ以降はお電話でご連絡ください`,
+    "日時の変更はお電話にて承ります",
+  ],
+  /** ご予約の確認・キャンセルページ、マイページの注意書き */
+  manageNotes: [
+    `Web でのキャンセルは、ご利用日の前日${CANCEL_DEADLINE_TIME}まで承ります`,
+    `前日${CANCEL_DEADLINE_TIME}以降のキャンセルや、日時の変更はお電話（${siteConfig.phone}）でご連絡ください`,
+    "マイページには、ご予約時のメールアドレスでログインできます（パスワードは不要です）",
   ],
 };
 
@@ -848,7 +866,7 @@ export const aboutPageData = {
     },
   ],
   overview: [
-    { label: "名称", value: `${siteConfig.name}（${siteConfig.nameEn}）` },
+    { label: "名称", value: siteConfig.officialName },
     { label: "所在地", value: `${siteConfig.address.postal} ${siteConfig.address.full}` },
     {
       label: "営業時間",
@@ -904,7 +922,7 @@ export const accessPageData = {
 
 export const privacyPolicy = {
   enactedAt: "2026年9月25日",
-  preamble: `${siteConfig.name}（${siteConfig.nameEn}）（以下「当施設」といいます）は、お客様の個人情報を適切に取り扱うことを重要な責務と考え、以下のとおりプライバシーポリシーを定めます。`,
+  preamble: `${siteConfig.officialName}（以下「当施設」といいます）は、お客様の個人情報を適切に取り扱うことを重要な責務と考え、以下のとおりプライバシーポリシーを定めます。`,
   sections: [
     {
       title: "取得する個人情報",

@@ -51,6 +51,11 @@ export default async function ReservePage({ searchParams }: ReservePageProps) {
               ご予約にあたって
             </h2>
             <BulletList items={reserveData.notes} />
+            <p className="mt-8 text-center">
+              <ArrowLink href={primaryActions.mypage.href}>
+                マイページでご予約を確認・キャンセルする
+              </ArrowLink>
+            </p>
             <div className="mt-12 pt-10 border-t border-[#E5E4DF] text-center">
               <p className="text-sm text-[#6B6B6B] mb-5">
                 ご質問・ご相談のみの方は、お問い合わせフォームをご利用ください。

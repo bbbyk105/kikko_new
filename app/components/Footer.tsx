@@ -126,12 +126,20 @@ export default function Footer() {
           <p className="text-[11px] tracking-[0.05em] text-[#5A5A5A]">
             © {new Date().getFullYear()} {siteConfig.name} ({siteConfig.nameEn}). All rights reserved.
           </p>
-          <Link
-            href="/privacy"
-            className="text-[11px] tracking-[0.05em] text-[#7A7A7A] hover:text-[#FAFAF8] transition-colors"
-          >
-            プライバシーポリシー
-          </Link>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <Link
+              href={primaryActions.mypage.href}
+              className="text-[11px] tracking-[0.05em] text-[#7A7A7A] hover:text-[#FAFAF8] transition-colors"
+            >
+              マイページ（ご予約の確認・キャンセル）
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-[11px] tracking-[0.05em] text-[#7A7A7A] hover:text-[#FAFAF8] transition-colors"
+            >
+              プライバシーポリシー
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
