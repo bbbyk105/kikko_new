@@ -69,9 +69,9 @@ export function WorkspaceFigure() {
       <line x1="330" y1="40" x2="330" y2="150" stroke="currentColor" strokeWidth="0.6" strokeDasharray={CENTER} />
       <rect x="296" y="64" width="68" height="12" rx="3" fill="none" stroke="currentColor" strokeWidth="1.5" className={INK.line} />
       <g fill="none" stroke="currentColor" strokeWidth="1.5" className={INK.accent}>
-        <path d="M311.6 91.4 A24 24 0 0 0 348.4 91.4" />
-        <path d="M297.8 103 A42 42 0 0 0 362.2 103" />
-        <path d="M284 114.6 A60 60 0 0 0 376 114.6" />
+        <path className="loop wifi-arc" d="M311.6 91.4 A24 24 0 0 0 348.4 91.4" />
+        <path className="loop wifi-arc wifi-arc-2" d="M297.8 103 A42 42 0 0 0 362.2 103" />
+        <path className="loop wifi-arc wifi-arc-3" d="M284 114.6 A60 60 0 0 0 376 114.6" />
       </g>
       <line x1="376" y1="114" x2="420" y2="100" stroke="currentColor" strokeWidth="0.75" className={INK.accent} />
       <text x="424" y="104" className={LABEL.accent} style={DIM_MONO}>
@@ -164,6 +164,7 @@ export function PrintScanFigure() {
         <line x1="286" y1="281" x2="306" y2="281" />
         <line x1="286" y1="304" x2="306" y2="304" />
       </g>
+      <rect x="204" y="136" width="5" height="10" fill="currentColor" className={`loop scan-bar ${INK.accent}`} />
       <Dimension x1={200} x2={392} y={112} from={128} label="MULTIFUNCTION PRINTER" markerId="kf2-arrow" />
 
       {/* 書類 */}
@@ -171,17 +172,27 @@ export function PrintScanFigure() {
         <path d="M454 150 L530 150 L550 170 L550 278 L454 278 Z" />
         <path d="M530 150 L530 170 L550 170" strokeWidth="1" />
       </g>
+      <line x1="468" y1="176" x2="512" y2="176" stroke="currentColor" strokeWidth="2" className={INK.thin} />
       <g stroke="currentColor" strokeWidth="1" className={INK.thin}>
-        <line x1="468" y1="176" x2="512" y2="176" strokeWidth="2" />
         {[196, 208, 220, 232, 244, 256].map((y, i) => (
-          <line key={y} x1="468" y1={y} x2={i % 3 === 2 ? 510 : 536} y2={y} />
+          <line key={y} x1="468" y1={y} x2={i % 3 === 2 ? 510 : 536} y2={y} className="loop print-line" />
         ))}
       </g>
 
       {/* 印刷・スキャンの流れ */}
       <g fill="none" stroke="currentColor" strokeWidth="1.25" className={INK.accent}>
-        <path d="M352 192 C400 192 410 214 450 214" markerEnd="url(#kf2-arrow)" />
-        <path d="M500 146 C496 118 442 114 398 128" markerEnd="url(#kf2-arrow)" />
+        <path
+          d="M352 192 C400 192 410 214 450 214"
+          strokeDasharray="6 5"
+          markerEnd="url(#kf2-arrow)"
+          className="loop flow-line"
+        />
+        <path
+          d="M500 146 C496 118 442 114 398 128"
+          strokeDasharray="6 5"
+          markerEnd="url(#kf2-arrow)"
+          className="loop flow-line"
+        />
       </g>
       <text x="394" y="186" className={LABEL.accent} style={DIM_MONO}>
         PRINT
@@ -249,22 +260,24 @@ export function AddressFigure() {
       </g>
 
       {/* 郵便物 */}
-      <g fill="none" stroke="currentColor" strokeWidth="1.5" className={INK.line}>
-        <rect x="452" y="120" width="128" height="80" />
-        <path d="M452 120 L516 160 L580 120" strokeWidth="1" />
-      </g>
-      <g stroke="currentColor" strokeWidth="1" className={INK.thin}>
-        <line x1="476" y1="178" x2="556" y2="178" />
-        <line x1="476" y1="188" x2="536" y2="188" />
+      <g className="loop envelope">
+        <g fill="none" stroke="currentColor" strokeWidth="1.5" className={INK.line}>
+          <rect x="452" y="120" width="128" height="80" />
+          <path d="M452 120 L516 160 L580 120" strokeWidth="1" />
+        </g>
+        <g stroke="currentColor" strokeWidth="1" className={INK.thin}>
+          <line x1="476" y1="178" x2="556" y2="178" />
+          <line x1="476" y1="188" x2="536" y2="188" />
+        </g>
       </g>
       <path
         d="M452 170 C420 172 404 190 400 208"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.25"
-        strokeDasharray="5 4"
+        strokeDasharray="6 5"
         markerEnd="url(#kf3-arrow)"
-        className={INK.accent}
+        className={`loop flow-line ${INK.accent}`}
       />
       <text x="412" y="166" className={LABEL.accent} style={DIM_MONO}>
         MAIL
@@ -273,7 +286,7 @@ export function AddressFigure() {
       {/* 登録済みのスタンプ */}
       <g fill="none" stroke="currentColor" className={INK.accent}>
         <circle cx="516" cy="258" r="28" strokeWidth="1.25" strokeDasharray="5 4" />
-        <path d="M503 259 L513 269 L530 247" strokeWidth="2.5" />
+        <path d="M503 259 L513 269 L530 247" strokeWidth="2.5" className="loop stamp-check" />
       </g>
       <text x="516" y="302" textAnchor="middle" className={LABEL.accent} style={DIM_MONO}>
         REGISTERED
@@ -313,8 +326,8 @@ export function FloorPlanFigure() {
       {/* 壁（断面ハッチ） */}
       <Hatch clipId="kf4-wall" from={72} to={568} y1={76} y2={316} step={8} />
       <g fill="none" stroke="currentColor" strokeWidth="1.5" className={INK.line}>
-        <rect x="72" y="76" width="496" height="240" />
-        <rect x="80" y="84" width="480" height="224" />
+        <rect x="72" y="76" width="496" height="240" className="figure-long" />
+        <rect x="80" y="84" width="480" height="224" className="figure-long" />
       </g>
       {/* 出入口（壁を抜いて扉の開きを描く） */}
       <rect x="292" y="305" width="40" height="13" fill="#FFFFFF" />
@@ -331,9 +344,18 @@ export function FloorPlanFigure() {
       </text>
 
       {/* 可動の仕切り */}
-      <line x1="308" y1="88" x2="308" y2="262" stroke="currentColor" strokeWidth="1" strokeDasharray="6 4" />
-      <text x="316" y="102" className={LABEL.small} style={DIM_MONO}>
-        MOVABLE
+      <line
+        x1="308"
+        y1="88"
+        x2="308"
+        y2="262"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeDasharray="6 4"
+        className={`loop partition ${INK.accent}`}
+      />
+      <text x="308" y="72" textAnchor="middle" className={LABEL.small} style={DIM_MONO}>
+        ← MOVABLE →
       </text>
 
       {/* 会議 */}

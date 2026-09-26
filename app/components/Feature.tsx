@@ -1,17 +1,21 @@
 import { features } from "@/app/data/site";
 import { featureFigures, type FeatureFigureId } from "@/app/components/feature/FeatureFigures";
+import { InView } from "@/app/components/feature/InView";
 import { cn } from "@/lib/utils";
 import { SectionHeader, CardTitle, DecorativeNumber, LeadText } from "@/app/components/ui/typography";
 import { ArrowLink } from "@/app/components/ui/arrow-link";
 
-/** 設備ごとの製図風イラスト（写真の使い回しをやめ、項目ごとに別の図を見せる） */
+/**
+ * 設備ごとの製図風イラスト（写真の使い回しをやめ、項目ごとに別の図を見せる）。
+ * 画面に入ると線が描き出され、そのあと一部の部品が動き続ける
+ */
 function FigureCard({ id, className }: { id: string; className?: string }) {
   const Figure = featureFigures[id as FeatureFigureId];
   if (!Figure) return null;
   return (
-    <div className={cn("bg-white border border-[#E5E4DF] p-3 sm:p-5 transition-colors", className)}>
+    <InView className={cn("bg-white border border-[#E5E4DF] p-3 sm:p-5 transition-colors", className)}>
       <Figure />
-    </div>
+    </InView>
   );
 }
 

@@ -72,7 +72,10 @@ export function Hatch({
   );
 }
 
-/** 図面シート（枠・右上の見出し・左下の図番） */
+/**
+ * 図面シート（枠・右上の見出し・左下の図番）。
+ * 親に .is-visible が付くと描き出しのアニメーションが始まる（app/globals.css の .feature-figure）
+ */
 export function Sheet({
   label,
   caption,
@@ -85,8 +88,22 @@ export function Sheet({
   children: ReactNode;
 }) {
   return (
-    <svg viewBox="0 0 640 400" role="img" aria-label={ariaLabel} className={`h-auto w-full ${INK.thin}`}>
-      <rect x="16" y="16" width="608" height="368" fill="none" stroke="currentColor" strokeWidth="1" />
+    <svg
+      viewBox="0 0 640 400"
+      role="img"
+      aria-label={ariaLabel}
+      className={`feature-figure h-auto w-full ${INK.thin}`}
+    >
+      <rect
+        x="16"
+        y="16"
+        width="608"
+        height="368"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        className="figure-frame"
+      />
       <text x="608" y="40" textAnchor="end" className={LABEL.base} style={DIM_MONO}>
         {label}
       </text>
