@@ -118,28 +118,24 @@ export const features = [
     title: "高速Wi-Fiと快適な設備",
     description:
       "安定した高速インターネット環境と、集中して作業できる快適なデスク・チェアを完備。",
-    image: "/images/slide1.webp",
   },
   {
     id: "business",
     title: "ビジネスサポート",
     description:
       "高性能プリンター・スキャナーを常設。急な印刷やスキャンにも対応。",
-    image: "/images/slide2.webp",
   },
   {
     id: "address",
     title: "住所登録サービス",
     description:
       "法人登記、事業所住所として利用可能。郵便物の受け取りにも対応いたします。",
-    image: "/images/slide3.webp",
   },
   {
     id: "flexible",
     title: "柔軟な利用形態",
     description:
       "会議やセミナー、小規模イベントまで。空間を自在にカスタマイズしてご利用いただけます。",
-    image: "/images/yoga.jpg",
   },
 ];
 
