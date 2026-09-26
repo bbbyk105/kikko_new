@@ -8,6 +8,8 @@ import Pricing from "@/app/components/Pricing";
 import Faq from "@/app/components/Faq";
 import Access from "@/app/components/Access";
 import Contact from "@/app/components/Contact";
+import { JsonLd } from "@/app/components/seo/JsonLd";
+import { homeStructuredData } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -25,6 +27,7 @@ export default function Home() {
       <Faq />
       <Access />
       <Contact />
+      <JsonLd data={homeStructuredData()} />
     </>
   );
 }
