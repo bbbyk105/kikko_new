@@ -3,7 +3,8 @@ import { Cormorant_Garamond, Noto_Sans_JP } from "next/font/google";
 import { siteConfig } from "@/app/data/site";
 import "./globals.css";
 
-const defaultTitle = `${siteConfig.name} (${siteConfig.nameEn}) | 富士市吉原のコワーキングスペース`;
+// 検索結果で先に目に入るよう、狙う言葉（地域＋業種）を前に置く
+const defaultTitle = `富士市吉原のコワーキングスペース | ${siteConfig.name} (${siteConfig.nameEn})`;
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -37,13 +38,15 @@ export const metadata: Metadata = {
     "会議室",
     "静岡県",
   ],
+  // og:title・og:description はここで固定しない（固定するとどのページを共有してもトップの内容になる）。
+  // 各ページの title・description が使われる。画像は app/opengraph-image.jpg
   openGraph: {
-    title: defaultTitle,
     siteName: `${siteConfig.name} (${siteConfig.nameEn})`,
-    description:
-      "静岡県富士市吉原の静かで上質なワークスペース。高速Wi-Fi、住所登録、会議室完備。",
     locale: "ja_JP",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 

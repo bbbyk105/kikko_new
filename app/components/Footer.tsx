@@ -49,7 +49,7 @@ export default function Footer() {
 
           {/* Menu */}
           <nav aria-label="フッターナビゲーション" className="lg:col-span-2">
-            <BlockLabel as="h3" theme="dark" className="mb-5">
+            <BlockLabel theme="dark" className="mb-5">
               Menu
             </BlockLabel>
             <ul className="space-y-3.5">
@@ -70,7 +70,7 @@ export default function Footer() {
 
           {/* Space */}
           <nav aria-label="利用スタイル" className="lg:col-span-3">
-            <BlockLabel as="h3" theme="dark" className="mb-5">
+            <BlockLabel theme="dark" className="mb-5">
               Space
             </BlockLabel>
             <ul className="space-y-3.5">
@@ -86,7 +86,7 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div className="lg:col-span-3">
-            <BlockLabel as="h3" theme="dark" className="mb-5">
+            <BlockLabel theme="dark" className="mb-5">
               Contact
             </BlockLabel>
             <address className="not-italic space-y-5 text-[13px] text-[#9A9A9A]">
