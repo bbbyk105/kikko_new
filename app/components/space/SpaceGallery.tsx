@@ -54,7 +54,7 @@ export default function SpaceGallery({ images }: SpaceGalleryProps) {
                     src={image.src}
                     alt={image.alt}
                     fill
-                    className="object-cover transition-transform duration-700 hover:scale-105"
+                    className="object-cover"
                     sizes="(max-width: 768px) 50vw, 25vw"
                   />
                 </div>

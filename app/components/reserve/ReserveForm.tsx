@@ -261,7 +261,8 @@ export default function ReserveForm({ contactInfo, initialType }: ReserveFormPro
             />
           </div>
 
-          <div className="flex justify-center gap-4">
+          {/* 「戻る」と「次へ進む」は長いほうの文字幅に合わせて同じ幅にする */}
+          <div className="mx-auto grid w-fit grid-flow-col auto-cols-fr gap-4">
             <button type="button" onClick={steps.back} className={secondaryButtonClass}>
               戻る
             </button>

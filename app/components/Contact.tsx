@@ -23,9 +23,10 @@ export default function Contact() {
               <br className="hidden sm:block" />
               貸切利用のご予約を承ります。
             </LeadText>
+            {/* 右の「お問い合わせ」と同じ幅にする（min-w-44 は長いほうの文字幅より少し広い） */}
             <Link
               href="/reserve"
-              className="inline-flex items-center gap-2 px-8 py-4 text-[12px] tracking-[0.12em] text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] transition-colors"
+              className="inline-flex min-w-44 items-center justify-center gap-2 px-8 py-4 text-[12px] tracking-[0.12em] text-[#FAFAF8] bg-[#2C2C2C] border border-transparent hover:bg-[#3D3D3D] transition-colors"
             >
               <span>予約する</span>
               <ArrowRight className="w-3 h-3" strokeWidth={1.5} aria-hidden="true" />
@@ -46,7 +47,7 @@ export default function Contact() {
 
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 text-[12px] tracking-[0.12em] text-[#2C2C2C] border border-[#2C2C2C] hover:bg-[#2C2C2C] hover:text-[#FAFAF8] transition-colors mb-14"
+              className="inline-flex min-w-44 items-center justify-center gap-2 px-8 py-4 text-[12px] tracking-[0.12em] text-[#2C2C2C] border border-[#2C2C2C] hover:bg-[#2C2C2C] hover:text-[#FAFAF8] transition-colors mb-14"
             >
               <span>お問い合わせ</span>
               <ArrowRight className="w-3 h-3" strokeWidth={1.5} aria-hidden="true" />

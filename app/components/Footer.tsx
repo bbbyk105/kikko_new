@@ -31,16 +31,17 @@ export default function Footer() {
               <br />
               {siteConfig.description}
             </p>
-            <div className="flex flex-wrap gap-3">
+            {/* 2つを同じ幅にする（スマホは左右半分ずつ、sm 以上は長いほうの文字幅に揃える） */}
+            <div className="grid grid-cols-2 gap-3 sm:w-fit sm:grid-cols-none sm:grid-flow-col sm:auto-cols-fr">
               <Link
                 href={primaryActions.reserve.href}
-                className="inline-flex items-center justify-center px-7 py-3 text-[12px] tracking-[0.12em] text-[#2C2C2C] bg-[#FAFAF8] hover:bg-[#E5E4DF] transition-colors"
+                className="inline-flex items-center justify-center px-4 sm:px-7 py-3 text-[12px] tracking-[0.12em] text-[#2C2C2C] bg-[#FAFAF8] hover:bg-[#E5E4DF] transition-colors"
               >
                 {primaryActions.reserve.label}
               </Link>
               <Link
                 href={primaryActions.contact.href}
-                className="inline-flex items-center justify-center px-7 py-3 text-[12px] tracking-[0.12em] text-[#FAFAF8] border border-[#6B6B6B] hover:border-[#FAFAF8] transition-colors"
+                className="inline-flex items-center justify-center px-4 sm:px-7 py-3 text-[12px] tracking-[0.12em] text-[#FAFAF8] border border-[#6B6B6B] hover:border-[#FAFAF8] transition-colors"
               >
                 {primaryActions.contact.label}
               </Link>
