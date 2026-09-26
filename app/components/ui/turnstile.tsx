@@ -88,6 +88,8 @@ export function Turnstile({ action, resetKey, onToken, onFail }: TurnstileProps)
           sitekey: TURNSTILE_SITE_KEY,
           action,
           appearance: "interaction-only",
+          // サイトは白基調なので、閲覧側のダークモード設定に関係なく明るい表示にする
+          theme: "light",
           language: "ja",
           callback: (token: string) => handlers.current.onToken(token),
           "expired-callback": () => handlers.current.onToken(null),
