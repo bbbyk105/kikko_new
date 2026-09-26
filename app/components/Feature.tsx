@@ -1,7 +1,23 @@
-import Image from "next/image";
 import { features } from "@/app/data/site";
+import { featureFigures, type FeatureFigureId } from "@/app/components/feature/FeatureFigures";
+import { InView } from "@/app/components/feature/InView";
+import { cn } from "@/lib/utils";
 import { SectionHeader, CardTitle, DecorativeNumber, LeadText } from "@/app/components/ui/typography";
 import { ArrowLink } from "@/app/components/ui/arrow-link";
+
+/**
+ * 設備ごとの製図風イラスト（写真の使い回しをやめ、項目ごとに別の図を見せる）。
+ * 画面に入ると線が描き出され、そのあと一部の部品が動き続ける
+ */
+function FigureCard({ id, className }: { id: string; className?: string }) {
+  const Figure = featureFigures[id as FeatureFigureId];
+  if (!Figure) return null;
+  return (
+    <InView className={cn("bg-white border border-[#E5E4DF] p-3 sm:p-5 transition-colors", className)}>
+      <Figure />
+    </InView>
+  );
+}
 
 export default function Feature() {
   return (
@@ -28,15 +44,7 @@ export default function Feature() {
           {/* Feature 1 - Large Left */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <div className="lg:col-span-7">
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image
-                  src={features[0].image}
-                  alt={features[0].title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                />
-              </div>
+              <FigureCard id={features[0].id} />
             </div>
             <div className="lg:col-span-5 lg:pl-4">
               <DecorativeNumber size="large" className="block mb-5">01</DecorativeNumber>
@@ -53,15 +61,7 @@ export default function Feature() {
               <LeadText>{features[1].description}</LeadText>
             </div>
             <div className="lg:col-span-7 order-1 lg:order-2">
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image
-                  src={features[1].image}
-                  alt={features[1].title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 60vw"
-                />
-              </div>
+              <FigureCard id={features[1].id} />
             </div>
           </div>
 
@@ -69,15 +69,7 @@ export default function Feature() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-14 lg:gap-20">
             {features.slice(2).map((feature, index) => (
               <div key={feature.id} className="group">
-                <div className="relative aspect-[4/3] overflow-hidden mb-8">
-                  <Image
-                    src={feature.image}
-                    alt={feature.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
+                <FigureCard id={feature.id} className="mb-8 group-hover:border-[#C9C8C3]" />
                 <DecorativeNumber className="block mb-4">0{index + 3}</DecorativeNumber>
                 <CardTitle className="mb-4">{feature.title}</CardTitle>
                 <LeadText>{feature.description}</LeadText>

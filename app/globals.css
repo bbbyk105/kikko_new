@@ -356,3 +356,200 @@ img {
 img[data-loading="true"] {
   opacity: 0;
 }
+
+/* ── 設備セクションの製図風 SVG（app/components/feature/FeatureFigures.tsx） ──
+   hakuho の機械図面風イラストと同じ動き。画面に入る（親に .is-visible が付く）と
+   線が引かれるように描き出され、文字・破線はあとからフェードで出る。
+   描き終わったあとは .loop の部品（Wi-Fi の電波・スキャン・郵便物・仕切りなど）が動き続ける */
+@keyframes figure-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes figure-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 破線が流れる（dasharray "6 5" の周期 11 の倍数で途切れずにループ） */
+@keyframes figure-dash-flow {
+  to {
+    stroke-dashoffset: -110;
+  }
+}
+
+/* Wi-Fi の電波が内側から順に光る */
+@keyframes figure-wifi-pulse {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  35% {
+    opacity: 1;
+  }
+}
+
+/* スキャンの光が原稿台を往復する */
+@keyframes figure-scan-sweep {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(170px);
+  }
+}
+
+/* 書類の行が 1 行ずつ印刷されていく */
+@keyframes figure-print-line {
+  0%,
+  8% {
+    opacity: 0;
+  }
+  18%,
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 郵便物がふわりと浮く */
+@keyframes figure-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+/* スタンプのチェックを描き直す */
+@keyframes figure-stamp-check {
+  0%,
+  12% {
+    stroke-dashoffset: 60;
+  }
+  40%,
+  88% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 60;
+  }
+}
+
+/* 可動の仕切りが左右にスライドする */
+@keyframes figure-partition {
+  from {
+    transform: translateX(-28px);
+  }
+  to {
+    transform: translateX(28px);
+  }
+}
+
+/* 描き出す線（破線・ループの部品は除く）。長い線は --draw-len を上書きする */
+.feature-figure :is(line, path, rect, circle, polyline, polygon):not([stroke-dasharray]):not(.loop):not(.loop *) {
+  stroke-dasharray: var(--draw-len, 900);
+  stroke-dashoffset: var(--draw-len, 900);
+}
+
+.feature-figure .figure-frame {
+  --draw-len: 2000;
+}
+
+.feature-figure .figure-long {
+  --draw-len: 1600;
+}
+
+/* 破線・文字・ループの部品は、描き終わるまで隠しておく */
+.feature-figure [stroke-dasharray],
+.feature-figure text,
+.feature-figure .loop {
+  opacity: 0;
+}
+
+.is-visible .feature-figure :is(line, path, rect, circle, polyline, polygon):not([stroke-dasharray]):not(.loop):not(.loop *) {
+  animation: figure-draw 1.6s cubic-bezier(0.65, 0.05, 0.35, 1) forwards;
+}
+
+.is-visible .feature-figure [stroke-dasharray]:not(.loop),
+.is-visible .feature-figure text {
+  animation: figure-fade-in 0.9s ease-out 1.3s forwards;
+}
+
+.is-visible .feature-figure .flow-line {
+  animation:
+    figure-fade-in 0.9s ease-out 1.3s forwards,
+    figure-dash-flow 3s linear 1.3s infinite;
+}
+
+.is-visible .feature-figure .wifi-arc {
+  animation: figure-wifi-pulse 2.4s ease-in-out 1.6s infinite both;
+}
+
+.is-visible .feature-figure .wifi-arc-2 {
+  animation-delay: 1.9s;
+}
+
+.is-visible .feature-figure .wifi-arc-3 {
+  animation-delay: 2.2s;
+}
+
+.is-visible .feature-figure .scan-bar {
+  animation:
+    figure-fade-in 0.6s ease-out 1.6s forwards,
+    figure-scan-sweep 1.8s ease-in-out 1.6s infinite alternate;
+}
+
+.is-visible .feature-figure .print-line {
+  animation: figure-print-line 4.2s ease-in-out 1.6s infinite both;
+}
+
+.is-visible .feature-figure .print-line:nth-child(2) { animation-delay: 1.9s; }
+.is-visible .feature-figure .print-line:nth-child(3) { animation-delay: 2.2s; }
+.is-visible .feature-figure .print-line:nth-child(4) { animation-delay: 2.5s; }
+.is-visible .feature-figure .print-line:nth-child(5) { animation-delay: 2.8s; }
+.is-visible .feature-figure .print-line:nth-child(6) { animation-delay: 3.1s; }
+.is-visible .feature-figure .print-line:nth-child(7) { animation-delay: 3.4s; }
+
+.is-visible .feature-figure .envelope {
+  animation:
+    figure-fade-in 0.9s ease-out 1.3s forwards,
+    figure-float 3.2s ease-in-out 2.2s infinite;
+}
+
+.feature-figure .stamp-check {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+}
+
+.is-visible .feature-figure .stamp-check {
+  animation:
+    figure-fade-in 0.3s ease-out 1.6s forwards,
+    figure-stamp-check 4s ease-in-out 1.6s infinite;
+}
+
+.is-visible .feature-figure .partition {
+  animation:
+    figure-fade-in 0.9s ease-out 1.3s forwards,
+    figure-partition 3.6s ease-in-out 2.2s infinite alternate;
+}
+
+/* 動きを減らす設定では、完成した図をそのまま出す */
+@media (prefers-reduced-motion: reduce) {
+  .feature-figure *,
+  .is-visible .feature-figure * {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
