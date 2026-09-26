@@ -8,7 +8,7 @@ import { BlockLabel, CardTitle } from "@/app/components/ui/typography";
 import { accessPageData, siteConfig, primaryActions } from "@/app/data/site";
 
 export const metadata: Metadata = {
-  title: "アクセス",
+  title: "アクセス（富士市吉原）",
   description: `橘香堂（worx mt.fuji）へのアクセス。${siteConfig.address.full}。吉原中央駅バス停から徒歩5分、JR富士駅から車で約10分。`,
   alternates: { canonical: "/access" },
 };
