@@ -20,7 +20,10 @@ const EMPTY_VALUES: ContactFormValues = {
  * お問い合わせフォームの入力・検証・送信の状態。
  * initialInquiryType を渡すと、種別を選んだ状態で始める（送信後のリセットでは空に戻す）。
  */
-export function useContactForm(initialInquiryType?: string) {
+export function useContactForm(
+  initialInquiryType: string | undefined,
+  human: { token: string | null; reset: () => void },
+) {
   const [values, setValues] = useState<ContactFormValues>({
     ...EMPTY_VALUES,
     inquiryType: initialInquiryType ?? "",
@@ -55,8 +58,10 @@ export function useContactForm(initialInquiryType?: string) {
       setIsSubmitting(true);
       setSubmitError(null);
 
-      const res = await submitContactInquiry(result.data);
+      const res = await submitContactInquiry(result.data, human.token);
       setIsSubmitting(false);
+      // ボット対策のトークンは1回しか使えないので、次の送信に備えて取り直す
+      human.reset();
 
       if (!res.success) {
         setSubmitError(res.error);
@@ -64,7 +69,7 @@ export function useContactForm(initialInquiryType?: string) {
       }
       setIsSubmitted(true);
     },
-    [values],
+    [values, human],
   );
 
   const reset = useCallback(() => {

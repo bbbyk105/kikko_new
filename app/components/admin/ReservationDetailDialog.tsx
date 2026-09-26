@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { updateReservationStatus, type AdminMutationResult } from "@/app/actions/admin-reservations";
+import {
+  updateReservationStatus,
+  updateStaffNote,
+  type AdminMutationResult,
+} from "@/app/actions/admin-reservations";
 import type { AdminReservation } from "@/lib/admin-reservations";
 import { cn } from "@/lib/utils";
 import AdminDialog from "./AdminDialog";
@@ -13,6 +17,8 @@ interface ReservationDetailDialogProps {
   onEdit: () => void;
   /** 確定・キャンセルが終わったとき（一覧の読み直しとお知らせ表示） */
   onDone: (message: string) => void;
+  /** 店内メモを保存したとき（ダイアログは開いたまま一覧だけ読み直す） */
+  onRefresh: () => void;
 }
 
 /** 予約の詳細と、確定・キャンセル・変更の操作 */
@@ -21,12 +27,37 @@ export default function ReservationDetailDialog({
   onClose,
   onEdit,
   onDone,
+  onRefresh,
 }: ReservationDetailDialogProps) {
   const hasEmail = Boolean(r.email);
   const [notify, setNotify] = useState(hasEmail);
   const [confirmingCancel, setConfirmingCancel] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [note, setNote] = useState(r.staffNote ?? "");
+  const [noteState, setNoteState] = useState<{ saving: boolean; message: string | null; error: boolean }>({
+    saving: false,
+    message: null,
+    error: false,
+  });
+  const noteChanged = note.trim() !== (r.staffNote ?? "").trim();
+
+  const saveNote = async () => {
+    setNoteState({ saving: true, message: null, error: false });
+    let result: AdminMutationResult;
+    try {
+      result = await updateStaffNote(r.id, note);
+    } catch {
+      result = { ok: false, reason: "error", error: "保存に失敗しました。もう一度お試しください。" };
+    }
+    if (result.ok) {
+      setNoteState({ saving: false, message: "メモを保存しました", error: false });
+      onRefresh();
+    } else {
+      const message = "error" in result ? result.error : "権限がありません。ページを読み込み直してください。";
+      setNoteState({ saving: false, message, error: true });
+    }
+  };
 
   const run = async (status: "confirmed" | "cancelled") => {
     setBusy(true);
@@ -94,6 +125,41 @@ export default function ReservationDetailDialog({
           </div>
         ))}
       </dl>
+
+      <div className="mt-6">
+        <label htmlFor="staff-note" className="block mb-1 text-sm">
+          店内メモ <span className="text-xs text-[#8A8A8A]">（お客様には表示されません）</span>
+        </label>
+        <textarea
+          id="staff-note"
+          rows={3}
+          value={note}
+          onChange={(e) => {
+            setNote(e.target.value);
+            setNoteState({ saving: false, message: null, error: false });
+          }}
+          placeholder="例: プロジェクター使用・駐車場の案内済み"
+          className="w-full px-3 py-2 text-sm bg-white border border-[#E5E4DF] focus:outline-none focus:border-[#5C6B5C] resize-none"
+        />
+        <div className="mt-2 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={saveNote}
+            disabled={noteState.saving || !noteChanged}
+            className={adminButton.secondary}
+          >
+            {noteState.saving ? "保存中..." : "メモを保存"}
+          </button>
+          {noteState.message && (
+            <p
+              role={noteState.error ? "alert" : "status"}
+              className={cn("text-sm", noteState.error ? "text-[#B85C5C]" : "text-[#5C6B5C]")}
+            >
+              {noteState.message}
+            </p>
+          )}
+        </div>
+      </div>
 
       {r.status !== "cancelled" && (
         <div className="mt-6 space-y-4">

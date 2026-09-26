@@ -8,6 +8,7 @@ import { customerReplyTo, notificationFrom } from "@/lib/email/config";
 import { sendResendEmail } from "@/lib/email/resend";
 import { loginLinkMail } from "@/lib/email/reservation-mail";
 import { allowEmailSend } from "@/lib/rate-limit";
+import { verifyHuman } from "@/lib/turnstile";
 import {
   toManagedReservation,
   type ManagedReservation,
@@ -41,12 +42,18 @@ const idSchema = z.string().uuid();
  * マイページのログイン用リンクをメールで送る。
  * 予約のあるメールアドレスにだけ送り、予約の有無は画面に返さない（他人のメールアドレスで予約の有無を調べられないように）。
  */
-export async function requestLoginLink(email: string): Promise<RequestLoginLinkResult> {
+export async function requestLoginLink(
+  email: string,
+  humanToken?: string | null,
+): Promise<RequestLoginLinkResult> {
   const parsed = emailSchema.safeParse(email);
   if (!parsed.success) {
     return { success: false, error: "正しいメールアドレスを入力してください" };
   }
   const address = parsed.data;
+
+  const human = await verifyHuman(humanToken, "login");
+  if (!human.ok) return { success: false, error: human.error };
 
   const from = notificationFrom();
   const url = await loginUrlFor(address);

@@ -5,6 +5,7 @@ import { requestLoginLink } from "@/app/actions/customer";
 import { siteConfig } from "@/app/data/site";
 import { FormField, fieldA11yProps, fieldClassName } from "@/app/components/ui/form-field";
 import { primaryButtonClass } from "@/app/components/reserve/buttons";
+import { Turnstile, TurnstileFailedNotice, useTurnstile } from "@/app/components/ui/turnstile";
 
 /** マイページのログイン（メールアドレス宛にログイン用リンクを送る） */
 export default function LoginForm({ notice }: { notice?: string }) {
@@ -12,13 +13,14 @@ export default function LoginForm({ notice }: { notice?: string }) {
   const [error, setError] = useState<string | null>(null);
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const human = useTurnstile();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
     try {
-      const result = await requestLoginLink(email);
+      const result = await requestLoginLink(email, human.token);
       if (result.success) {
         setSentTo(email.trim());
       } else {
@@ -28,6 +30,8 @@ export default function LoginForm({ notice }: { notice?: string }) {
       setError("送信に失敗しました。しばらく経ってからお試しください。");
     } finally {
       setIsSubmitting(false);
+      // ボット対策のトークンは1回しか使えないので、次の送信に備えて取り直す
+      human.reset();
     }
   };
 
@@ -75,9 +79,11 @@ export default function LoginForm({ notice }: { notice?: string }) {
                 {...fieldA11yProps("login-email", error ?? undefined)}
               />
             </FormField>
+            <Turnstile action="login" {...human.widgetProps} />
+            {human.failed && <TurnstileFailedNotice />}
             <button
               type="submit"
-              disabled={isSubmitting || !email.trim()}
+              disabled={isSubmitting || !email.trim() || !human.ready}
               className={`${primaryButtonClass} w-full`}
             >
               {isSubmitting ? "送信中..." : "ログイン用のリンクを送る"}

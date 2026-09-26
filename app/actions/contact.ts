@@ -2,6 +2,7 @@
 
 import { siteConfig } from "@/app/data/site";
 import { sendResendEmail } from "@/lib/email/resend";
+import { verifyHuman } from "@/lib/turnstile";
 import {
   contactSchema,
   inquiryTypeLabel,
@@ -114,6 +115,7 @@ async function sendCustomerContactConfirmation(data: {
 
 export async function submitContactInquiry(
   input: ContactInput,
+  humanToken?: string | null,
 ): Promise<ContactResult> {
   const parsed = contactSchema.safeParse(input);
   if (!parsed.success) {
@@ -123,6 +125,9 @@ export async function submitContactInquiry(
       error: first?.message ?? "入力内容を確認してください。",
     };
   }
+
+  const human = await verifyHuman(humanToken, "contact");
+  if (!human.ok) return { success: false, error: human.error };
 
   const data = parsed.data;
   const from = notifyFrom();

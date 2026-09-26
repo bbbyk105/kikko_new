@@ -44,3 +44,6 @@ next-env.d.ts
 .open-next
 .wrangler/
 .dev.vars
+
+# iCloud 同期が作る重複ファイル（例: page 2.tsx）
+* [0-9].*

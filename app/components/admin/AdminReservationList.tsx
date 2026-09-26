@@ -1,3 +1,4 @@
+import { StickyNote } from "lucide-react";
 import { groupByDate, todayJst, type AdminReservation } from "@/lib/admin-reservations";
 import { cn } from "@/lib/utils";
 import { STATUS_BADGE } from "./ui";
@@ -44,8 +45,17 @@ export default function AdminReservationList({ reservations, onSelect }: AdminRe
                   <span className="tabular-nums">{r.timeLabel}</span>
                   <span className="hidden sm:block text-[#6B6B6B]">{r.typeLabel}</span>
                   <span className="min-w-0">
-                    <span className="block truncate">
-                      {r.name} 様{r.peopleCount ? `（${r.peopleCount}名）` : ""}
+                    <span className="flex items-center gap-1.5 min-w-0">
+                      <span className="truncate">
+                        {r.name} 様{r.peopleCount ? `（${r.peopleCount}名）` : ""}
+                      </span>
+                      {r.staffNote && (
+                        <StickyNote
+                          className="w-3.5 h-3.5 shrink-0 text-[#8A6A2F]"
+                          strokeWidth={1.5}
+                          aria-label="店内メモあり"
+                        />
+                      )}
                     </span>
                     <span className="block sm:hidden text-xs text-[#8A8A8A]">{r.typeLabel}</span>
                   </span>

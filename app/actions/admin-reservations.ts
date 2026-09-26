@@ -4,7 +4,6 @@ import { z } from "zod";
 import { authenticateAdmin } from "@/lib/admin-auth";
 import {
   adminReservationSchema,
-  findConflicts,
   summarize,
   toAdminReservation,
   todayJst,
@@ -12,9 +11,9 @@ import {
   type AdminReservationInput,
   type AdminSummary,
   type AdminView,
-  type ConflictCandidate,
 } from "@/lib/admin-reservations";
 import { customerReplyTo, notificationFrom } from "@/lib/email/config";
+import { findConflicts, type ConflictCandidate } from "@/lib/reservation-conflicts";
 import { sendResendEmail } from "@/lib/email/resend";
 import { storeNoticeMail, type StoreNoticeKind } from "@/lib/email/reservation-mail";
 import { reservationTimeLabel, toManagedReservation } from "@/lib/reservation-manage";
@@ -245,6 +244,49 @@ export async function saveReservation(
     return { ok: true, reservation: toAdminReservation(row), notified };
   } catch (err) {
     console.error("saveReservation:", err);
+    return { ok: false, reason: "error", error: ERROR };
+  }
+}
+
+const staffNoteSchema = z.string().max(2000, "店内メモは2000文字以内で入力してください");
+
+/** 店内メモの保存（空にすると消す）。お客様には知らせない */
+export async function updateStaffNote(id: string, note: string): Promise<AdminMutationResult> {
+  const auth = await authenticateAdmin();
+  if (!auth.ok) return auth;
+  const parsed = staffNoteSchema.safeParse(note);
+  if (!idSchema.safeParse(id).success || !parsed.success) {
+    return {
+      ok: false,
+      reason: "invalid",
+      error: parsed.success ? "予約が見つかりません。" : (parsed.error.issues[0]?.message ?? ERROR),
+    };
+  }
+
+  try {
+    const { data, error } = await getSupabase()
+      .from("reservations")
+      .update({ staff_note: parsed.data.trim() || null })
+      .eq("id", id)
+      .select("*")
+      .maybeSingle();
+    if (error) {
+      // 列の追加（supabase/schema.sql の staff_note）がまだの DB
+      if (error.code === "PGRST204" || error.code === "42703") {
+        return {
+          ok: false,
+          reason: "error",
+          error: "店内メモの保存先がまだありません。Supabase で staff_note 列を追加する SQL を実行してください。",
+        };
+      }
+      throw error;
+    }
+    if (!data) return { ok: false, reason: "invalid", error: "予約が見つかりません。" };
+
+    console.info(`[admin] ${auth.email} updated staff note of reservation ${id}`);
+    return { ok: true, reservation: toAdminReservation(data as Reservation), notified: false };
+  } catch (err) {
+    console.error("updateStaffNote:", err);
     return { ok: false, reason: "error", error: ERROR };
   }
 }

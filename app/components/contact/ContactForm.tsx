@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { useContactForm } from "@/app/hooks/use-contact-form";
+import { Turnstile, TurnstileFailedNotice, useTurnstile } from "@/app/components/ui/turnstile";
 import type { InquiryType } from "@/lib/routes";
 import { inquiryTypeOptions } from "@/lib/validation/contact";
 import { FormField, fieldA11yProps, fieldClassName } from "@/app/components/ui/form-field";
@@ -22,6 +23,7 @@ interface ContactFormProps {
 }
 
 export default function ContactForm({ aside, initialType }: ContactFormProps) {
+  const human = useTurnstile();
   const {
     values,
     errors,
@@ -31,7 +33,7 @@ export default function ContactForm({ aside, initialType }: ContactFormProps) {
     handleChange,
     handleSubmit,
     reset,
-  } = useContactForm(initialType);
+  } = useContactForm(initialType, human);
 
   if (isSubmitted) {
     return (
@@ -155,11 +157,14 @@ export default function ContactForm({ aside, initialType }: ContactFormProps) {
             </p>
           )}
 
+          <Turnstile action="contact" {...human.widgetProps} />
+          {human.failed && <TurnstileFailedNotice />}
+
           {/* Submit Button */}
           <div className="pt-4">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !human.ready}
               className="w-full py-4 text-sm tracking-wider text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] disabled:bg-[#8A8A8A] disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting ? "送信中..." : "送信する"}

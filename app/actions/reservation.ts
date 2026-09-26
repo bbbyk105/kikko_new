@@ -10,8 +10,15 @@ import {
 import { sendResendEmail } from "@/lib/email/resend";
 import { reservationReceivedCustomerMail } from "@/lib/email/reservation-mail";
 import { customerLinksFor } from "@/lib/reservation-service";
+import {
+  earlierWebBookingConflicts,
+  findWebBookingConflicts,
+  type ConflictCandidate,
+} from "@/lib/reservation-conflicts";
 import { isReservationTimeInPastForDateJst } from "@/lib/reservation-time";
+import { RESERVE_TYPES } from "@/lib/routes";
 import { getSupabase } from "@/lib/supabase";
+import { verifyHuman } from "@/lib/turnstile";
 
 export type ReservationInput = {
   type: string;
@@ -125,16 +132,45 @@ async function sendCustomerReservationConfirmation(
   }
 }
 
+const SLOT_TAKEN_ERROR =
+  "選択した日時は、ほかのご予約で埋まってしまいました。お手数ですが、別の日時をお選びください。";
+
+type SameDayReservation = ConflictCandidate & { created_at: string };
+
+/** 同じ日のキャンセル以外の予約（重なりの確認用。個人情報は名前以外取らない） */
+async function sameDayReservations(date: string): Promise<SameDayReservation[]> {
+  const { data, error } = await getSupabase()
+    .from("reservations")
+    .select("id, type, date, time, name, created_at")
+    .eq("date", date)
+    .neq("status", "cancelled");
+  if (error) throw error;
+  return (data ?? []) as SameDayReservation[];
+}
+
 export async function createReservation(
   input: ReservationInput,
+  humanToken?: string | null,
 ): Promise<ReservationResult> {
   try {
+    if (!RESERVE_TYPES.some((type) => type === input.type) || !/^\d{4}-\d{2}-\d{2}$/.test(input.date)) {
+      return { success: false, error: "予約内容が正しくありません。もう一度お選びください。" };
+    }
+
+    const human = await verifyHuman(humanToken, "reserve");
+    if (!human.ok) return { success: false, error: human.error };
+
     if (isReservationTimeInPastForDateJst(input.date, input.time)) {
       return {
         success: false,
         error:
           "指定した時間はすでに過ぎているため、当日の予約としては承れません。別の時間をお選びください。",
       };
+    }
+
+    // カレンダーを開いてから送信するまでの間に埋まっていないか（画面の空き枠だけに頼らない）
+    if (findWebBookingConflicts(input, await sameDayReservations(input.date)).length > 0) {
+      return { success: false, error: SLOT_TAKEN_ERROR };
     }
 
     const { data, error } = await getSupabase()
@@ -150,7 +186,7 @@ export async function createReservation(
         message: input.message || null,
         status: "pending",
       })
-      .select("id")
+      .select("id, created_at")
       .single();
 
     if (error) {
@@ -159,6 +195,14 @@ export async function createReservation(
         success: false,
         error: "予約の送信に失敗しました。しばらく経ってからお試しください。",
       };
+    }
+
+    // ほぼ同時に同じ枠の予約が入った場合は、先に入った方を残し、後から入った自分を取り消す
+    const mine = { ...input, id: data.id as string, created_at: data.created_at as string };
+    if (earlierWebBookingConflicts(mine, await sameDayReservations(input.date)).length > 0) {
+      const removed = await getSupabase().from("reservations").delete().eq("id", mine.id);
+      if (removed.error) console.error("Failed to remove conflicting reservation:", removed.error);
+      return { success: false, error: SLOT_TAKEN_ERROR };
     }
 
     // メール送信は失敗しても予約自体は成功とみなす
