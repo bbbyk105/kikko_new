@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig, heroFeatures, images } from "@/app/data/site";
-import { Eyebrow, DisplayHeading, LeadText } from "@/app/components/ui/typography";
+import { LeadText } from "@/app/components/ui/typography";
 
 export default function Hero() {
   return (
@@ -12,20 +12,17 @@ export default function Hero() {
           {/* Text Content */}
           <div className="order-2 lg:order-1 py-16 lg:py-0">
             <div className="hero-header">
-              {/* Eyebrow - 静かな前置き */}
-              <div className="animate-fade-up">
-                <Eyebrow className="hero-eyebrow">
-                  Coworking Space in Fuji City
-                </Eyebrow>
-              </div>
-
-              {/* Main Copy - 余白との緊張感で魅せる */}
-              <div className="animate-fade-up animation-delay-100">
-                <DisplayHeading id="hero-heading">
+              {/* h1 は「検索で狙う言葉（小さな前置き）＋キャッチコピー」で1つにする */}
+              <h1 id="hero-heading">
+                <span className="block eyebrow-text hero-eyebrow hero-keyword text-[#9A9A9A] animate-fade-up">
+                  富士市吉原のコワーキングスペース
+                </span>{" "}
+                {/* Main Copy - 余白との緊張感で魅せる */}
+                <span className="block display-heading text-[#2C2C2C] animate-fade-up animation-delay-100">
                   <span className="block">働く場所から、</span>
                   <span className="block mt-1">仕事の質を整える。</span>
-                </DisplayHeading>
-              </div>
+                </span>
+              </h1>
 
               {/* Lead Text - 抑制された説明文 */}
               <div className="animate-fade-up animation-delay-200">

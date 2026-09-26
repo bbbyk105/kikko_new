@@ -251,6 +251,12 @@ p {
   margin-bottom: 2.5rem;
 }
 
+/* トップの h1 の前置き（日本語なので英字の前置きより少し大きく・字間を詰める） */
+.hero-keyword {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+}
+
 @media (min-width: 768px) {
   .hero-eyebrow {
     margin-bottom: 2rem;

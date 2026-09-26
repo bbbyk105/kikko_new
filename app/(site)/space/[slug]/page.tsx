@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: SpaceDetailPageProps): Promis
 
   const { category } = space;
   return {
-    title: `${category.titleJa}（${category.title}）`,
+    title: category.seoTitle,
     description: `富士市吉原の橘香堂の${category.titleJa}。${category.description}`,
     alternates: { canonical: `/space/${category.id}` },
   };

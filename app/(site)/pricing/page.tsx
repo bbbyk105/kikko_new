@@ -6,7 +6,7 @@ import PricingNotes from "@/app/components/pricing/PricingNotes";
 import { pricingPageData, primaryActions } from "@/app/data/site";
 
 export const metadata: Metadata = {
-  title: "料金プラン",
+  title: "料金プラン（ビジター・月額会員）",
   description:
     "橘香堂の料金プラン。ビジター利用から法人契約まで、利用スタイルに合わせて選べるシンプルな料金体系。",
   alternates: { canonical: "/pricing" },

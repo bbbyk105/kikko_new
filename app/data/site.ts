@@ -79,6 +79,8 @@ export const spaceCategories = [
     number: "01",
     title: "Coworking",
     titleJa: "コワーキング",
+    /** 検索結果に出すタイトル（ページ上の見出しは titleJa のまま） */
+    seoTitle: "コワーキング（ビジター・月額会員）",
     description:
       "集中できる静かな環境で、日々の仕事に取り組む。高速Wi-Fiと快適な設備を完備した、プロフェッショナルのためのワークスペース。",
     image: "/images/slide1.webp",
@@ -88,6 +90,8 @@ export const spaceCategories = [
     number: "02",
     title: "Meeting / Seminar",
     titleJa: "会議・セミナー",
+    /** 検索結果に出すタイトル（ページ上の見出しは titleJa のまま） */
+    seoTitle: "富士市の貸し会議室・セミナー会場",
     description:
       "少人数の打ち合わせから、セミナーや研修まで。用途に応じた柔軟なレイアウトで、ビジネスシーンをサポート。",
     image: "/images/slide2.webp",
@@ -97,6 +101,8 @@ export const spaceCategories = [
     number: "03",
     title: "Address Registration",
     titleJa: "住所登録",
+    /** 検索結果に出すタイトル（ページ上の見出しは titleJa のまま） */
+    seoTitle: "富士市の住所登録・法人登記",
     description:
       "法人登記や事業所住所として利用可能。ビジネスの拠点として、信頼性のある住所をご提供。",
     image: "/images/slide3.webp",
@@ -106,6 +112,8 @@ export const spaceCategories = [
     number: "04",
     title: "Event / Multi-purpose",
     titleJa: "イベント・多目的",
+    /** 検索結果に出すタイトル（ページ上の見出しは titleJa のまま） */
+    seoTitle: "富士市のイベントスペース・貸切",
     description:
       "展示会、ワークショップ、小規模イベントなど。着席80名、スタンディング150名まで対応可能な多目的スペース。",
     image: "/images/yoga.jpg",
