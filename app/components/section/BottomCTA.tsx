@@ -29,10 +29,11 @@ export default function BottomCTA({
           {description && (
             <p className="text-[#6B6B6B] leading-relaxed mb-10">{description}</p>
           )}
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          {/* 横並びでは長いほうの文字幅に合わせて2つを同じ幅にする */}
+          <div className="grid gap-4 sm:w-fit sm:mx-auto sm:grid-flow-col sm:auto-cols-fr">
             <Link
               href={primaryButton.href}
-              className="inline-flex items-center justify-center px-8 py-4 text-sm tracking-wider text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] transition-colors"
+              className="inline-flex items-center justify-center px-8 py-4 text-sm tracking-wider text-[#FAFAF8] bg-[#2C2C2C] border border-transparent hover:bg-[#3D3D3D] transition-colors"
             >
               {primaryButton.text}
             </Link>

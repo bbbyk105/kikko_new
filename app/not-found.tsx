@@ -34,10 +34,11 @@ export default function NotFound() {
                   <br className="hidden sm:block" />
                   下のメニューから、お探しの情報をご覧ください。
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 animate-fade-up animation-delay-300">
+                {/* 横並びでは長いほうの文字幅に合わせて2つを同じ幅にする */}
+                <div className="grid gap-4 sm:w-fit sm:grid-flow-col sm:auto-cols-fr animate-fade-up animation-delay-300">
                   <Link
                     href="/"
-                    className="inline-flex items-center justify-center px-10 py-4 text-[13px] tracking-[0.12em] text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] transition-colors"
+                    className="inline-flex items-center justify-center px-10 py-4 text-[13px] tracking-[0.12em] text-[#FAFAF8] bg-[#2C2C2C] border border-transparent hover:bg-[#3D3D3D] transition-colors"
                   >
                     トップページへ
                   </Link>
