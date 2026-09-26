@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
+import { primaryActions } from "@/app/data/site";
 
 interface ReserveCompleteProps {
   onReset: () => void;
@@ -16,12 +17,22 @@ export default function ReserveComplete({ onReset }: ReserveCompleteProps) {
         ご予約を受け付けました
       </h3>
 
-      <p className="text-[#6B6B6B] leading-relaxed mb-8">
+      <p className="text-[#6B6B6B] leading-relaxed mb-6">
         お申し込みいただきありがとうございます。
         <br />
         内容を確認のうえ、担当者より確認のご連絡をいたします。
         <br />
         しばらくお待ちくださいませ。
+      </p>
+
+      <p className="text-sm text-[#6B6B6B] leading-relaxed mb-8">
+        ご入力のメールアドレスに、予約受付メールをお送りしました。
+        <br className="hidden sm:inline" />
+        メール内のリンクか
+        <Link href={primaryActions.mypage.href} className="underline underline-offset-2 hover:text-[#2C2C2C]">
+          マイページ
+        </Link>
+        から、ご予約内容の確認・キャンセルができます。
       </p>
 
       <div className="flex flex-col sm:flex-row justify-center gap-4">

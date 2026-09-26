@@ -13,4 +13,16 @@ const config = {
   modulePathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/.open-next/", "<rootDir>/.wrangler/"],
 };
 
-export default createJestConfig(config);
+// jose は ESM のみ配布なので、node_modules のうち jose だけは変換する（next/jest の既定は node_modules を変換しない）
+const jestConfig = async () => {
+  const resolved = await createJestConfig(config)();
+  return {
+    ...resolved,
+    transformIgnorePatterns: [
+      "/node_modules/(?!jose/)",
+      ...(resolved.transformIgnorePatterns ?? []).filter((pattern) => !pattern.includes("node_modules")),
+    ],
+  };
+};
+
+export default jestConfig;

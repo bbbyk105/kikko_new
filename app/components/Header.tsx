@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, UserRound } from "lucide-react";
 import { siteConfig, navigation, spaceCategories, primaryActions } from "@/app/data/site";
 import HeaderShell from "@/app/components/header/HeaderShell";
 import NavLink from "@/app/components/header/NavLink";
@@ -78,12 +78,21 @@ export default function Header() {
               );
             })}
           </ul>
-          <Link
-            href={primaryActions.reserve.href}
-            className="px-6 py-3 text-[13px] tracking-[0.12em] text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] transition-colors"
-          >
-            {primaryActions.reserve.label}
-          </Link>
+          <div className="flex items-center gap-5">
+            <NavLink
+              href={primaryActions.mypage.href}
+              className="group/nav flex items-center gap-1.5 py-2 text-[12px] tracking-[0.08em] text-[#6B6B6B] hover:text-[#2C2C2C] data-[active=true]:text-[#5C6B5C] transition-colors"
+            >
+              <UserRound className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
+              {primaryActions.mypage.label}
+            </NavLink>
+            <Link
+              href={primaryActions.reserve.href}
+              className="px-6 py-3 text-[13px] tracking-[0.12em] text-[#FAFAF8] bg-[#2C2C2C] hover:bg-[#3D3D3D] transition-colors"
+            >
+              {primaryActions.reserve.label}
+            </Link>
+          </div>
         </nav>
       </HeaderShell>
     </>
@@ -183,6 +192,14 @@ function MobileMenu() {
           {primaryActions.contact.label}
         </Link>
       </div>
+
+      <NavLink
+        href={primaryActions.mypage.href}
+        className="mt-3 inline-flex items-center justify-center gap-2 py-4 text-[13px] tracking-[0.08em] text-[#2C2C2C] border border-[#E5E4DF] hover:border-[#2C2C2C] transition-colors"
+      >
+        <UserRound className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
+        マイページ（ご予約の確認・キャンセル）
+      </NavLink>
 
       <div className="mt-10 space-y-1 text-[12px] tracking-[0.04em] text-[#9A9A9A]">
         <a

@@ -1,7 +1,15 @@
 "use server";
 
 import { siteConfig } from "@/app/data/site";
+import {
+  customerCopyEnabled,
+  customerReplyTo,
+  notificationFrom,
+  reservationAdminTo,
+} from "@/lib/email/config";
 import { sendResendEmail } from "@/lib/email/resend";
+import { reservationReceivedCustomerMail } from "@/lib/email/reservation-mail";
+import { customerLinksFor } from "@/lib/reservation-service";
 import { isReservationTimeInPastForDateJst } from "@/lib/reservation-time";
 import { getSupabase } from "@/lib/supabase";
 
@@ -22,25 +30,12 @@ export type ReservationResult = {
   reservationId?: string;
 };
 
-function reservationFromAddress(): string | undefined {
-  return process.env.RESEND_FROM ?? process.env.RESERVATION_EMAIL_FROM;
-}
-
-/** お客様向けメールの Reply-To（未設定時はサイトの問い合わせメール） */
-function customerReplyTo(): string {
-  return process.env.RESEND_REPLY_TO ?? siteConfig.email;
-}
-
-function customerCopyEnabled(): boolean {
-  return process.env.RESEND_CUSTOMER_COPY !== "false";
-}
-
 async function sendAdminReservationEmail(
   input: ReservationInput,
   reservationId: string,
 ) {
-  const from = reservationFromAddress();
-  const to = process.env.RESERVATION_EMAIL_TO ?? siteConfig.email;
+  const from = notificationFrom();
+  const to = reservationAdminTo();
 
   if (!from) {
     return;
@@ -99,43 +94,16 @@ async function sendCustomerReservationConfirmation(
     return;
   }
 
-  const from = reservationFromAddress();
+  const from = notificationFrom();
   if (!from) {
     return;
   }
 
-  const dateTimeLabel = input.time
-    ? `${input.date} ${input.time}`
-    : `${input.date}（終日または時間未指定）`;
-
-  const subject = `【予約を受け付けました】${siteConfig.name}`;
-
-  const lines = [
-    `${input.name} 様`,
-    "",
-    "この度はお予約をお申し込みいただき、ありがとうございます。",
-    "以下の内容で承りました。担当者より改めてご連絡いたします。",
-    "",
-    "────────────────────────",
-    `受付番号: ${reservationId}`,
-    `利用種別: ${input.type}`,
-    `利用日時: ${dateTimeLabel}`,
-    input.peopleCount ? `人数: ${input.peopleCount}名` : "",
-    `お名前: ${input.name}`,
-    `メール: ${input.email}`,
-    `電話番号: ${input.phone?.trim() || "（未入力）"}`,
-    "",
-    "ご要望・メッセージ:",
-    input.message?.trim() || "（未入力）",
-    "────────────────────────",
-    "",
-    siteConfig.name,
-    siteConfig.address.full,
-    `TEL ${siteConfig.phone}`,
-    siteConfig.email,
-  ];
-
-  const text = lines.filter(Boolean).join("\n");
+  const { subject, text } = reservationReceivedCustomerMail(
+    input,
+    reservationId,
+    await customerLinksFor(reservationId),
+  );
 
   const result = await sendResendEmail({
     from,

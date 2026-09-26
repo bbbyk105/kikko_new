@@ -26,6 +26,10 @@ export async function sendResendEmail(
 ): Promise<ResendSendResult> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
+    // 開発中はキーを外してメールを止めても、送るはずだった内容（予約確認リンクなど）を確かめられるようにする
+    if (process.env.NODE_ENV === "development") {
+      console.info(`[email:not-sent] to=${params.to} subject=${params.subject}\n${params.text}`);
+    }
     return { ok: false, reason: "missing_api_key" };
   }
 

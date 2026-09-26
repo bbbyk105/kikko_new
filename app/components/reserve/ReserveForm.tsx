@@ -9,6 +9,8 @@ import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { reserveData } from "@/app/data/site";
 import { createReservation } from "@/app/actions/reservation";
+import type { CustomerProfile } from "@/app/actions/customer";
+import { useCustomerPrefill } from "@/app/hooks/use-customer-prefill";
 import { useReserveSteps } from "@/app/hooks/use-reserve-steps";
 import {
   bookingModeOf,
@@ -86,6 +88,20 @@ export default function ReserveForm({ contactInfo, initialType }: ReserveFormPro
     resolver: zodResolver(reserveSchema),
     defaultValues: { type: initialType ?? "" },
   });
+
+  // マイページにログイン中なら、空欄のお名前・メールアドレス・電話番号を埋める
+  const applyProfile = useCallback(
+    (profile: CustomerProfile) => {
+      const fill = (field: "name" | "email" | "phone", value: string | null) => {
+        if (value && !getValues(field)) setValue(field, value);
+      };
+      fill("name", profile.name);
+      fill("email", profile.email);
+      fill("phone", profile.phone);
+    },
+    [getValues, setValue],
+  );
+  useCustomerPrefill(applyProfile);
 
   const dateTimeReady = isDateTimeReady({ date: selectedDate, time: selectedTime, mode });
   const steps = useReserveSteps({
