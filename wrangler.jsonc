@@ -1,7 +1,10 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"main": ".open-next/worker.js",
+	// OpenNext の .open-next/worker.js を包み、定期実行（scheduled）を足した入口
+	"main": "worker/index.ts",
 	"name": "kikko",
+	// 毎日 18:00 UTC（日本時間 3:00）に Supabase を一行だけ読む。worker/keep-alive.ts
+	"triggers": { "crons": ["0 18 * * *"] },
 	"compatibility_date": "2026-03-07",
 	"compatibility_flags": [
 		"nodejs_compat",
