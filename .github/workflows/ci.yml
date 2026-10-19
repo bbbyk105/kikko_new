@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# 同じブランチで新しい push があれば古い実行は打ち切る
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # wrangler のテレメトリ送信とバージョンチェックを止める（CI を遅くしないため）
+  WRANGLER_SEND_METRICS: "false"
+  # Next.js の匿名テレメトリを止める
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  verify:
+    name: lint / test / Worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      # ビルドした Worker を立ち上げ、主なページが開けるか・作り置きから返すかを見る（scripts/worker-smoke.mjs）。
+      # 2026-10-16 に、next build は通るのに Worker では 500 になる版（Next.js だけ上げた PR）がマージされた。
+      # 秘密の値は要らない（ページを開くだけで、DB には触らない）
+      - name: Worker
+        run: npm run test:worker
