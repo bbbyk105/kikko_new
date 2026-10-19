@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import PageHero from "@/app/components/section/PageHero";
 import ContactForm from "@/app/components/contact/ContactForm";
+import ContactFormFromUrl from "@/app/components/contact/ContactFormFromUrl";
 import ContactInfo from "@/app/components/contact/ContactInfo";
-import { parseInquiryType } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "お問い合わせ",
@@ -11,14 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-interface ContactPageProps {
-  searchParams: Promise<{ type?: string | string[] }>;
-}
-
-export default async function ContactPage({ searchParams }: ContactPageProps) {
-  // 法人会員・住所登録・イベントなどのページから ?type= 付きで来たら、種別を選んだ状態で開く
-  const initialType = parseInquiryType((await searchParams).type);
-
+export default function ContactPage() {
   return (
     <>
       <PageHero
@@ -31,7 +25,10 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
       {/* Contact Form Section */}
       <section className="py-16 lg:py-24 bg-[#FAFAF8]">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-          <ContactForm key={initialType ?? "none"} initialType={initialType} aside={<ContactInfo />} />
+          {/* ?type= はブラウザ側で読む。読むまでは種別を選ぶ前のフォームを出しておく */}
+          <Suspense fallback={<ContactForm aside={<ContactInfo />} />}>
+            <ContactFormFromUrl aside={<ContactInfo />} />
+          </Suspense>
         </div>
       </section>
     </>

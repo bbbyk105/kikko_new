@@ -37,12 +37,16 @@ let server;
 // Worker（wrangler dev）が出したログ。落ちたときに、そのリクエストの間のログを見せる
 let serverLog = "";
 
-/** ページを開き、状態の番号と、その間に Worker が出したログを返す */
+/** ページを開き、状態の番号・作り置きから返したか・その間に Worker が出したログを返す */
 async function open(path) {
   const from = serverLog.length;
   const res = await fetch(`${ORIGIN}${path}`, { redirect: "manual" });
   await res.arrayBuffer();
-  return { status: res.status, log: serverLog.slice(from).trim() };
+  return {
+    status: res.status,
+    cache: res.headers.get("x-opennext-cache"),
+    log: serverLog.slice(from).trim(),
+  };
 }
 
 before(async () => {
@@ -84,6 +88,26 @@ for (const path of PAGES) {
   test(`${path} が開ける`, async () => {
     const { status, log } = await open(path);
     assert.equal(status, 200, `${path}: ${status}\n${log}`);
+  });
+}
+
+// 作り置きのページは Next.js のサーバー処理を通さずに返す（Workers Free の CPU 10ms に収めるため）。
+// 予約・お問い合わせも ?type= をブラウザ側で読み、作り置きのままにしている
+const CACHED_PAGES = [
+  "/",
+  "/space",
+  "/pricing",
+  "/mypage",
+  "/reserve",
+  "/reserve?type=meeting",
+  "/contact",
+  "/contact?type=corporate",
+];
+
+for (const path of CACHED_PAGES) {
+  test(`${path} は作り置きから返す`, async () => {
+    const { cache } = await open(path);
+    assert.equal(cache, "HIT", `${path}: x-opennext-cache=${cache}`);
   });
 }
 

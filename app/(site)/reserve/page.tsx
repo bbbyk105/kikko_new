@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import PageHero from "@/app/components/section/PageHero";
 import ReserveForm from "@/app/components/reserve/ReserveForm";
+import ReserveFormFromUrl from "@/app/components/reserve/ReserveFormFromUrl";
 import ReserveContactInfo from "@/app/components/reserve/ReserveContactInfo";
 import { BulletList } from "@/app/components/ui/bullet-list";
 import { ArrowLink } from "@/app/components/ui/arrow-link";
 import { reserveData, primaryActions } from "@/app/data/site";
-import { parseReserveType } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "ご予約",
@@ -14,14 +15,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/reserve" },
 };
 
-interface ReservePageProps {
-  searchParams: Promise<{ type?: string | string[] }>;
-}
-
-export default async function ReservePage({ searchParams }: ReservePageProps) {
-  // 料金プランやスペース詳細から ?type=meeting などで来たら、その種別を選んだ状態で開く
-  const initialType = parseReserveType((await searchParams).type);
-
+export default function ReservePage() {
   return (
     <>
       <PageHero
@@ -34,12 +28,10 @@ export default async function ReservePage({ searchParams }: ReservePageProps) {
       {/* Reserve Form Section */}
       <section className="py-12 lg:py-16 bg-[#F7F6F3]">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
-          {/* 同じページ内で種別付きリンクを押したときも、選び直した状態から始める */}
-          <ReserveForm
-            key={initialType ?? "none"}
-            initialType={initialType}
-            contactInfo={<ReserveContactInfo />}
-          />
+          {/* ?type= はブラウザ側で読む。読むまでは種別を選ぶ前のフォームを出しておく */}
+          <Suspense fallback={<ReserveForm contactInfo={<ReserveContactInfo />} />}>
+            <ReserveFormFromUrl contactInfo={<ReserveContactInfo />} />
+          </Suspense>
         </div>
       </section>
 
