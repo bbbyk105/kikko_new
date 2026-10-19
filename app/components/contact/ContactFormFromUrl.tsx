@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense, useState, type ReactNode } from "react";
+import { SearchParamReader } from "@/app/components/ui/search-param-reader";
 import { parseInquiryType } from "@/lib/routes";
 import ContactForm from "./ContactForm";
 
@@ -10,7 +10,15 @@ import ContactForm from "./ContactForm";
  * ?type= はブラウザ側で読む。ページを静的なままにし、Workers の CPU を使わないため。
  */
 export default function ContactFormFromUrl({ aside }: { aside: ReactNode }) {
-  const initialType = parseInquiryType(useSearchParams().get("type") ?? undefined);
+  const [type, setType] = useState<string>();
+  const initialType = parseInquiryType(type);
 
-  return <ContactForm key={initialType ?? "none"} initialType={initialType} aside={aside} />;
+  return (
+    <>
+      <Suspense fallback={null}>
+        <SearchParamReader name="type" onChange={setType} />
+      </Suspense>
+      <ContactForm key={initialType ?? "none"} initialType={initialType} aside={aside} />
+    </>
+  );
 }

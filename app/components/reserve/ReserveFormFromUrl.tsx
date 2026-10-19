@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense, useState, type ReactNode } from "react";
+import { SearchParamReader } from "@/app/components/ui/search-param-reader";
 import { parseReserveType } from "@/lib/routes";
 import ReserveForm from "./ReserveForm";
 
@@ -10,8 +10,16 @@ import ReserveForm from "./ReserveForm";
  * ?type= はブラウザ側で読む。ページを静的なままにし、Workers の CPU を使わないため。
  */
 export default function ReserveFormFromUrl({ contactInfo }: { contactInfo: ReactNode }) {
-  const initialType = parseReserveType(useSearchParams().get("type") ?? undefined);
+  const [type, setType] = useState<string>();
+  const initialType = parseReserveType(type);
 
-  // 同じページ内で種別付きリンクを押したときも、選び直した状態から始める
-  return <ReserveForm key={initialType ?? "none"} initialType={initialType} contactInfo={contactInfo} />;
+  return (
+    <>
+      <Suspense fallback={null}>
+        <SearchParamReader name="type" onChange={setType} />
+      </Suspense>
+      {/* 同じページ内で種別付きリンクを押したときも、選び直した状態から始める */}
+      <ReserveForm key={initialType ?? "none"} initialType={initialType} contactInfo={contactInfo} />
+    </>
+  );
 }
