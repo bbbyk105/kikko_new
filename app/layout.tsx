@@ -41,11 +41,13 @@ export const metadata: Metadata = {
     "worx mt.fuji",
   ],
   // og:title・og:description はここで固定しない（固定するとどのページを共有してもトップの内容になる）。
-  // 各ページの title・description が使われる。画像は app/opengraph-image.jpg
+  // 各ページの title・description が使われる。画像は app/opengraph-image.jpg。
+  // url の "./" は、そのページ自身のパスになる（ページ側で openGraph を書くと画像が外れる）。
   openGraph: {
     siteName: `${brandWithReading} (${siteConfig.nameEn})`,
     locale: "ja_JP",
     type: "website",
+    url: "./",
   },
   twitter: {
     card: "summary_large_image",
