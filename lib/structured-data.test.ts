@@ -28,10 +28,22 @@ describe("homeStructuredData", () => {
 
   it("店舗情報はサイトに載っている値でつくる", () => {
     expect(business["@type"]).toBe("LocalBusiness");
-    expect(business.name).toBe("worx mt.fuji 橘香堂（近藤薬局）");
-    expect(business.alternateName).toEqual(
-      expect.arrayContaining(["橘香堂（きっこうどう）", "きっこうどう", "worx mt.fuji", "橘香堂近藤薬局"]),
-    );
+    const mapsName = "橘香堂近藤薬局\uFF08worx mt.fuji\uFF09";
+    expect(business.name).toBe(mapsName);
+    expect(mapsName).toContain("\uFF08");
+    expect(mapsName).toContain("\uFF09");
+    expect(mapsName).not.toContain("(");
+    expect(mapsName).not.toContain(")");
+    expect(business.alternateName).toEqual([
+      "橘香堂",
+      "worx mt.fuji",
+      "きっこうどう",
+      "橘香堂（きっこうどう）",
+      "橘香堂近藤薬局",
+      "近藤薬局",
+      "worx mt.fuji 橘香堂（近藤薬局）",
+    ]);
+    expect(business.alternateName).not.toContain(mapsName);
     expect(business.sameAs).toEqual([
       "https://www.instagram.com/kikkou2022/",
       "https://x.com/kikkoudo_0321",
@@ -44,6 +56,15 @@ describe("homeStructuredData", () => {
       addressLocality: "富士市",
       streetAddress: "吉原2丁目8番21-2号",
     });
+    const address = business.address as {
+      postalCode: string;
+      addressRegion: string;
+      addressLocality: string;
+      streetAddress: string;
+    };
+    expect(`〒${address.postalCode} ${address.addressRegion}${address.addressLocality}${address.streetAddress}`).toBe(
+      "〒417-0051 静岡県富士市吉原2丁目8番21-2号",
+    );
     expect(business.geo).toMatchObject({ "@type": "GeoCoordinates" });
     expect(business.priceRange).toBe("¥550〜");
   });
@@ -53,9 +74,11 @@ describe("homeStructuredData", () => {
     expect(website.publisher).toEqual({ "@id": "https://worxmtfuji.com/#business" });
   });
 
-  it("JSON として壊れず、Facebook の URL をそのまま含む", () => {
+  it("JSON として壊れず、マップの事業者名と Facebook の URL をそのまま含む", () => {
     const json = JSON.stringify(data);
-    expect(() => JSON.parse(json)).not.toThrow();
+    const parsed = JSON.parse(json) as { "@graph": { name?: string }[] };
+    expect(parsed["@graph"][0].name).toBe("橘香堂近藤薬局\uFF08worx mt.fuji\uFF09");
+    expect(json).toContain("橘香堂近藤薬局\uFF08worx mt.fuji\uFF09");
     expect(json).toContain(
       "https://www.facebook.com/p/%E6%A9%98%E9%A6%99%E5%A0%82%E8%BF%91%E8%97%A4%E8%96%AC%E5%B1%80worx-mtfuji-100095544335452/",
     );

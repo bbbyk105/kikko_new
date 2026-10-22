@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { siteConfig, brandWithReading, navigation, spaceCategories, primaryActions } from "@/app/data/site";
+import { siteConfig, listingName, navigation, spaceCategories, primaryActions } from "@/app/data/site";
 import { BlockLabel } from "@/app/components/ui/typography";
 
 const menuLinks = [{ name: "Home", href: "/" }, ...navigation];
@@ -22,9 +22,8 @@ export default function Footer() {
               <span className="font-[var(--font-cormorant)] text-[1.625rem] tracking-[0.08em]">
                 {siteConfig.nameEn}
               </span>
-              <span className="block text-[10px] text-[#6B6B6B] mt-2">
-                <span className="tracking-[0.25em]">{siteConfig.name}</span>
-                <span className="tracking-[0.06em]">（{siteConfig.nameReading}）</span>
+              <span className="block text-[10px] tracking-[0.04em] text-[#6B6B6B] mt-2">
+                {listingName}
               </span>
             </Link>
             <p className="text-[13px] text-[#7A7A7A] leading-[2] tracking-[0.02em] max-w-sm mb-10">
@@ -145,7 +144,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-10 border-t border-[#404040] flex flex-col-reverse items-center gap-4 sm:flex-row sm:justify-between">
           <p className="text-[11px] tracking-[0.05em] text-[#5A5A5A]">
-            © {new Date().getFullYear()} {brandWithReading} ({siteConfig.nameEn}). All rights reserved.
+            © {new Date().getFullYear()} {listingName}. All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link

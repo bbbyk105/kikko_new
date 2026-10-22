@@ -1,4 +1,4 @@
-import { brandWithReading, pricingPlans, siteConfig } from "@/app/data/site";
+import { brandWithReading, listingName, pricingPlans, siteConfig } from "@/app/data/site";
 
 /** Google マップの埋め込み URL（!2d経度!3d緯度）から座標を取り出す。取れなければ null */
 export function coordinatesFromMapsEmbed(embedUrl: string): { latitude: number; longitude: number } | null {
@@ -35,16 +35,17 @@ export function homeStructuredData() {
       {
         "@type": "LocalBusiness",
         "@id": `${siteConfig.url}/#business`,
-        name: siteConfig.officialName,
-        // 読み・英語名・Google マップの登録名（siteConfig.googleMapsLink の検索語）
+        name: listingName,
+        // マップの name 以外で、サイトや検索に出ている呼び方。name 自身は重ねない
         alternateName: [
-          brandWithReading,
           siteConfig.name,
-          siteConfig.nameReading,
           siteConfig.nameEn,
-          "近藤薬局",
+          siteConfig.nameReading,
+          brandWithReading,
           "橘香堂近藤薬局",
-        ],
+          "近藤薬局",
+          siteConfig.officialName,
+        ].filter((name, index, names) => name !== listingName && names.indexOf(name) === index),
         description: `${siteConfig.description}会議室、住所登録、貸切に対応。`,
         url: siteConfig.url,
         telephone: siteConfig.phone,

@@ -54,8 +54,14 @@ export const siteConfig = {
   googleMapsLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("橘香堂近藤薬局 静岡県富士市吉原2丁目8番21-2号")}`,
 };
 
-/** 見出しやフッターに出す屋号（読み付き） */
+/** 見出しに出す屋号（読み付き）。title もこれを使う */
 export const brandWithReading = `${siteConfig.name}（${siteConfig.nameReading}）`;
+
+/**
+ * Google マップの事業者名と一字一句同じにする。
+ * 括弧は全角 U+FF08 / U+FF09。括弧の前に空白は置かない。worx と mt.fuji の間は半角スペース 1 つ。
+ */
+export const listingName = "橘香堂近藤薬局\uFF08worx mt.fuji\uFF09";
 
 /** 読みと英語名を併記するときの名称 */
 export const brandFullName = `${siteConfig.name}（${siteConfig.nameReading} / ${siteConfig.nameEn}）`;
@@ -897,7 +903,7 @@ export const aboutPageData = {
     },
   ],
   overview: [
-    { label: "名称", value: `${siteConfig.nameEn} ${siteConfig.name}（${siteConfig.nameReading}／近藤薬局）` },
+    { label: "名称", value: listingName },
     { label: "所在地", value: `${siteConfig.address.postal} ${siteConfig.address.full}` },
     {
       label: "営業時間",
