@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { siteConfig, navigation, spaceCategories, primaryActions } from "@/app/data/site";
+import { siteConfig, brandWithReading, navigation, spaceCategories, primaryActions } from "@/app/data/site";
 import { BlockLabel } from "@/app/components/ui/typography";
 
 const menuLinks = [{ name: "Home", href: "/" }, ...navigation];
@@ -22,8 +22,9 @@ export default function Footer() {
               <span className="font-[var(--font-cormorant)] text-[1.625rem] tracking-[0.08em]">
                 {siteConfig.nameEn}
               </span>
-              <span className="block text-[10px] tracking-[0.25em] text-[#6B6B6B] mt-2">
-                {siteConfig.name}
+              <span className="block text-[10px] text-[#6B6B6B] mt-2">
+                <span className="tracking-[0.25em]">{siteConfig.name}</span>
+                <span className="tracking-[0.06em]">（{siteConfig.nameReading}）</span>
               </span>
             </Link>
             <p className="text-[13px] text-[#7A7A7A] leading-[2] tracking-[0.02em] max-w-sm mb-10">
@@ -118,6 +119,25 @@ export default function Footer() {
                   {siteConfig.hours.days} {siteConfig.hours.regular}
                 </span>
               </p>
+              <p>
+                <span className="block text-[10px] tracking-[0.2em] uppercase text-[#6B6B6B] mb-2">
+                  SNS
+                </span>
+                <span className="flex flex-wrap gap-x-4 gap-y-1">
+                  {siteConfig.social.map((profile) => (
+                    <a
+                      key={profile.url}
+                      href={profile.url}
+                      target="_blank"
+                      rel="me noopener noreferrer"
+                      className="tracking-[0.02em] hover:text-[#FAFAF8] transition-colors"
+                    >
+                      {profile.name}
+                      <span className="sr-only">（新しいタブで開きます）</span>
+                    </a>
+                  ))}
+                </span>
+              </p>
             </address>
           </div>
         </div>
@@ -125,7 +145,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-10 border-t border-[#404040] flex flex-col-reverse items-center gap-4 sm:flex-row sm:justify-between">
           <p className="text-[11px] tracking-[0.05em] text-[#5A5A5A]">
-            © {new Date().getFullYear()} {siteConfig.name} ({siteConfig.nameEn}). All rights reserved.
+            © {new Date().getFullYear()} {brandWithReading} ({siteConfig.nameEn}). All rights reserved.
           </p>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link

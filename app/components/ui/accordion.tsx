@@ -100,15 +100,9 @@ export function AccordionContent({ children, className, value }: AccordionConten
   const { openItems } = useAccordionContext();
   const isOpen = openItems.includes(value);
 
-  if (!isOpen) return null;
-
+  // 閉じているときも回答を HTML に残す（検索エンジンが本文を読めるようにする）。見た目は閉じたまま。
   return (
-    <div
-      className={cn(
-        "pb-6 text-[#6B6B6B] leading-relaxed animate-fade-in",
-        className
-      )}
-    >
+    <div hidden={!isOpen} className={cn("pb-6 text-[#6B6B6B] leading-relaxed", isOpen && "animate-fade-in", className)}>
       {children}
     </div>
   );

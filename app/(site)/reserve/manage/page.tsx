@@ -22,8 +22,8 @@ export default function ReserveManagePage() {
         titleJa="ご予約の確認・キャンセル"
         description="予約受付メールのリンクから、ご予約内容の確認とキャンセルができます。"
         breadcrumbs={[
-          { name: "Reserve", href: primaryActions.reserve.href },
-          { name: "My Reservation", href: RESERVE_MANAGE_PATH },
+          { name: "Reserve", href: primaryActions.reserve.href, structuredName: "ご予約" },
+          { name: "My Reservation", href: RESERVE_MANAGE_PATH, structuredName: "ご予約の確認・キャンセル" },
         ]}
       />
 

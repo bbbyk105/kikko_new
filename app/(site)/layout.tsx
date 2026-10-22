@@ -1,5 +1,7 @@
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
+import { JsonLd } from "@/app/components/seo/JsonLd";
+import { homeStructuredData } from "@/lib/structured-data";
 
 /**
  * 公開ページ共通のレイアウト。
@@ -12,6 +14,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <Header />
       <main id="main">{children}</main>
       <Footer />
+      <JsonLd data={homeStructuredData()} />
     </>
   );
 }

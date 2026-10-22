@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { siteConfig } from "@/app/data/site";
+import { JsonLd } from "@/app/components/seo/JsonLd";
 
 export interface BreadcrumbItem {
+  /** 画面に出すラベル（英語の柱が残っている箇所がある） */
   name: string;
   href: string;
+  /** 検索結果のパンくずに出す日本語名。未指定なら name */
+  structuredName?: string;
 }
 
 interface BreadcrumbsProps {
@@ -14,7 +18,7 @@ interface BreadcrumbsProps {
 
 /** パンくずリスト（検索エンジン向けの構造化データも出す） */
 export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
-  const trail: BreadcrumbItem[] = [{ name: "Home", href: "/" }, ...items];
+  const trail: BreadcrumbItem[] = [{ name: "Home", href: "/", structuredName: "トップ" }, ...items];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -22,8 +26,8 @@ export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
     itemListElement: trail.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      name: item.name,
-      item: new URL(item.href, siteConfig.url).toString(),
+      name: item.structuredName ?? item.name,
+      item: item.href === "/" ? siteConfig.url : new URL(item.href, siteConfig.url).toString(),
     })),
   };
 
@@ -48,10 +52,7 @@ export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
           );
         })}
       </ol>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
     </nav>
   );
 }

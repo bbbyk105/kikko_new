@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { siteConfig, heroFeatures, images } from "@/app/data/site";
+import { siteConfig, brandWithReading, heroFeatures, images } from "@/app/data/site";
 import { LeadText } from "@/app/components/ui/typography";
 
 export default function Hero() {
@@ -15,7 +15,8 @@ export default function Hero() {
               {/* h1 は「検索で狙う言葉（小さな前置き）＋キャッチコピー」で1つにする */}
               <h1 id="hero-heading">
                 <span className="block eyebrow-text hero-eyebrow hero-keyword text-[#9A9A9A] animate-fade-up">
-                  富士市吉原のコワーキングスペース
+                  <span className="block">{brandWithReading}</span>
+                  <span className="mt-2 block">富士市吉原のコワーキング・レンタルスペース</span>
                 </span>{" "}
                 {/* Main Copy - 余白との緊張感で魅せる */}
                 <span className="block display-heading text-[#2C2C2C] animate-fade-up animation-delay-100">

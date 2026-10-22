@@ -19,7 +19,7 @@ export default function MyPagePage() {
         title="My Page"
         titleJa="マイページ"
         description="ご予約時のメールアドレスでログインすると、ご予約の確認とキャンセルができます。"
-        breadcrumbs={[{ name: "My Page", href: primaryActions.mypage.href }]}
+        breadcrumbs={[{ name: "My Page", href: primaryActions.mypage.href, structuredName: "マイページ" }]}
       />
 
       <section className="py-12 lg:py-16 bg-[#F7F6F3]">

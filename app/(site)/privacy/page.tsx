@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import PageHero from "@/app/components/section/PageHero";
-import { privacyPolicy, siteConfig, primaryActions } from "@/app/data/site";
+import { brandFullName, privacyPolicy, siteConfig, primaryActions } from "@/app/data/site";
 import { ArrowLink } from "@/app/components/ui/arrow-link";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "プライバシーポリシー",
-  description: "橘香堂（worx mt.fuji）における個人情報の取り扱いについて。",
-  alternates: { canonical: "/privacy" },
-};
+export const metadata: Metadata = pageMetadata(
+  "/privacy",
+  "プライバシーポリシー",
+  `${brandFullName}における個人情報の取り扱いについて。`,
+);
 
 export default function PrivacyPage() {
   return (
@@ -16,7 +17,7 @@ export default function PrivacyPage() {
         title="Privacy Policy"
         titleJa="プライバシーポリシー"
         description="個人情報の取り扱いについて"
-        breadcrumbs={[{ name: "Privacy Policy", href: "/privacy" }]}
+        breadcrumbs={[{ name: "Privacy Policy", href: "/privacy", structuredName: "プライバシーポリシー" }]}
       />
 
       <section className="pb-28 lg:pb-36">

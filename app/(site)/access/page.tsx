@@ -5,13 +5,14 @@ import SectionIntro from "@/app/components/section/SectionIntro";
 import { ArrowLink } from "@/app/components/ui/arrow-link";
 import { BulletList } from "@/app/components/ui/bullet-list";
 import { BlockLabel, CardTitle } from "@/app/components/ui/typography";
-import { accessPageData, siteConfig, primaryActions } from "@/app/data/site";
+import { accessPageData, brandFullName, siteConfig, primaryActions } from "@/app/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "アクセス（富士市吉原）",
-  description: `橘香堂（worx mt.fuji）へのアクセス。${siteConfig.address.full}。吉原中央駅バス停から徒歩5分、JR富士駅から車で約10分。`,
-  alternates: { canonical: "/access" },
-};
+export const metadata: Metadata = pageMetadata(
+  "/access",
+  "アクセス（富士市吉原）",
+  `${brandFullName}へのアクセス。${siteConfig.address.full}。吉原中央駅バス停から徒歩5分、JR富士駅から車で約10分。`,
+);
 
 const infoRows = [
   {
@@ -54,7 +55,7 @@ export default function AccessPage() {
         title={intro.title}
         titleJa={intro.titleJa}
         description={intro.description}
-        breadcrumbs={[{ name: "Access", href: "/access" }]}
+        breadcrumbs={[{ name: "Access", href: "/access", structuredName: "アクセス" }]}
       />
 
       {/* Map */}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ChevronDown, UserRound } from "lucide-react";
-import { siteConfig, navigation, spaceCategories, primaryActions } from "@/app/data/site";
+import { siteConfig, brandWithReading, navigation, spaceCategories, primaryActions } from "@/app/data/site";
 import HeaderShell from "@/app/components/header/HeaderShell";
 import NavLink from "@/app/components/header/NavLink";
 import NavDropdown from "@/app/components/header/NavDropdown";
@@ -35,12 +35,15 @@ export default function Header() {
         {/* Logo（トップページにいるときは先頭へスクロール） */}
         <HomeLink
           className="flex flex-col items-start gap-0 transition-opacity hover:opacity-70"
-          aria-label={`${siteConfig.name} トップページへ`}
+          aria-label={`${brandWithReading} トップページへ`}
         >
           <span className="font-[var(--font-cormorant)] text-xl tracking-wider text-[#2C2C2C]">
             {siteConfig.nameEn}
           </span>
-          <span className="text-[10px] tracking-[0.2em] text-[#6B6B6B]">{siteConfig.name}</span>
+          <span className="text-[10px] text-[#6B6B6B]">
+            <span className="tracking-[0.2em]">{siteConfig.name}</span>
+            <span className="tracking-[0.04em]">（{siteConfig.nameReading}）</span>
+          </span>
         </HomeLink>
 
         {/* Desktop Navigation */}

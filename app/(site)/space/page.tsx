@@ -5,14 +5,14 @@ import BottomCTA from "@/app/components/section/BottomCTA";
 import SpaceTypes from "@/app/components/space/SpaceTypes";
 import SpaceGallery from "@/app/components/space/SpaceGallery";
 import SpaceSpecs from "@/app/components/space/SpaceSpecs";
-import { spacePageData, spaceCategories, images, primaryActions } from "@/app/data/site";
+import { spacePageData, spaceCategories, images, primaryActions, brandWithReading } from "@/app/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "空間と利用シーン",
-  description:
-    "橘香堂の空間紹介。コワーキング、会議、セミナー、イベントなど多様な用途に対応する静かで上質なワークスペース。",
-  alternates: { canonical: "/space" },
-};
+export const metadata: Metadata = pageMetadata(
+  "/space",
+  "空間と利用シーン",
+  `富士市吉原の${brandWithReading}の空間。コワーキング、会議、セミナー、イベントなど、用途に合わせて使える静かで上質なワークスペース。`,
+);
 
 export default function SpacePage() {
   return (
@@ -21,7 +21,7 @@ export default function SpacePage() {
         title={spacePageData.intro.title}
         titleJa={spacePageData.intro.titleJa}
         description={spacePageData.intro.description}
-        breadcrumbs={[{ name: "Space", href: "/space" }]}
+        breadcrumbs={[{ name: "Space", href: "/space", structuredName: "空間" }]}
       />
 
       {/* Hero Visual */}

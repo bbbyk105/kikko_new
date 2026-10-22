@@ -3,14 +3,14 @@ import PageHero from "@/app/components/section/PageHero";
 import BottomCTA from "@/app/components/section/BottomCTA";
 import PricingTable from "@/app/components/pricing/PricingTable";
 import PricingNotes from "@/app/components/pricing/PricingNotes";
-import { pricingPageData, primaryActions } from "@/app/data/site";
+import { brandWithReading, pricingPageData, pricingPlans, primaryActions } from "@/app/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "料金プラン（ビジター・月額会員）",
-  description:
-    "橘香堂の料金プラン。ビジター利用から法人契約まで、利用スタイルに合わせて選べるシンプルな料金体系。",
-  alternates: { canonical: "/pricing" },
-};
+export const metadata: Metadata = pageMetadata(
+  "/pricing",
+  "料金プラン（ビジター・月額会員）",
+  `富士市吉原の${brandWithReading}の料金プラン。ビジター利用は1時間${pricingPlans[0].price}から、月額会員・法人契約まで。利用スタイルに合わせて選べます。`,
+);
 
 export default function PricingPage() {
   return (
@@ -19,7 +19,7 @@ export default function PricingPage() {
         title={pricingPageData.intro.title}
         titleJa={pricingPageData.intro.titleJa}
         description={pricingPageData.intro.description}
-        breadcrumbs={[{ name: "Pricing", href: "/pricing" }]}
+        breadcrumbs={[{ name: "Pricing", href: "/pricing", structuredName: "料金" }]}
       />
 
       {/* Intro */}

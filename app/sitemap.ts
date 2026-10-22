@@ -14,9 +14,16 @@ const pages: { path: string; priority: number }[] = [
   { path: "/privacy", priority: 0.2 },
 ];
 
+/** canonical と同じ URL にする。トップは Next が末尾スラッシュを付けない */
+function absoluteUrl(path: string): string {
+  if (path === "/") return siteConfig.url;
+  return new URL(path, `${siteConfig.url}/`).toString();
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return pages.map(({ path, priority }) => ({
-    url: new URL(path, siteConfig.url).toString(),
+    url: absoluteUrl(path),
+    lastModified: siteConfig.contentUpdated,
     changeFrequency: "monthly",
     priority,
   }));

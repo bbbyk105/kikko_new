@@ -11,7 +11,8 @@ import SpaceScenes from "@/app/components/space/SpaceScenes";
 import SpacePlans from "@/app/components/space/SpacePlans";
 import SpaceOtherTypes from "@/app/components/space/SpaceOtherTypes";
 import { ArrowLink } from "@/app/components/ui/arrow-link";
-import { spaceCategories, spaceDetails, pricingPlans, faqItems } from "@/app/data/site";
+import { brandWithReading, spaceCategories, spaceDetails, pricingPlans, faqItems } from "@/app/data/site";
+import { pageMetadata } from "@/lib/seo";
 
 interface SpaceDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -36,11 +37,11 @@ export async function generateMetadata({ params }: SpaceDetailPageProps): Promis
   if (!space) return {};
 
   const { category } = space;
-  return {
-    title: category.seoTitle,
-    description: `富士市吉原の橘香堂の${category.titleJa}。${category.description}`,
-    alternates: { canonical: `/space/${category.id}` },
-  };
+  return pageMetadata(
+    `/space/${category.id}`,
+    category.seoTitle,
+    `富士市吉原の${brandWithReading}の${category.titleJa}。${category.description}`,
+  );
 }
 
 export default async function SpaceDetailPage({ params }: SpaceDetailPageProps) {
