@@ -35,6 +35,7 @@ describe("homeStructuredData", () => {
     expect(business.sameAs).toEqual([
       "https://www.instagram.com/kikkou2022/",
       "https://x.com/kikkoudo_0321",
+      "https://www.facebook.com/p/%E6%A9%98%E9%A6%99%E5%A0%82%E8%BF%91%E8%97%A4%E8%96%AC%E5%B1%80worx-mtfuji-100095544335452/",
     ]);
     expect(business.telephone).toBe("0545-67-7400");
     expect(business.address).toMatchObject({
@@ -52,8 +53,12 @@ describe("homeStructuredData", () => {
     expect(website.publisher).toEqual({ "@id": "https://worxmtfuji.com/#business" });
   });
 
-  it("JSON として壊れない", () => {
-    expect(() => JSON.parse(JSON.stringify(data))).not.toThrow();
+  it("JSON として壊れず、Facebook の URL をそのまま含む", () => {
+    const json = JSON.stringify(data);
+    expect(() => JSON.parse(json)).not.toThrow();
+    expect(json).toContain(
+      "https://www.facebook.com/p/%E6%A9%98%E9%A6%99%E5%A0%82%E8%BF%91%E8%97%A4%E8%96%AC%E5%B1%80worx-mtfuji-100095544335452/",
+    );
   });
 });
 

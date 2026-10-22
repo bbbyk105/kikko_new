@@ -19,11 +19,15 @@ export const siteConfig = {
    * 公式アカウント。
    * X（@kikkoudo_0321）の公開プロフィール名は「橘香堂 worx mt.fuji」で、掲載の電話番号は当サイトと同じ。
    * そのプロフィールから Instagram（kikkou2022）へリンクされている。
-   * Facebook の URL はサイト内にも、このプロフィールからも確認できなかったので入れていない。
+   * Facebook は運営者から確認したページ URL。
    */
   social: [
     { name: "Instagram", url: "https://www.instagram.com/kikkou2022/" },
     { name: "X", url: "https://x.com/kikkoudo_0321" },
+    {
+      name: "Facebook",
+      url: "https://www.facebook.com/p/%E6%A9%98%E9%A6%99%E5%A0%82%E8%BF%91%E8%97%A4%E8%96%AC%E5%B1%80worx-mtfuji-100095544335452/",
+    },
   ],
   phone: "0545-67-7400",
   email: "info@worxmtfuji.com",
