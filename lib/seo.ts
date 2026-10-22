@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
-import { brandWithReading } from "@/app/data/site";
+import { brandWithReading, siteConfig } from "@/app/data/site";
+
+/**
+ * サイト内パスを絶対 URL にする。
+ * トップ（"/"）は末尾スラッシュなし。sitemap、robots の Sitemap、パンくず JSON-LD の item で使う。
+ */
+export function absoluteUrl(path: string): string {
+  if (path === "/") return siteConfig.url;
+  return new URL(path, `${siteConfig.url}/`).toString();
+}
 
 /** トップのタイトル。読みを前に置き、地域と業種が続く */
 export const homeTitle = `${brandWithReading} | 富士市吉原のコワーキング・レンタルスペース`;

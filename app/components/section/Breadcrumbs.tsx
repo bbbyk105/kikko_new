@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { siteConfig } from "@/app/data/site";
 import { JsonLd } from "@/app/components/seo/JsonLd";
+import { absoluteUrl } from "@/lib/seo";
 
 export interface BreadcrumbItem {
   /** 画面に出すラベル（英語の柱が残っている箇所がある） */
@@ -27,7 +27,7 @@ export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
       "@type": "ListItem",
       position: index + 1,
       name: item.structuredName ?? item.name,
-      item: item.href === "/" ? siteConfig.url : new URL(item.href, siteConfig.url).toString(),
+      item: absoluteUrl(item.href),
     })),
   };
 

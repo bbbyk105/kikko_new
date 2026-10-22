@@ -5,7 +5,7 @@ export const siteConfig = {
   /** 屋号の読み。検索では漢字より「きっこうどう」で探される */
   nameReading: "きっこうどう",
   nameEn: "worx mt.fuji",
-  /** 正式名称。施設概要・プライバシーポリシー・メール署名など、事業者として名乗る箇所だけに使う */
+  /** プライバシーポリシーの前文・名称、メール署名、LocalBusiness の alternateName。マップ登録名とは別の文字列 */
   officialName: "worx mt.fuji 橘香堂（近藤薬局）",
   url: "https://worxmtfuji.com",
   tagline: "働く場所から、仕事の質を整える。",
@@ -54,16 +54,16 @@ export const siteConfig = {
   googleMapsLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("橘香堂近藤薬局 静岡県富士市吉原2丁目8番21-2号")}`,
 };
 
-/** 見出しに出す屋号（読み付き）。title もこれを使う */
+/** 読み付き屋号。title、トップの h1、ヘッダー、各ページの description、about の見出しと概念文、WebSite の name */
 export const brandWithReading = `${siteConfig.name}（${siteConfig.nameReading}）`;
 
 /**
- * Google マップの事業者名と一字一句同じにする。
- * 括弧は全角 U+FF08 / U+FF09。括弧の前に空白は置かない。worx と mt.fuji の間は半角スペース 1 つ。
+ * Google マップ登録名と完全一致。括弧は全角 U+FF08 / U+FF09。括弧の前に空白は置かない。worx と mt.fuji の間は半角スペース 1 つ。
+ * 施設概要の名称、フッターの事業者名とコピーライト、LocalBusiness の name。
  */
 export const listingName = "橘香堂近藤薬局\uFF08worx mt.fuji\uFF09";
 
-/** 読みと英語名を併記するときの名称 */
+/** about・access・privacy の meta description だけに使う併記名 */
 export const brandFullName = `${siteConfig.name}（${siteConfig.nameReading} / ${siteConfig.nameEn}）`;
 
 export interface NavItem {
