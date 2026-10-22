@@ -4,14 +4,14 @@ import ReserveFormFromUrl from "@/app/components/reserve/ReserveFormFromUrl";
 import ReserveContactInfo from "@/app/components/reserve/ReserveContactInfo";
 import { BulletList } from "@/app/components/ui/bullet-list";
 import { ArrowLink } from "@/app/components/ui/arrow-link";
-import { reserveData, primaryActions } from "@/app/data/site";
+import { brandWithReading, reserveData, primaryActions } from "@/app/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "ご予約",
-  description:
-    "橘香堂のご予約フォーム。ビジター利用、会議室予約、貸切利用を承ります。",
-  alternates: { canonical: "/reserve" },
-};
+export const metadata: Metadata = pageMetadata(
+  "/reserve",
+  "ご予約",
+  `富士市吉原の${brandWithReading}のご予約。ビジター利用、会議室、貸切をウェブから申し込めます。`,
+);
 
 export default function ReservePage() {
   return (
@@ -20,7 +20,7 @@ export default function ReservePage() {
         title="Reserve"
         titleJa="ご予約"
         description="ご利用のご予約を承ります。"
-        breadcrumbs={[{ name: "Reserve", href: "/reserve" }]}
+        breadcrumbs={[{ name: "Reserve", href: "/reserve", structuredName: "ご予約" }]}
       />
 
       {/* Reserve Form Section */}

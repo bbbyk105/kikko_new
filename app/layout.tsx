@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Noto_Sans_JP } from "next/font/google";
-import { siteConfig } from "@/app/data/site";
+import { brandWithReading, siteConfig } from "@/app/data/site";
+import { homeDescription, homeTitle } from "@/lib/seo";
 import "./globals.css";
-
-// 検索結果で先に目に入るよう、狙う言葉（地域＋業種）を前に置く
-const defaultTitle = `富士市吉原のコワーキングスペース | ${siteConfig.name} (${siteConfig.nameEn})`;
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -24,26 +22,32 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   // 各ページは title に「料金プラン」などだけを書く
   title: {
-    default: defaultTitle,
-    template: `%s | ${siteConfig.name} (${siteConfig.nameEn})`,
+    default: homeTitle,
+    template: `%s | ${brandWithReading}`,
   },
-  description:
-    "静岡県富士市吉原の静かで上質なワークスペース。高速Wi-Fi、住所登録、会議室完備。起業家、フリーランス、リモートワーカーのための集中できる空間。",
+  description: homeDescription,
   keywords: [
+    "きっこうどう",
+    "橘香堂",
     "コワーキングスペース",
+    "レンタルスペース",
     "富士市",
     "吉原",
     "ワークスペース",
     "シェアオフィス",
     "会議室",
     "静岡県",
+    "近藤薬局",
+    "worx mt.fuji",
   ],
   // og:title・og:description はここで固定しない（固定するとどのページを共有してもトップの内容になる）。
-  // 各ページの title・description が使われる。画像は app/opengraph-image.jpg
+  // 各ページの title・description が使われる。画像は app/opengraph-image.jpg。
+  // url の "./" は、そのページ自身のパスになる（ページ側で openGraph を書くと画像が外れる）。
   openGraph: {
-    siteName: `${siteConfig.name} (${siteConfig.nameEn})`,
+    siteName: `${brandWithReading} (${siteConfig.nameEn})`,
     locale: "ja_JP",
     type: "website",
+    url: "./",
   },
   twitter: {
     card: "summary_large_image",

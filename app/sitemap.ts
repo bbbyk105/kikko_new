@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig, spaceCategories } from "@/app/data/site";
+import { absoluteUrl } from "@/lib/seo";
 
 const pages: { path: string; priority: number }[] = [
   { path: "/", priority: 1 },
@@ -16,7 +17,8 @@ const pages: { path: string; priority: number }[] = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return pages.map(({ path, priority }) => ({
-    url: new URL(path, siteConfig.url).toString(),
+    url: absoluteUrl(path),
+    lastModified: siteConfig.contentUpdated,
     changeFrequency: "monthly",
     priority,
   }));

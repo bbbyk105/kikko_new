@@ -24,8 +24,8 @@ export default function SpaceDetailHero({
         <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
           <Breadcrumbs
             items={[
-              { name: "Space", href: "/space" },
-              { name: title, href: `/space/${slug}` },
+              { name: "Space", href: "/space", structuredName: "空間" },
+              { name: title, href: `/space/${slug}`, structuredName: titleJa },
             ]}
             className="mb-10 animate-fade-up"
           />

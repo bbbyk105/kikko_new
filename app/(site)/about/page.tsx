@@ -12,14 +12,14 @@ import {
   LeadText,
   SectionHeading,
 } from "@/app/components/ui/typography";
-import { aboutPageData, images, primaryActions } from "@/app/data/site";
+import { aboutPageData, brandFullName, images, primaryActions } from "@/app/data/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "橘香堂について",
-  description:
-    "富士市吉原のコワーキングスペース「橘香堂（worx mt.fuji）」のコンセプトと施設概要。集中、つながり、自由な働き方のための場所です。",
-  alternates: { canonical: "/about" },
-};
+export const metadata: Metadata = pageMetadata(
+  "/about",
+  "橘香堂について",
+  `富士市吉原のコワーキング・レンタルスペース、${brandFullName}のコンセプトと施設概要。集中、つながり、自由な働き方のための場所です。`,
+);
 
 export default function AboutPage() {
   const { intro, concept, values, audiences, overview } = aboutPageData;
@@ -30,7 +30,7 @@ export default function AboutPage() {
         title={intro.title}
         titleJa={intro.titleJa}
         description={intro.description}
-        breadcrumbs={[{ name: "About", href: "/about" }]}
+        breadcrumbs={[{ name: "About", href: "/about", structuredName: "橘香堂について" }]}
       />
 
       {/* Concept */}
@@ -119,12 +119,12 @@ export default function AboutPage() {
       </section>
 
       {/* Visual */}
-      <section className="pb-28 lg:pb-40" aria-hidden="true">
+      <section className="pb-28 lg:pb-40">
         <div className="mx-auto max-w-[1280px] px-6 lg:px-8">
           <div className="relative aspect-[16/9] md:aspect-[16/7] overflow-hidden">
             <Image
               src={images.capacity}
-              alt=""
+              alt="イベント利用時のスペースレイアウト例"
               fill
               className="object-cover"
               sizes="100vw"

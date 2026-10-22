@@ -2,12 +2,33 @@ import { contactHref, MYPAGE_PATH, reserveHref, type ReserveType } from "@/lib/r
 
 export const siteConfig = {
   name: "橘香堂",
+  /** 屋号の読み。検索では漢字より「きっこうどう」で探される */
+  nameReading: "きっこうどう",
   nameEn: "worx mt.fuji",
-  /** 正式名称。施設概要・プライバシーポリシー・メール署名など、事業者として名乗る箇所だけに使う */
+  /** プライバシーポリシーの前文・名称、メール署名、LocalBusiness の alternateName。マップ登録名とは別の文字列 */
   officialName: "worx mt.fuji 橘香堂（近藤薬局）",
   url: "https://worxmtfuji.com",
   tagline: "働く場所から、仕事の質を整える。",
-  description: "富士市吉原の、静かで上質なワークスペース。",
+  description: "富士市吉原の、静かで上質なコワーキング・レンタルスペース。",
+  /**
+   * 公開ページの内容を変えた日（sitemap の lastmod）。
+   * 本文・タイトル・施設情報を更新したら、この日付も更新する。
+   */
+  contentUpdated: "2026-10-22",
+  /**
+   * 公式アカウント。
+   * X（@kikkoudo_0321）の公開プロフィール名は「橘香堂 worx mt.fuji」で、掲載の電話番号は当サイトと同じ。
+   * そのプロフィールから Instagram（kikkou2022）へリンクされている。
+   * Facebook は運営者から確認したページ URL。
+   */
+  social: [
+    { name: "Instagram", url: "https://www.instagram.com/kikkou2022/" },
+    { name: "X", url: "https://x.com/kikkoudo_0321" },
+    {
+      name: "Facebook",
+      url: "https://www.facebook.com/p/%E6%A9%98%E9%A6%99%E5%A0%82%E8%BF%91%E8%97%A4%E8%96%AC%E5%B1%80worx-mtfuji-100095544335452/",
+    },
+  ],
   phone: "0545-67-7400",
   email: "info@worxmtfuji.com",
   address: {
@@ -32,6 +53,18 @@ export const siteConfig = {
   /** Google マップのアプリ・新しいタブで開く用（Google 上の登録名「橘香堂近藤薬局」＋住所で検索する） */
   googleMapsLink: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("橘香堂近藤薬局 静岡県富士市吉原2丁目8番21-2号")}`,
 };
+
+/** 読み付き屋号。title、トップの h1、ヘッダー、各ページの description、about の見出しと概念文、WebSite の name */
+export const brandWithReading = `${siteConfig.name}（${siteConfig.nameReading}）`;
+
+/**
+ * Google マップ登録名と完全一致。括弧は全角 U+FF08 / U+FF09。括弧の前に空白は置かない。worx と mt.fuji の間は半角スペース 1 つ。
+ * 施設概要の名称、フッターの事業者名とコピーライト、LocalBusiness の name。
+ */
+export const listingName = "橘香堂近藤薬局\uFF08worx mt.fuji\uFF09";
+
+/** about・access・privacy の meta description だけに使う併記名 */
+export const brandFullName = `${siteConfig.name}（${siteConfig.nameReading} / ${siteConfig.nameEn}）`;
 
 export interface NavItem {
   name: string;
@@ -822,13 +855,13 @@ export const spaceDetails: Record<string, SpaceDetail> = {
 export const aboutPageData = {
   intro: {
     title: "About",
-    titleJa: "橘香堂について",
-    description: "富士市吉原の、静かで上質なワークスペース。",
+    titleJa: `${brandWithReading}について`,
+    description: siteConfig.description,
   },
   concept: {
     heading: ["集中、つながり、", "自由な働き方を。"],
     paragraphs: [
-      "橘香堂は、ただ作業をする場所ではありません。集中して仕事に向き合い、必要なときには人とつながり、用途に応じて空間を自在に使える——そんな、新しい働き方のための場所です。",
+      `${brandWithReading}は、ただ作業をする場所ではありません。集中して仕事に向き合い、必要なときには人とつながり、用途に応じて空間を自在に使える——そんな、新しい働き方のための場所です。`,
       "富士市吉原の静かな環境の中で、起業家、フリーランス、リモートワーカーの皆さまの日々の仕事と成長をサポートいたします。",
     ],
   },
@@ -870,7 +903,7 @@ export const aboutPageData = {
     },
   ],
   overview: [
-    { label: "名称", value: siteConfig.officialName },
+    { label: "名称", value: listingName },
     { label: "所在地", value: `${siteConfig.address.postal} ${siteConfig.address.full}` },
     {
       label: "営業時間",
